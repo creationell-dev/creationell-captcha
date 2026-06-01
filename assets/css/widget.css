@@ -1,0 +1,28 @@
+/*
+ * Frontend stylesheet for the CreaCaptcha widget.
+ *
+ * The <altcha-widget> custom element has no default block-flow spacing, so on
+ * pages where the widget is visible (display="standard") and is the last child
+ * of its parent form, the form's bottom edge sits flush against the widget.
+ * Use padding-block-end rather than margin-block-end: padding does not
+ * collapse with the parent's bottom edge, so the gap is always visible
+ * regardless of whether the form has padding/border/min-height. Scoped to
+ * display="standard" because floating/overlay/bar are positioned out-of-flow
+ * and don't need block-flow spacing; invisible is display:none on the inner
+ * .altcha anyway.
+ *
+ * The --altcha-color-base override binds the widget's primary colour to the
+ * plugin's own --creationell-captcha-primary variable. The plugin emits an
+ * inline <style> block setting that variable only when widget_primary_color is
+ * configured; if unset, the var() fallback to the original --altcha-color-base
+ * preserves the theme's default colour.
+ */
+
+altcha-widget {
+    display: block;
+    --altcha-color-base: var( --creationell-captcha-primary, var( --altcha-color-base ) );
+}
+
+altcha-widget[display="standard"] {
+    padding-block-end: var( --creationell-captcha-widget-margin-block-end, 1rem );
+}

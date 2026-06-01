@@ -1,0 +1,40 @@
+{
+    "name": "creationell/creationell-captcha",
+    "description": "CreaCaptcha — datenschutzfreundlicher Proof-of-Work-Spamschutz für WordPress.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "creationell® – die Werbeagentur",
+            "homepage": "https://www.creationell.de/"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "altcha-org/altcha": "^2.0"
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "lib",
+            "namespace_prefix": "Creationell\\Captcha\\Vendor\\",
+            "classmap_prefix": "Creationell_Captcha_Vendor_",
+            "constant_prefix": "CREATIONELL_CAPTCHA_VENDOR_",
+            "packages": [
+                "altcha-org/altcha"
+            ],
+            "delete_vendor_packages": true
+        }
+    },
+    "require-dev": {
+        "brianhenryie/strauss": "^0.27.2"
+    },
+    "scripts": {
+        "strauss": "@php vendor/bin/strauss",
+        "post-install-cmd": [
+            "@strauss"
+        ],
+        "post-update-cmd": [
+            "@strauss"
+        ]
+    }
+}

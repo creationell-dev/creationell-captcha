@@ -1,0 +1,13 @@
+# Build-Artefakte (werden vom Release-Workflow erzeugt)
+/vendor/
+/lib/
+/docs/
+
+# Build- & OS-Artefakte
+*.zip
+*.sha256
+.DS_Store
+
+# CI-Scratch
+/gh-pages-*/
+/phpDocumentor.phar
