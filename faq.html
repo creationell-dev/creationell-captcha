@@ -1,0 +1,127 @@
+<h3 id="sendet-creacaptcha-daten-an-externe-dienste">Sendet CreaCaptcha
+Daten an externe Dienste?</h3>
+<p>Nein. Das Plugin arbeitet vollständig selbst-gehostet — es gibt keine
+API-Aufrufe, kein Telemetrie-Backend, keinen Lizenz-Check und keine
+SaaS-Anbindung. Die einzige optionale externe Anfrage ist der
+Cloudflare-IP-Refresh aus den offiziellen Cloudflare-Listen, der
+ausschließlich auf expliziten Toggle läuft.</p>
+<h3 id="welcher-captcha-algorithmus-läuft-im-hintergrund">Welcher
+Captcha-Algorithmus läuft im Hintergrund?</h3>
+<p>CreaCaptcha nutzt die offizielle MIT-Bibliothek
+<code>altcha-org/altcha</code>. Standardmäßig kommt PBKDF2/SHA-256 zum
+Einsatz (kein PHP-Extension-Bedarf). Optional lässt sich auf Argon2id
+umschalten, dafür wird <code>ext-sodium</code> benötigt.</p>
+<h3 id="funktioniert-das-plugin-ohne-javascript">Funktioniert das Plugin
+ohne JavaScript?</h3>
+<p>Nein — die Proof-of-Work-Sicherheitsabfrage muss vom Browser gelöst
+werden. Ohne JavaScript erscheint das Widget als Hinweistext, und die
+Server-Verifikation wird die Submission abweisen. Für ein vollständig
+JS-loses Schutz-Setup ist die Firewall+Rate-Limit-Schicht der richtige
+Ansatz.</p>
+<h3 id="welche-form-plugins-werden-unterstützt">Welche Form-Plugins
+werden unterstützt?</h3>
+<p>Mit dedizierten Integrationen: <strong>Contact Form 7</strong>,
+<strong>Forminator</strong>, <strong>WPForms</strong> (Lite und Pro),
+<strong>WooCommerce</strong> (Checkout, My-Account-Login, Registrierung,
+Lost-Password). Beliebige andere Formulare lassen sich über
+<code>[creationell_captcha]</code> und die Geschützte-Pfade-Liste
+absichern. Für AJAX-/Admin-Post-Endpoints gibt es zusätzlich die
+Geschützte-Aktionen-Liste.</p>
+<h3
+id="wie-schütze-ich-ein-eigenes-formular-auf-einer-beliebigen-seite">Wie
+schütze ich ein eigenes Formular auf einer beliebigen Seite?</h3>
+<p>Drei Schritte: (1) Den Shortcode <code>[creationell_captcha]</code>
+oder das Template-Tag <code>creationell_captcha_widget()</code> ins
+Formular einbauen. (2) Den Pfad der Seite oder den Submit-Pfad in
+<strong>Captcha → Interceptor → Geschützte Pfade</strong> eintragen. (3)
+Bei AJAX-/Admin-Post-Submissions zusätzlich den
+<code>action</code>-Namen in <strong>Geschützte Aktionen</strong>. Der
+Interceptor verifiziert dann automatisch jede Submission.</p>
+<h3 id="was-passiert-mit-ungelösten-bot-submissions">Was passiert mit
+ungelösten Bot-Submissions?</h3>
+<p>Der Server lehnt die Submission ab. Bei klassischen Formularen erhält
+der Browser die normale Validierungs-Fehlermeldung des jeweiligen
+Plugins. Bei AJAX wird <code>403 Forbidden</code> mit JSON-Body
+geliefert. Der Bot bekommt keine Hilfe in Form von Hinweisen, woran das
+Captcha gescheitert ist — der <code>reason</code> landet nur im
+Event-Log.</p>
+<h3
+id="wie-kann-ich-mich-selbst-aussperren-und-wie-komme-ich-wieder-rein">Wie
+kann ich mich selbst aussperren — und wie komme ich wieder rein?</h3>
+<p>Wer durch eigene Firewall-Regeln, Rate-Limit oder einen kaputten
+Under-Attack-Modus ausgesperrt wird, kann zu jeder Zeit per
+<code>wp-config.php</code> den Kill-Switch setzen:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;CREATIONELL_CAPTCHA_DISABLE&#39;</span><span class="ot">,</span> <span class="kw">true</span> )<span class="ot">;</span></span></code></pre></div>
+<p>Sofort sind <strong>alle</strong> Module aus — Firewall, Rate-Limit,
+Captcha, Under-Attack, Interceptor. Anschließend lassen sich die
+problematischen Einstellungen im Backend korrigieren. Ohne
+SSH/FTP-Zugriff bleibt der direkte Datenbank-Eingriff:
+<code>wp option update creationell_captcha_settings …</code> oder per
+<code>wp creacaptcha settings load-defaults</code>.</p>
+<h3
+id="funktioniert-das-plugin-hinter-cloudflare-oder-einem-reverse-proxy">Funktioniert
+das Plugin hinter Cloudflare oder einem Reverse-Proxy?</h3>
+<p>Ja. Im Tab <strong>Firewall</strong> unter „Proxy &amp;
+IP-Ermittlung” den Proxy-Modus aktivieren und den passenden
+Forwarded-Header wählen. Für Cloudflare zusätzlich „Cloudflare-IPs
+vertrauen” und optional den Auto-Refresh einschalten — die offiziellen
+Cloudflare-v4/v6-Ranges werden dann täglich neu geladen. Ohne
+Trust-Konfiguration wird der Header ignoriert, damit Angreifer nicht
+beliebige IPs spoofen können.</p>
+<h3 id="wie-viel-performance-kostet-das-plugin">Wie viel Performance
+kostet das Plugin?</h3>
+<p>Sehr wenig. Die Captcha-Berechnung läuft im Browser, nicht auf dem
+Server. Die Firewall-Auswertung ist eine reine IP-/Pattern-Prüfung
+(keine externen Lookups). Analytics-Counter werden seit v0.26.0 pro
+Request gesammelt und in einem einzigen DB-Roundtrip auf
+<code>shutdown</code> geschrieben. Das Event-Log nutzt seit derselben
+Version einen Composite-Index, der typgefilterte Dashboard-Queries ohne
+Filesort beantwortet.</p>
+<h3 id="wie-dsgvo-konform-ist-das-plugin">Wie DSGVO-konform ist das
+Plugin?</h3>
+<p>Out-of-the-box ist die IP-Anonymisierung im Event-Log aktiv (IPv4 auf
+letztes Oktett, IPv6 auf letzte 80 Bit trunkiert). Aggregat-Zähler
+enthalten keinerlei personenbezogene Daten. Im Event-Log werden keine
+Query-String-Werte (GET-Token, Magic-Links, API-Keys) gespeichert — der
+Pfad wird vor dem Schreiben auf den reinen Pfadanteil reduziert.
+Request-Body-Fingerprints enthalten nur Feldnamen und Wertlängen;
+sensitive Feldnamen werden zusätzlich gehasht.</p>
+<h3 id="wie-deaktiviere-ich-das-plugin-sauber">Wie deaktiviere ich das
+Plugin sauber?</h3>
+<p>Über <strong>Plugins → Installierte Plugins</strong> deaktivieren
+reicht für den Betrieb. Wer auch die Daten loswerden will, kann das
+Plugin anschließend löschen — der <code>uninstall.php</code>-Cleanup
+entfernt alle Options, Transients (inklusive <code>_cc_*</code>-Caches
+und <code>_git_update_*</code>-Locks) sowie die Event-Tabelle.</p>
+<h3 id="funktioniert-das-plugin-mit-multisite">Funktioniert das Plugin
+mit Multisite?</h3>
+<p>Ja, allerdings pro Site einzeln aktivierbar. Es gibt aktuell keine
+Network-Activate-Logik mit zentralen Settings — jede Site hat ihre
+eigene Konfiguration. Network-weite Aktivierung ist möglich, hat aber
+denselben Effekt wie eine Aktivierung pro Site.</p>
+<h3
+id="kann-ich-creacaptcha-parallel-zu-einem-anderen-captcha-plugin-betreiben">Kann
+ich CreaCaptcha parallel zu einem anderen Captcha-Plugin betreiben?</h3>
+<p>Technisch ja — die Code-Pfade kollidieren nicht.
+<code>wp creacaptcha doctor</code> prüft auf bekannte Captcha-Plugins
+(reCAPTCHA, hCaptcha, Turnstile, ALTCHA-WordPress) und warnt, weil zwei
+Captcha-Layer auf demselben Formular für den Nutzer unzumutbar werden.
+Empfehlung: nur eines aktiv lassen.</p>
+<h3 id="wo-finde-ich-logs-wenn-etwas-nicht-funktioniert">Wo finde ich
+Logs, wenn etwas nicht funktioniert?</h3>
+<p>Mit <code>define( 'CREATIONELL_CAPTCHA_DEBUG', true );</code> (oder
+global <code>WP_DEBUG</code>) schreibt das Plugin Debug-Hinweise nach
+<code>wp-content/debug.log</code>. Zusätzlich liefert
+<code>wp creacaptcha doctor</code> einen kompletten Diagnose-Lauf, und
+das Event-Log zeigt alle abgewiesenen Requests samt Grund.</p>
+<h3 id="wie-aktualisiere-ich-auf-eine-neue-version">Wie aktualisiere ich
+auf eine neue Version?</h3>
+<p>Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue
+Versionen automatisch im <strong>Plugins</strong>-Bildschirm — wie ein
+normales wp.org-Update. (2) ZIP von der GitHub-Release-Seite
+herunterladen und manuell über <strong>Plugins → Installieren → Plugin
+hochladen</strong> einspielen. (3) Per WP-CLI:
+<code>wp plugin install --activate &lt;release-url&gt;</code> mit der
+URL aus den GitHub-Releases.</p>
+<hr />

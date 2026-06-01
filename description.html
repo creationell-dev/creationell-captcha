@@ -1,0 +1,100 @@
+<p><strong>CreaCaptcha</strong> ist ein vollständig selbst-gehostetes
+Schutz-Plugin für WordPress. Es kombiniert einen Proof-of-Work-Captcha
+auf Basis der MIT-Bibliothek <code>altcha-org/altcha</code> mit einer
+Firewall, einem per-IP-Rate-Limiter, einem Under-Attack-Modus,
+E-Mail-Obfuskation und einer optionalen Bild-Code-Challenge. Es gibt
+keine externen API-Aufrufe, kein Lizenz-Gate, keine SaaS-Anbindung und
+keine Telemetrie — alle Funktionen laufen lokal in WordPress.</p>
+<p>Das Plugin schützt die vier WordPress-Kernformulare (Kommentare,
+Login, Registrierung, Passwort-Reset) sowie automatisch alle Formulare
+gängiger Form-Plugins (<strong>Contact Form 7</strong>,
+<strong>Forminator</strong>, <strong>WPForms</strong>,
+<strong>WooCommerce</strong> mit Checkout / My-Account-Login /
+Registrierung / Lost-Password). Eigene oder fremde Formulare lassen sich
+über den Shortcode <code>[creationell_captcha]</code>, das Template-Tag
+<code>creationell_captcha_widget()</code> oder den generischen
+Interceptor (Pfad-Schutz) absichern.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Proof-of-Work-Captcha</strong> — Server stellt eine
+Challenge aus, Browser löst sie mit PBKDF2/SHA-256 oder Argon2id; kein
+Klick-Puzzle, keine Bilderkennung, keine Tracking-Cookies</li>
+<li><strong>Vollständig selbst-gehostet</strong> — Keine externen
+Dienste, kein API-Key, kein Lizenz-Server. Datenfluss bleibt zu 100 %
+auf dem WordPress-Host</li>
+<li><strong>Schutz der WordPress-Kernformulare</strong> — Kommentare,
+Login, Registrierung und Passwort-Reset einzeln zuschaltbar</li>
+<li><strong>Vier Form-Plugin-Integrationen</strong> — Contact Form 7,
+Forminator, WPForms, WooCommerce (Checkout + My-Account-Login +
+Registrierung + Lost-Password) mit Auto-Inject und
+Server-Verifikation</li>
+<li><strong>Generischer Interceptor</strong> — Eigene Form-Pfade per
+URL-Muster (mit <code>*</code>-Wildcards und <code>!</code>-Ausschluss)
+schützen, fail-closed</li>
+<li><strong>Action-Schutz</strong> — <code>admin-post.php</code> /
+<code>admin-ajax.php</code>-Aktionen über die <code>action</code>-Liste
+absichern, mit <code>*</code>-Wildcards und
+<code>!</code>-Ausschluss</li>
+<li><strong>Inject-Pfade</strong> — Auf konfigurierten Pfaden wird die
+Sicherheitsabfrage automatisch in jedes <code>&lt;/form&gt;</code>
+injiziert (idempotent — bereits geschützte Formulare werden
+übersprungen)</li>
+<li><strong>Shortcode &amp; Template-Tag</strong> —
+<code>[creationell_captcha]</code> oder
+<code>creationell_captcha_widget()</code> für freihändigen Einbau in
+beliebige Formulare; CF7-Form-Tag mit identischem Namen</li>
+<li><strong>Bild-Code-Challenge</strong> — Optionale zweite Stufe nach
+PoW: serverseitig gerendertes PNG (PHP-GD, mitgelieferte DejaVu-TTF),
+4–8-stelliger Code mit Anti-OCR-Verzerrung; Trigger wahlweise Immer,
+Under-Attack, Rate-Limit-Schwelle oder Watch-Liste (OR-verknüpft)</li>
+<li><strong>Under-Attack-Modus</strong> — HTTP-503-Interstitial mit
+invisiblem PoW-Widget für anonyme Besucher; HMAC-signiertes Pass-Cookie
+für die konfigurierte Dauer</li>
+<li><strong>Firewall</strong> — IP-Blocklist &amp; -Allowlist (exakt +
+CIDR, v4 &amp; v6), User-Agent-Blocklist (Wildcard), Proxy-Modus mit
+konfigurierbarem Forwarded-Header</li>
+<li><strong>Vertrauenswürdige Proxies</strong> — Eigene IP-/CIDR-Liste,
+Cloudflare-IP-Auto-Refresh aus den offiziellen Listen, optionaler Trust
+von Private-Netzen; nur dann wird <code>X-Forwarded-For</code>
+ausgewertet</li>
+<li><strong>Rate-Limit</strong> — Per-IP Fixed-Window-Counter mit drei
+Scopes (Core-Formulare / alle Formulare / global); konfigurierbarer
+Max-Wert, Fenster und Retry-After</li>
+<li><strong>Drei Bypass-Mechaniken</strong> — IP-Allowlist (CIDR),
+User-Agent-Wildcard-Liste und Cookie-Bypass (<code>name=wert</code>);
+Treffer umgehen Firewall, Rate-Limit, Captcha und Under-Attack</li>
+<li><strong>Analytics &amp; Event-Log</strong> — Aggregierte Tages- und
+Stundenzähler je Ereignistyp (<code>verified</code> /
+<code>failed</code> / <code>firewall</code> / <code>ratelimit</code> /
+<code>underattack</code> / <code>challenge</code>); optional
+detaillierte Event-Tabelle mit IP, Pfad, Plugin, Aktion, Form-ID, Grund,
+User-Agent, Referrer, User-ID und Request-Body-Fingerprint</li>
+<li><strong>DSGVO-konforme IP-Anonymisierung</strong> — Standard: IPv4
+auf das letzte Oktett, IPv6 auf die letzten 80 Bit trunkiert</li>
+<li><strong>Statistik-Dashboard</strong> — Drei Tabs (Übersicht /
+Verlauf / Ereignisse), vier Zeitfenster (24 h / 7 Tage / 30 Tage / 90
+Tage), Filterleiste, seitenweises Blättern und CSV-Export</li>
+<li><strong>E-Mail-Obfuskation</strong> — Verschleiert
+<code>mailto:</code>-Links und Klartextadressen per XOR-Hex; zwei Modi
+(Content-Filter oder Ganzseiten-Buffer für theme-hartkodierte
+Adressen)</li>
+<li><strong>Widget-Customization</strong> — Anzeigemodus (Standard /
+schwebend / Overlay / Bar / Invisible), Interaktionstyp, Auto-Trigger,
+Theme, Branding-Toggle, Akzentfarbe, eigenes CSS und Strings-Override
+für alle Übersetzungstexte</li>
+<li><strong>Backend-UI mit sechs Tabs</strong> — Captcha, Formulare,
+Firewall, Under-Attack, <strong>Analytics</strong>, E-Mail-Schutz —
+alles unter einem gemeinsamen „Änderungen speichern”</li>
+<li><strong>Werkzeuge-Seite</strong> — Export / Import der Einstellungen
+als JSON, vollständiger Werksreset und ein gesonderter „Standardwerte
+laden”-Schritt (Listen bleiben erhalten)</li>
+<li><strong>WP-CLI-Integration</strong> — Befehlsgruppe
+<code>wp creacaptcha</code> für Status, Diagnose, Modul-Aktivierung,
+Listen, Event-Log, Cloudflare-Refresh und Bypass-Tests</li>
+<li><strong>Self-Hosted-Updater</strong> — Updates direkt aus
+GitHub-Releases mit SHA-256-Manifest-Verifikation (timing-safe
+<code>hash_equals</code>)</li>
+<li><strong>Kein Lizenz-Gate</strong> — Alle Funktionen sind dauerhaft
+aktiv. GPL-2.0-or-later</li>
+</ul>
+<hr />

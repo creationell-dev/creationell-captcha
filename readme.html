@@ -1,0 +1,2628 @@
+<h1 id="creacaptcha">CreaCaptcha</h1>
+<p><strong>Plugin Name:</strong> CreaCaptcha<br />
+<strong>Plugin URI:</strong>
+https://github.com/creationell-dev/creationell-captcha<br />
+<strong>Description:</strong> Datenschutzfreundlicher
+Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus,
+E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet
+ohne externe Dienste.<br />
+<strong>Version:</strong> 0.30.1<br />
+<strong>Author:</strong> creationell® – die Werbeagentur <a
+href="mailto:marketing@creationell.de"
+class="email">marketing@creationell.de</a><br />
+<strong>Author URI:</strong> https://www.creationell.de/<br />
+<strong>Contributors:</strong> creationell-dev<br />
+<strong>Tags:</strong> captcha, spam, anti-spam, anti-bot, proof of
+work<br />
+<strong>Requires at least:</strong> 6.9<br />
+<strong>Tested up to:</strong> 7.0<br />
+<strong>Requires PHP:</strong> 8.3<br />
+<strong>Stable tag:</strong> 0.30.1<br />
+<strong>License:</strong> GPL-2.0-or-later<br />
+<strong>License URI:</strong>
+https://www.gnu.org/licenses/gpl-2.0.html<br />
+<strong>Text Domain:</strong> creationell-captcha<br />
+<strong>Domain Path:</strong> /languages</p>
+<p>Schützt WordPress-Formulare und ganze Sites mit einem
+selbst-gehosteten Proof-of-Work-Captcha, Firewall, Rate-Limiter,
+Under-Attack-Interstitial, E-Mail-Obfuskation und optionaler
+Bild-Code-Challenge — ohne externe Dienste.</p>
+<hr />
+<h2 id="description">Description</h2>
+<p><strong>CreaCaptcha</strong> ist ein vollständig selbst-gehostetes
+Schutz-Plugin für WordPress. Es kombiniert einen Proof-of-Work-Captcha
+auf Basis der MIT-Bibliothek <code>altcha-org/altcha</code> mit einer
+Firewall, einem per-IP-Rate-Limiter, einem Under-Attack-Modus,
+E-Mail-Obfuskation und einer optionalen Bild-Code-Challenge. Es gibt
+keine externen API-Aufrufe, kein Lizenz-Gate, keine SaaS-Anbindung und
+keine Telemetrie — alle Funktionen laufen lokal in WordPress.</p>
+<p>Das Plugin schützt die vier WordPress-Kernformulare (Kommentare,
+Login, Registrierung, Passwort-Reset) sowie automatisch alle Formulare
+gängiger Form-Plugins (<strong>Contact Form 7</strong>,
+<strong>Forminator</strong>, <strong>WPForms</strong>,
+<strong>WooCommerce</strong> mit Checkout / My-Account-Login /
+Registrierung / Lost-Password). Eigene oder fremde Formulare lassen sich
+über den Shortcode <code>[creationell_captcha]</code>, das Template-Tag
+<code>creationell_captcha_widget()</code> oder den generischen
+Interceptor (Pfad-Schutz) absichern.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Proof-of-Work-Captcha</strong> — Server stellt eine
+Challenge aus, Browser löst sie mit PBKDF2/SHA-256 oder Argon2id; kein
+Klick-Puzzle, keine Bilderkennung, keine Tracking-Cookies</li>
+<li><strong>Vollständig selbst-gehostet</strong> — Keine externen
+Dienste, kein API-Key, kein Lizenz-Server. Datenfluss bleibt zu 100 %
+auf dem WordPress-Host</li>
+<li><strong>Schutz der WordPress-Kernformulare</strong> — Kommentare,
+Login, Registrierung und Passwort-Reset einzeln zuschaltbar</li>
+<li><strong>Vier Form-Plugin-Integrationen</strong> — Contact Form 7,
+Forminator, WPForms, WooCommerce (Checkout + My-Account-Login +
+Registrierung + Lost-Password) mit Auto-Inject und
+Server-Verifikation</li>
+<li><strong>Generischer Interceptor</strong> — Eigene Form-Pfade per
+URL-Muster (mit <code>*</code>-Wildcards und <code>!</code>-Ausschluss)
+schützen, fail-closed</li>
+<li><strong>Action-Schutz</strong> — <code>admin-post.php</code> /
+<code>admin-ajax.php</code>-Aktionen über die <code>action</code>-Liste
+absichern, mit <code>*</code>-Wildcards und
+<code>!</code>-Ausschluss</li>
+<li><strong>Inject-Pfade</strong> — Auf konfigurierten Pfaden wird die
+Sicherheitsabfrage automatisch in jedes <code>&lt;/form&gt;</code>
+injiziert (idempotent — bereits geschützte Formulare werden
+übersprungen)</li>
+<li><strong>Shortcode &amp; Template-Tag</strong> —
+<code>[creationell_captcha]</code> oder
+<code>creationell_captcha_widget()</code> für freihändigen Einbau in
+beliebige Formulare; CF7-Form-Tag mit identischem Namen</li>
+<li><strong>Bild-Code-Challenge</strong> — Optionale zweite Stufe nach
+PoW: serverseitig gerendertes PNG (PHP-GD, mitgelieferte DejaVu-TTF),
+4–8-stelliger Code mit Anti-OCR-Verzerrung; Trigger wahlweise Immer,
+Under-Attack, Rate-Limit-Schwelle oder Watch-Liste (OR-verknüpft)</li>
+<li><strong>Under-Attack-Modus</strong> — HTTP-503-Interstitial mit
+invisiblem PoW-Widget für anonyme Besucher; HMAC-signiertes Pass-Cookie
+für die konfigurierte Dauer</li>
+<li><strong>Firewall</strong> — IP-Blocklist &amp; -Allowlist (exakt +
+CIDR, v4 &amp; v6), User-Agent-Blocklist (Wildcard), Proxy-Modus mit
+konfigurierbarem Forwarded-Header</li>
+<li><strong>Vertrauenswürdige Proxies</strong> — Eigene IP-/CIDR-Liste,
+Cloudflare-IP-Auto-Refresh aus den offiziellen Listen, optionaler Trust
+von Private-Netzen; nur dann wird <code>X-Forwarded-For</code>
+ausgewertet</li>
+<li><strong>Rate-Limit</strong> — Per-IP Fixed-Window-Counter mit drei
+Scopes (Core-Formulare / alle Formulare / global); konfigurierbarer
+Max-Wert, Fenster und Retry-After</li>
+<li><strong>Drei Bypass-Mechaniken</strong> — IP-Allowlist (CIDR),
+User-Agent-Wildcard-Liste und Cookie-Bypass (<code>name=wert</code>);
+Treffer umgehen Firewall, Rate-Limit, Captcha und Under-Attack</li>
+<li><strong>Analytics &amp; Event-Log</strong> — Aggregierte Tages- und
+Stundenzähler je Ereignistyp (<code>verified</code> /
+<code>failed</code> / <code>firewall</code> / <code>ratelimit</code> /
+<code>underattack</code> / <code>challenge</code>); optional
+detaillierte Event-Tabelle mit IP, Pfad, Plugin, Aktion, Form-ID, Grund,
+User-Agent, Referrer, User-ID und Request-Body-Fingerprint</li>
+<li><strong>DSGVO-konforme IP-Anonymisierung</strong> — Standard: IPv4
+auf das letzte Oktett, IPv6 auf die letzten 80 Bit trunkiert</li>
+<li><strong>Statistik-Dashboard</strong> — Drei Tabs (Übersicht /
+Verlauf / Ereignisse), vier Zeitfenster (24 h / 7 Tage / 30 Tage / 90
+Tage), Filterleiste, seitenweises Blättern und CSV-Export</li>
+<li><strong>E-Mail-Obfuskation</strong> — Verschleiert
+<code>mailto:</code>-Links und Klartextadressen per XOR-Hex; zwei Modi
+(Content-Filter oder Ganzseiten-Buffer für theme-hartkodierte
+Adressen)</li>
+<li><strong>Widget-Customization</strong> — Anzeigemodus (Standard /
+schwebend / Overlay / Bar / Invisible), Interaktionstyp, Auto-Trigger,
+Theme, Branding-Toggle, Akzentfarbe, eigenes CSS und Strings-Override
+für alle Übersetzungstexte</li>
+<li><strong>Backend-UI mit sechs Tabs</strong> — Captcha, Formulare,
+Firewall, Under-Attack, <strong>Analytics</strong>, E-Mail-Schutz —
+alles unter einem gemeinsamen „Änderungen speichern”</li>
+<li><strong>Werkzeuge-Seite</strong> — Export / Import der Einstellungen
+als JSON, vollständiger Werksreset und ein gesonderter „Standardwerte
+laden”-Schritt (Listen bleiben erhalten)</li>
+<li><strong>WP-CLI-Integration</strong> — Befehlsgruppe
+<code>wp creacaptcha</code> für Status, Diagnose, Modul-Aktivierung,
+Listen, Event-Log, Cloudflare-Refresh und Bypass-Tests</li>
+<li><strong>Self-Hosted-Updater</strong> — Updates direkt aus
+GitHub-Releases mit SHA-256-Manifest-Verifikation (timing-safe
+<code>hash_equals</code>)</li>
+<li><strong>Kein Lizenz-Gate</strong> — Alle Funktionen sind dauerhaft
+aktiv. GPL-2.0-or-later</li>
+</ul>
+<hr />
+<h2 id="installation">Installation</h2>
+<ol type="1">
+<li>Den Plugin-Ordner <code>creationell-captcha</code> nach
+<code>/wp-content/plugins/</code> hochladen — entweder als ZIP über
+<strong>Plugins → Installieren → Plugin hochladen</strong> oder per
+FTP/SSH/<code>wp plugin install</code>.</li>
+<li>Unter <strong>Plugins → Installierte Plugins</strong> das Plugin
+<strong>CreaCaptcha</strong> aktivieren.</li>
+<li>Den neuen Menüpunkt <strong>CreaCaptcha</strong> im
+WordPress-Adminbereich öffnen.</li>
+<li>Unter <strong>CreaCaptcha → Einstellungen</strong> im Tab
+<strong>Captcha</strong> den Master-Toggle prüfen (Standard: aktiv) und
+den Tab <strong>Formulare</strong> durchgehen, um
+WordPress-Kernformulare und Form-Plugins zu aktivieren.</li>
+<li>Falls eigene Formular-Pfade abgesichert werden sollen: im Tab
+<strong>Captcha → Interceptor</strong> die Liste <strong>Geschützte
+Pfade</strong> pflegen.</li>
+<li>Empfohlen: einmal <strong>CreaCaptcha → Statistik</strong> öffnen,
+damit der Event-Log aktiviert werden kann (optional — die
+Aggregat-Statistik läuft auch ohne).</li>
+</ol>
+<h3 id="anforderungen">Anforderungen</h3>
+<ul>
+<li>WordPress <strong>6.9</strong> oder höher</li>
+<li>PHP <strong>8.3</strong> oder höher</li>
+<li>Für die Bild-Code-Challenge: PHP-Erweiterung
+<strong>GD</strong></li>
+<li>Für den optionalen Argon2id-Algorithmus: PHP-Erweiterung
+<strong>Sodium</strong></li>
+</ul>
+<p>Das Plugin prüft die Mindestversionen beim Aktivieren und zeigt im
+Admin-Bereich eine deutliche Hinweisleiste, wenn die Umgebung zu alt
+ist.</p>
+<h3 id="updates">Updates</h3>
+<p>Updates kommen direkt aus dem GitHub-Repo. Der eingebaute
+Self-Hosted-Updater (<code>includes/class-plugin-updater.php</code>)
+prüft regelmäßig das Manifest, vergleicht Versionen und installiert das
+offiziell signierte ZIP samt SHA-256-Checksum.</p>
+<hr />
+<h2 id="konfiguration">Konfiguration</h2>
+<p>Sämtliche Einstellungen liegen unter <strong>CreaCaptcha →
+Einstellungen</strong> und sind in sechs Tabs gegliedert. Alle Tabs
+teilen ein gemeinsames „Änderungen speichern”.</p>
+<h3 id="tab-captcha">Tab: Captcha</h3>
+<p>Steuert die Proof-of-Work-Engine, das Widget-Aussehen und die
+Bild-Code-Challenge.</p>
+<h4 id="section-engine">Section „Engine”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Captcha aktivieren</td>
+<td>Master-Toggle. Aus = keinerlei PoW-Verifikation; alle anderen Module
+bleiben unbeeinflusst</td>
+</tr>
+<tr class="even">
+<td>Algorithmus</td>
+<td><code>pbkdf2</code> (Standard, kein PHP-Extension-Bedarf) oder
+<code>argon2id</code> (benötigt <code>ext-sodium</code>)</td>
+</tr>
+<tr class="odd">
+<td>Schwierigkeit</td>
+<td>Anzahl PoW-Iterationen; Standard 50.000 (≈ 1 s auf
+Mittelklasse-Hardware)</td>
+</tr>
+<tr class="even">
+<td>Challenge-Gültigkeit</td>
+<td>Sekunden, in denen eine ausgestellte Challenge eingelöst werden kann
+(Replay-Schutz)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="section-wordpress-kernformulare">Section
+„WordPress-Kernformulare”</h4>
+<p>Vier unabhängige Toggles für Kommentare, Login, Registrierung und
+Passwort-Reset.</p>
+<h4 id="section-widget-erscheinungsbild">Section
+„Widget-Erscheinungsbild”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Anzeigemodus</td>
+<td><code>standard</code> / <code>floating</code> (schwebend über
+Submit-Button) / <code>overlay</code> / <code>bar</code> /
+<code>invisible</code></td>
+</tr>
+<tr class="even">
+<td>Interaktionstyp</td>
+<td><code>checkbox</code> / <code>switch</code> /
+<code>native</code></td>
+</tr>
+<tr class="odd">
+<td>Auto-Trigger</td>
+<td><code>none</code> / <code>onload</code> / <code>onsubmit</code></td>
+</tr>
+<tr class="even">
+<td>Theme</td>
+<td>Eines der acht ALTCHA-v3-Themes</td>
+</tr>
+<tr class="odd">
+<td>ALTCHA-Branding ausblenden</td>
+<td>Versteckt Footer und Logo</td>
+</tr>
+<tr class="even">
+<td>Akzentfarbe</td>
+<td>Color-Picker; wird als CSS-Variable
+<code>--creationell-captcha-primary</code> ausgespielt</td>
+</tr>
+<tr class="odd">
+<td>Eigenes CSS</td>
+<td>Wird inline nach dem Theme-CSS ausgegeben — beliebige
+Überschreibungen möglich</td>
+</tr>
+<tr class="even">
+<td>Übersetzungstexte überschreiben</td>
+<td>JSON-Map zum Überschreiben einzelner Widget-Strings</td>
+</tr>
+<tr class="odd">
+<td>Floating-Anchor</td>
+<td>CSS-Selektor für den Anker des schwebenden Modus (leer = erster
+Submit-Button)</td>
+</tr>
+<tr class="even">
+<td>Floating-Position</td>
+<td><code>auto</code> / <code>top</code> / <code>bottom</code></td>
+</tr>
+<tr class="odd">
+<td>Floating-Offset</td>
+<td>Abstand in Pixel (0–200)</td>
+</tr>
+</tbody>
+</table>
+<p>Die Floating-Felder sind nur aktiv, wenn der Anzeigemodus auf
+<strong>schwebend</strong> steht — sonst werden sie ausgegraut.</p>
+<p><strong>Sprache:</strong> CreaCaptcha erkennt die Widget-Sprache
+automatisch aus der WordPress-Locale (<code>get_locale()</code>) und
+enqueued die passende von 20 vendorierten ALTCHA-Locale-Dateien (DE, EN,
+FR-FR/CA, ES-ES/419, IT, NL, PT-PT/BR, PL, CS, SK, DA, SV, FI, NB, HU,
+RO, EL). Eine nicht abgedeckte WP-Locale lässt das Widget auf seine
+eigene <code>&lt;html lang&gt;</code>/Browser-Sprach-Detection bzw.
+Englisch zurückfallen. Einzelne Begriffe lassen sich weiterhin über das
+Setting <strong>Übersetzungstexte überschreiben</strong> anpassen —
+Auto-Locale und Override greifen kombiniert, der Override gewinnt pro
+Schlüssel.</p>
+<h4 id="section-bild-code-challenge">Section „Bild-Code-Challenge”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Code-Challenge aktivieren</td>
+<td>Master-Toggle. Benötigt PHP-GD</td>
+</tr>
+<tr class="even">
+<td>Trigger: Immer</td>
+<td>Spielt die Code-Challenge bei jedem Captcha-Request aus (Test /
+pauschal erhöhte Sicherheit)</td>
+</tr>
+<tr class="odd">
+<td>Trigger: Under-Attack-Modus</td>
+<td>Greift nur bei aktivem Under-Attack-Modus (außer auf dem
+Interstitial selbst — dort ist sie unterdrückt)</td>
+</tr>
+<tr class="even">
+<td>Trigger: Rate-Limit-Schwelle</td>
+<td>Greift, sobald die IP die Rate-Limit-Auslastung von 50–95 %
+überschreitet</td>
+</tr>
+<tr class="odd">
+<td>Trigger: Watch-Liste</td>
+<td>IPs/CIDRs, die immer eine Code-Challenge bekommen</td>
+</tr>
+<tr class="even">
+<td>Code-Länge</td>
+<td>4–8 Zeichen</td>
+</tr>
+<tr class="odd">
+<td>Zeichensatz</td>
+<td>Nur Ziffern / alphanumerisch / alphanumerisch ohne Verwechsler (0-O,
+1-I-l)</td>
+</tr>
+<tr class="even">
+<td>Token-Gültigkeit</td>
+<td>60–900 Sekunden</td>
+</tr>
+<tr class="odd">
+<td>Anzeige-Modus</td>
+<td><code>standard</code> / <code>overlay</code> /
+<code>bottomsheet</code> (im Modal des Widgets)</td>
+</tr>
+</tbody>
+</table>
+<p>Mehrere Trigger sind OR-verknüpft. Wenn die Code-Challenge
+eingerichtet, aber GD nicht verfügbar ist, deaktiviert sich das Feature
+stillschweigend und zeigt eine Warn-Notice.</p>
+<h4 id="section-interceptor">Section „Interceptor”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Geschützte Pfade</td>
+<td>URL-Pfade mit <code>*</code>-Wildcard. <code>!</code>-Präfix kehrt
+das Muster um (Ausschluss). Eine Zeile pro Muster</td>
+</tr>
+<tr class="even">
+<td>Geschützte Aktionen</td>
+<td>WordPress-Action-Namen für
+<code>admin-post.php</code>/<code>admin-ajax.php</code>
+(<code>$_POST[action]</code> / <code>$_GET[action]</code>).
+<code>*</code> und <code>!</code> werden unterstützt. Überschreibt den
+<code>is_admin</code>-Bypass</td>
+</tr>
+<tr class="odd">
+<td>Inject-Pfade</td>
+<td>Pfade, auf denen die Sicherheitsabfrage automatisch vor jedem
+<code>&lt;/form&gt;</code> eingefügt wird (idempotent)</td>
+</tr>
+<tr class="even">
+<td>Bei eingeloggten Usern überspringen</td>
+<td>Bypass für angemeldete User mit
+<code>edit_posts</code>-Capability</td>
+</tr>
+</tbody>
+</table>
+<p>Der Interceptor läuft als früher Request-Guard auf <code>init</code>
+und arbeitet <strong>fail-closed</strong>: Fehlt eine Verifikation, wird
+die Anfrage abgelehnt (HTTP 403, AJAX-Requests bekommen JSON-403).</p>
+<h3 id="tab-formulare">Tab: Formulare</h3>
+<p>Vier Toggles für die WordPress-Kernformulare (siehe Captcha-Tab —
+werden hier als Komfort-Kopie gespiegelt) sowie sechs Toggles für die
+Form-Plugin-Integrationen.</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contact Form 7 schützen</td>
+<td>Aktiv, wenn CF7 installiert ist. Auto-Inject vor Submit, Verify über
+<code>wpcf7_spam</code></td>
+</tr>
+<tr class="even">
+<td>Forminator schützen</td>
+<td>Aktiv, wenn Forminator installiert ist. Auto-Inject + Verify über
+<code>forminator_custom_form_submit_errors</code></td>
+</tr>
+<tr class="odd">
+<td>WPForms schützen</td>
+<td>Aktiv, wenn WPForms installiert ist. Auto-Inject vor Submit, Verify
+über <code>wpforms_process</code></td>
+</tr>
+<tr class="even">
+<td>WooCommerce schützen</td>
+<td>Master-Toggle. Aktiv, wenn WooCommerce installiert ist</td>
+</tr>
+<tr class="odd">
+<td>→ Checkout schützen</td>
+<td>Auto-Inject auf <code>woocommerce_review_order_before_submit</code>,
+Verify auf <code>woocommerce_after_checkout_validation</code></td>
+</tr>
+<tr class="even">
+<td>→ My-Account-Login schützen</td>
+<td>Auto-Inject auf <code>woocommerce_login_form_end</code>, Verify auf
+<code>woocommerce_process_login_errors</code></td>
+</tr>
+<tr class="odd">
+<td>→ Registrierung schützen</td>
+<td>Auto-Inject auf <code>woocommerce_register_form</code>, Verify auf
+<code>woocommerce_registration_errors</code></td>
+</tr>
+<tr class="even">
+<td>→ Lost-Password schützen</td>
+<td>Render-only — Server-Verify läuft über das Kern-Modul
+<code>protect_password_reset</code></td>
+</tr>
+</tbody>
+</table>
+<p>CF7 bietet zusätzlich einen Form-Tag
+<code>[creationell_captcha]</code>, mit dem die Position der
+Sicherheitsabfrage frei wählbar ist. Forminator/WPForms nutzen
+Auto-Inject standardmäßig vor dem Submit-Button — der Filter
+<code>creationell_captcha_forminator_autoinject</code> (bzw.
+<code>creationell_captcha_wpforms_autoinject</code>) erlaubt das
+Deaktivieren je Formular.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> WooCommerce-Produktbewertungen sind
+WordPress-Kommentare und werden bereits durch
+<strong>WordPress-Kommentare schützen</strong> abgedeckt. Es gibt
+absichtlich keinen separaten Sub-Toggle.</p>
+</blockquote>
+<h3 id="tab-firewall">Tab: Firewall</h3>
+<p>Vier Sections in dieser Reihenfolge: Proxy → Firewall → Bypass →
+Rate-Limit.</p>
+<h4 id="section-proxy-ip-ermittlung">Section „Proxy &amp;
+IP-Ermittlung”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Proxy-Modus</td>
+<td>Aktivieren, wenn die Site hinter einem Reverse-Proxy / CDN
+liegt</td>
+</tr>
+<tr class="even">
+<td>Forwarded-Header</td>
+<td><code>X-Forwarded-For</code> (Standard) / <code>X-Real-IP</code> /
+<code>CF-Connecting-IP</code> / <code>True-Client-IP</code></td>
+</tr>
+<tr class="odd">
+<td>Vertrauenswürdige Proxies</td>
+<td>IP-/CIDR-Liste, eine pro Zeile. Nur diese Hops dürfen den
+Forwarded-Header setzen</td>
+</tr>
+<tr class="even">
+<td>Cloudflare-IPs vertrauen</td>
+<td>Cloudflare-v4 + v6-Ranges automatisch laden</td>
+</tr>
+<tr class="odd">
+<td>Cloudflare-Auto-Refresh</td>
+<td>Täglicher Cron-Refresh aus den offiziellen Cloudflare-Listen</td>
+</tr>
+<tr class="even">
+<td>Private Netze vertrauen</td>
+<td>RFC1918 + ULA als trusted Hops behandeln</td>
+</tr>
+</tbody>
+</table>
+<p>Zusätzlich kann die wp-config-Konstante
+<code>CREATIONELL_CAPTCHA_TRUSTED_PROXIES</code> (Array von CIDRs) die
+Trust-Liste ergänzen.</p>
+<h4 id="section-firewall">Section „Firewall”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Firewall aktivieren</td>
+<td>Master-Toggle</td>
+</tr>
+<tr class="even">
+<td>IP-Blockliste</td>
+<td>Eine pro Zeile, exakt oder CIDR (v4 + v6)</td>
+</tr>
+<tr class="odd">
+<td>IP-Erlaubnisliste</td>
+<td>Global wirksam: umgeht Firewall, Rate-Limiter, Captcha und
+Under-Attack</td>
+</tr>
+<tr class="even">
+<td>User-Agent-Blockliste</td>
+<td>Wildcard-Muster (z. B. <code>*bot*</code>,
+<code>*scanner*</code>)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="section-bypass">Section „Bypass”</h4>
+<p>Drei Eintragsarten, die jeweils Firewall, Rate-Limit, Captcha und
+Under-Attack-Modus umgehen.</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>User-Agent-Erlaubnisliste</td>
+<td>Wildcard-Muster für Allow-listing (z. B. eigene
+Monitoring-Bots)</td>
+</tr>
+<tr class="even">
+<td>Cookie-Bypass</td>
+<td>Liste im Format <code>name=wert</code>, eine pro Zeile</td>
+</tr>
+</tbody>
+</table>
+<p>Treffer auf Formular-Ebene erscheinen im Event-Log als
+<code>verified</code>-Eintrag mit passendem Grund (IP-Allowlist /
+UA-Bypass / Cookie-Bypass).</p>
+<h4 id="section-rate-limit">Section „Rate-Limit”</h4>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rate-Limit aktivieren</td>
+<td>Master-Toggle</td>
+</tr>
+<tr class="even">
+<td>Maximale Anfragen</td>
+<td>Fixed-Window-Limit pro IP, Standard 30</td>
+</tr>
+<tr class="odd">
+<td>Zeitfenster</td>
+<td>Sekunden des Fensters, Standard 300</td>
+</tr>
+<tr class="even">
+<td>Wirkungsbereich</td>
+<td><code>core</code> (nur Kernformulare) / <code>forms</code> (alle
+Formulare) / <code>all</code> (global, alle Anfragen)</td>
+</tr>
+<tr class="odd">
+<td><code>edit_posts</code>-Exemption</td>
+<td>Eingeloggte User mit Schreibrechten ausnehmen</td>
+</tr>
+</tbody>
+</table>
+<p>Bei Überschreitung sendet der Plugin-Stack HTTP 429 mit
+<code>Retry-After</code>-Header.</p>
+<h3 id="tab-under-attack">Tab: Under-Attack</h3>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Under-Attack aktivieren</td>
+<td>Master-Toggle. Bei <code>an</code> muss jeder anonyme Besucher eine
+PoW-Sicherheitsabfrage bestehen, bevor er die Site erreicht</td>
+</tr>
+<tr class="even">
+<td>Pass-Dauer</td>
+<td>Lebenszeit des HMAC-signierten Pass-Cookies in Sekunden</td>
+</tr>
+<tr class="odd">
+<td>Eingeloggte Besucher ausnehmen</td>
+<td>Standard: aktiv</td>
+</tr>
+</tbody>
+</table>
+<p><code>wp-admin</code>, REST-API und Cron sind automatisch
+ausgenommen. Der Kill-Switch <code>CREATIONELL_CAPTCHA_DISABLE</code>
+(wp-config-Konstante) hebt den Modus global auf.</p>
+<h4 id="section-erscheinungsbild">Section „Erscheinungsbild”</h4>
+<p>Optional — leere Felder verwenden die Standardwerte. Sichtbar, sobald
+der Under-Attack-Modus aktiv ist (sonst ausgegraut).</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Logo-URL</td>
+<td>Bild über der Überschrift, zentriert, Höhe ≤ 128 px. Default: kein
+Logo. Alt-Text = Website-Name. Über <code>.crea-ua-logo</code> im
+Eigenes-CSS-Feld feinjustierbar</td>
+</tr>
+<tr class="even">
+<td>Browser-Tab-Titel</td>
+<td><code>&lt;title&gt;</code>-Tag der Interstitial-Seite. Default:
+„Sicherheitsprüfung”</td>
+</tr>
+<tr class="odd">
+<td>Überschrift</td>
+<td>Große H1 mittig auf der Seite. Default: „Die Website wird gerade
+besonders geschützt”</td>
+</tr>
+<tr class="even">
+<td>Hinweistext</td>
+<td>Erläuternder Text unter der Überschrift. Default: „Ihr Browser wird
+kurz geprüft — einen Moment bitte.”</td>
+</tr>
+<tr class="odd">
+<td>NoScript-Hinweis</td>
+<td>Nur sichtbar bei deaktiviertem JS. Default: „Für die
+Sicherheitsprüfung muss JavaScript aktiviert sein.”</td>
+</tr>
+<tr class="even">
+<td>Hintergrundfarbe</td>
+<td>Hex, z. B. <code>#0a0a0a</code>. Default: <code>#f0f0f1</code></td>
+</tr>
+<tr class="odd">
+<td>Textfarbe</td>
+<td>Hex, z. B. <code>#ffffff</code>. Default: <code>#1d2327</code></td>
+</tr>
+<tr class="even">
+<td>Eigenes CSS</td>
+<td>Beliebige CSS-Regeln. Werden nach dem Default-Stylesheet ausgegeben
+und überschreiben alles. Verfügbare CSS-Variablen:
+<code>--creationell-captcha-ua-bg</code>,
+<code>--creationell-captcha-ua-text</code>. Verfügbare Selektoren:
+<code>body</code>, <code>.crea-ua</code>, <code>.crea-ua h1</code>,
+<code>.crea-ua p</code>, <code>.crea-ua noscript</code>,
+<code>.crea-ua-logo</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tab-analytics">Tab: Analytics</h3>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Event-Log aktivieren</td>
+<td>Schreibt jede Aktion in die Tabelle
+<code>&lt;prefix&gt;creationell_captcha_events</code>. Aggregierte
+Tageszähler laufen immer</td>
+</tr>
+<tr class="even">
+<td>Aufbewahrungsdauer</td>
+<td>Tage, nach denen Event-Log-Einträge gelöscht werden (Default
+30)</td>
+</tr>
+<tr class="odd">
+<td>IP-Adressen anonymisieren</td>
+<td>DSGVO-First: trunkiert IPv4 auf das letzte Oktett, IPv6 auf die
+letzten 80 Bit (Default: an)</td>
+</tr>
+<tr class="even">
+<td>Request-Body-Fingerprint speichern</td>
+<td>JSON-Map aus Feldnamen und Wertlängen — ohne die Werte selbst.
+Sensitive Feldnamen (<code>password</code>, <code>secret</code>,
+<code>token</code>, <code>iban</code>, <code>api_key</code>,
+<code>cvv</code>, …) werden zusätzlich gehasht</td>
+</tr>
+<tr class="odd">
+<td>Erfolgreiche Verifikationen loggen</td>
+<td>Per-Event-Typ-Schalter, Default: an</td>
+</tr>
+<tr class="even">
+<td>Fehlgeschlagene Verifikationen loggen</td>
+<td>Default: an</td>
+</tr>
+<tr class="odd">
+<td>Firewall-Blocks loggen</td>
+<td>Default: an</td>
+</tr>
+<tr class="even">
+<td>Rate-Limit-Blocks loggen</td>
+<td>Default: an</td>
+</tr>
+<tr class="odd">
+<td>Under-Attack-Abfragen loggen</td>
+<td>Default: an</td>
+</tr>
+<tr class="even">
+<td>Bestandene Under-Attack-Prüfungen loggen</td>
+<td>Default: an</td>
+</tr>
+<tr class="odd">
+<td>Ausgestellte Challenges loggen</td>
+<td>Default: <strong>aus</strong> (hochvolumig)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tab-e-mail-schutz">Tab: E-Mail-Schutz</h3>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>E-Mail-Adressen verschleiern</td>
+<td>Master-Toggle</td>
+</tr>
+<tr class="even">
+<td>Verschleierungsmodus</td>
+<td><code>content</code> (Filter auf <code>the_content</code> /
+<code>the_excerpt</code> / <code>widget_text</code> /
+<code>widget_block_content</code> / <code>comment_text</code>) oder
+<code>buffer</code> (Vollseiten-Ausgabepuffer)</td>
+</tr>
+</tbody>
+</table>
+<p>Im Buffer-Modus werden auch theme-hartkodierte
+<code>mailto:</code>-Links und Klartextadressen im Footer/Header
+erfasst. <code>&lt;head&gt;</code>, <code>&lt;script&gt;</code> und
+<code>&lt;style&gt;</code> bleiben unberührt. Feed-Requests und der
+Admin-Bereich umgehen die Obfuskation immer.</p>
+<hr />
+<h2 id="shortcode-template-tag">Shortcode &amp; Template-Tag</h2>
+<h3 id="creationell_captcha"><code>[creationell_captcha]</code></h3>
+<p>Bettet das ALTCHA-Widget an beliebiger Stelle ein.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Attribut</th>
+<th>Werte</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>class</code></td>
+<td>CSS-Klassen</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Bei aktiviertem CF7-Plugin ist <code>[creationell_captcha]</code>
+zusätzlich als CF7-Form-Tag verfügbar und kann direkt im CF7-Form-Editor
+platziert werden.</p>
+<h3
+id="creationell_captcha_widget"><code>creationell_captcha_widget()</code></h3>
+<p>Template-Tag mit identischer Wirkung. Nützlich, wenn ein Shortcode
+nicht in Frage kommt (z. B. in Theme-PHP-Templates):</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>form method<span class="op">=</span><span class="st">&quot;post&quot;</span><span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;!--</span> … <span class="cn">F</span>elder … <span class="op">-</span>-&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span><span class="ot">?</span>php creationell_captcha_widget()<span class="ot">;</span> <span class="kw">?&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>button type<span class="op">=</span><span class="st">&quot;submit&quot;</span><span class="op">&gt;</span><span class="cn">S</span>enden<span class="op">&lt;/</span>button<span class="op">&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>form<span class="op">&gt;</span></span></code></pre></div>
+<p>Bei serverseitiger Verifikation immer auch den Pfad in
+<strong>Geschützte Pfade</strong> eintragen (siehe nächster Abschnitt) —
+sonst läuft eine manipulierte Submission ungeprüft durch.</p>
+<hr />
+<h2 id="geschützte-pfade-interceptor">Geschützte Pfade &amp;
+Interceptor</h2>
+<p>Der Interceptor läuft auf <code>init</code> und ist die generische
+Schutzschicht für <strong>eigene</strong> Formulare. Konfiguriert wird
+er im Captcha-Tab.</p>
+<h3 id="pfad-muster">Pfad-Muster</h3>
+<p><code>[creationell_captcha]</code>-Shortcode und Template-Tag rendern
+nur das Widget. Die Server-Verifikation übernimmt der Interceptor anhand
+der Pfad-Liste.</p>
+<pre><code>/kontakt              ← exakt
+/forms/*              ← Wildcard
+!/forms/whitelisted   ← Ausschluss (mit ! kombinierbar)</code></pre>
+<p><code>!</code>-Muster greifen vor positiven Mustern. So lässt sich
+<code>/forms/*</code> schützen, ein einzelner Sub-Pfad aber gezielt
+freistellen.</p>
+<h3 id="action-schutz">Action-Schutz</h3>
+<p>Für AJAX-/Admin-Post-Endpoints reicht die Pfad-Liste nicht — Requests
+gehen alle an <code>admin-ajax.php</code> oder
+<code>admin-post.php</code>. Die Liste <strong>Geschützte
+Aktionen</strong> wertet stattdessen das <code>action</code>-Feld (POST
+oder GET) aus:</p>
+<pre><code>my-custom-action
+form/*
+!form/internal</code></pre>
+<p>Action-Treffer überschreiben den <code>is_admin()</code>-Bypass — die
+Verifikation läuft auch dann, wenn der Aufruf aus dem Admin-Backend
+käme.</p>
+<h3 id="auto-inject-auf-pfaden">Auto-Inject auf Pfaden</h3>
+<p>Die <strong>Inject-Pfade</strong>-Liste fügt die Sicherheitsabfrage
+automatisch vor jedem <code>&lt;/form&gt;</code> der passenden Seite
+ein, ohne dass das Theme oder ein Plugin angepasst werden muss.
+Idempotent: Formulare mit bereits eingebautem Widget bleiben
+unangetastet.</p>
+<h3 id="bypass-kette">Bypass-Kette</h3>
+<p>Vor jeder Verifikation läuft die Bypass-Kette in dieser
+Reihenfolge:</p>
+<ol type="1">
+<li>Kill-Switch <code>CREATIONELL_CAPTCHA_DISABLE</code>
+(wp-config-Konstante)</li>
+<li>Master-Toggle aus</li>
+<li>Request-Methode <code>GET</code> (Renderpfad — Verify nur auf
+POST/PUT/DELETE/PATCH)</li>
+<li>CLI / Cron / XML-RPC (nicht-Browser-Kontexte)</li>
+<li><code>is_admin()</code> — <strong>wird durch Action-Schutz
+überschrieben</strong>, sobald die <code>action</code> auf einer
+geschützten Liste steht</li>
+<li>REST-API-Eigen-Endpoints (Challenge-/Code-Routes)</li>
+<li>WordPress-Kernformulare (siehe Tab Formulare)</li>
+<li><code>edit_posts</code>-Capability (eingeloggte User)</li>
+<li>Bei aktiviertem Toggle: alle eingeloggten User</li>
+<li>Globale Bypass-Quellen: IP-Allowlist, UA-Allowlist,
+Cookie-Bypass</li>
+</ol>
+<p>Greift einer der Schritte, wird die Anfrage durchgelassen. Auf
+Formular-Ebene wird der erfolgreiche Bypass als
+<code>verified</code>-Event mit Grund-Annotation geloggt.</p>
+<h3 id="entwickler-filter">Entwickler-Filter</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pfad/Action-Listen runtime ergänzen</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>add_filter( <span class="st">&#39;creationell_captcha_interceptor_paths&#39;</span><span class="ot">,</span> <span class="kw">function</span> ( <span class="dt">array</span> <span class="va">$paths</span> )<span class="ot">:</span> <span class="dt">array</span> {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$paths</span>[] <span class="op">=</span> <span class="st">&#39;/api/mein-form/*&#39;</span><span class="ot">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">$paths</span><span class="ot">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>} )<span class="ot">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>add_filter( <span class="st">&#39;creationell_captcha_interceptor_actions&#39;</span><span class="ot">,</span> <span class="kw">function</span> ( <span class="dt">array</span> <span class="va">$actions</span> )<span class="ot">:</span> <span class="dt">array</span> {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">$actions</span>[] <span class="op">=</span> <span class="st">&#39;mein_plugin_form&#39;</span><span class="ot">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">$actions</span><span class="ot">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>} )<span class="ot">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Eigenen Bypass anhängen (true = durchlassen)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>add_filter( <span class="st">&#39;creationell_captcha_interceptor_bypass&#39;</span><span class="ot">,</span> <span class="kw">function</span> ( <span class="dt">bool</span> <span class="va">$bypass</span> )<span class="ot">:</span> <span class="dt">bool</span> {</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">$bypass</span> <span class="op">||</span> ( <span class="fu">defined</span>( <span class="st">&#39;MY_DEV_BYPASS&#39;</span> ) <span class="op">&amp;&amp;</span> <span class="cn">MY_DEV_BYPASS</span> )<span class="ot">;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>} )<span class="ot">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">// Custom geschützten Pfad zur Laufzeit registrieren</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>creationell_captcha_protect_path( <span class="st">&#39;/checkout/step2&#39;</span> )<span class="ot">;</span></span></code></pre></div>
+<hr />
+<h2 id="bild-code-challenge">Bild-Code-Challenge</h2>
+<p>Die Bild-Code-Challenge ist eine <strong>zweite Stufe</strong> nach
+der PoW-Verifikation — kein Ersatz. Der Browser löst zuerst die PoW, der
+Server schickt dann optional ein PNG mit einem 4–8-stelligen Code, den
+der Nutzer abtippt.</p>
+<h3 id="trigger-bedingungen">Trigger-Bedingungen</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Trigger</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Immer</td>
+<td>Pauschal aktiv bei jedem Captcha-Request</td>
+</tr>
+<tr class="even">
+<td>Under-Attack-Modus</td>
+<td>Greift nur, wenn UA-Modus aktiv ist (außer auf dem Interstitial —
+dort unterdrückt)</td>
+</tr>
+<tr class="odd">
+<td>Rate-Limit-Schwelle</td>
+<td>Greift ab konfigurierter Auslastung (50–95 %) der IP-Bucket</td>
+</tr>
+<tr class="even">
+<td>Watch-Liste</td>
+<td>IPs/CIDRs, die immer eine Code-Challenge bekommen</td>
+</tr>
+</tbody>
+</table>
+<p>Mehrere Trigger sind OR-verknüpft.</p>
+<h3 id="rest-endpoints">REST-Endpoints</h3>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Methode</th>
+<th>Route</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>GET</code></td>
+<td><code>/wp-json/creationell-captcha/v1/code-image?t=&lt;token&gt;</code></td>
+<td>PNG-Bild ausliefern (Cache-Header <code>no-store</code>)</td>
+</tr>
+<tr class="even">
+<td><code>POST</code></td>
+<td><code>/wp-json/creationell-captcha/v1/code-verify</code></td>
+<td>Code prüfen, signierte ALTCHA-Payload zurückgeben</td>
+</tr>
+</tbody>
+</table>
+<p>Tokens sind opake 32-Hex-Server-Identifier; der erwartete Code lebt
+nur in einem WP-Transient und verlässt den Server nie. Die
+zurückgegebene Payload geht durch den bestehenden Verify-Pfad.</p>
+<h3 id="rendering">Rendering</h3>
+<p>PHP-GD mit vendorierter DejaVuSans-Bold-TTF
+(<code>assets/fonts/captcha.ttf</code>) und naiver Anti-OCR-Verzerrung
+(rotierte Zeichen, Querlinien, Rauschen). Fehlt die TTF, fällt der
+Renderer auf den GD-Bitmap-Font 5 zurück.</p>
+<p>Fehlt <strong>GD selbst</strong>, deaktiviert sich das Feature
+stillschweigend und der Section-Renderer zeigt eine Warn-Notice.</p>
+<h3 id="bypass-schutz">Bypass-Schutz</h3>
+<p><code>Engine::verify()</code> lehnt jeden Payload ab, in dem
+<code>parameters.data.ccode</code> clientseitig gesetzt ist — ein
+Angreifer kann den originalen Payload nicht recyclen, um die Code-Stufe
+zu überspringen.</p>
+<hr />
+<h2 id="under-attack-modus">Under-Attack-Modus</h2>
+<p>Der Under-Attack-Modus ist ein <strong>Notfall-Schalter</strong> für
+aktive Bot-Wellen. Bei aktivem Modus liefert WordPress für jeden
+anonymen Besucher ein HTTP-503-Interstitial mit einem invisiblen
+ALTCHA-Widget aus. Erst nach bestandener PoW-Sicherheitsabfrage setzt
+der Server ein HMAC-signiertes Pass-Cookie und lässt den Browser auf die
+eigentliche Seite.</p>
+<h3 id="ablauf">Ablauf</h3>
+<ol type="1">
+<li>Anonymer Besucher öffnet beliebige Seite</li>
+<li><code>template_redirect</code> fängt den Request ab, zeigt das
+Interstitial</li>
+<li>Browser löst die PoW-Sicherheitsabfrage im Hintergrund</li>
+<li>Server prüft, signiert das Pass-Cookie
+<code>creationell_captcha_ua_pass</code> (HMAC, gültig für die
+konfigurierte Pass-Dauer)</li>
+<li>Browser wird mit <code>Location</code>-Header auf die ursprüngliche
+URL umgeleitet</li>
+<li>Folgende Requests passieren den Modus, bis das Cookie abläuft</li>
+</ol>
+<p><code>wp-admin</code>, REST-API und Cron sind automatisch ausgenommen
+— die Site bleibt von innen administrierbar. Eingeloggte User sind per
+Default ebenfalls ausgenommen.</p>
+<h3 id="kill-switch">Kill-Switch</h3>
+<p>Definiert man
+<code>define( 'CREATIONELL_CAPTCHA_DISABLE', true );</code> in
+<code>wp-config.php</code>, sind alle CreaCaptcha-Funktionen — inklusive
+Under-Attack — global deaktiviert. Praktisch für den Fall, dass die Site
+sich selbst aussperrt.</p>
+<hr />
+<h2 id="statistik-event-log">Statistik &amp; Event-Log</h2>
+<h3 id="aggregat-statistiken">Aggregat-Statistiken</h3>
+<p>Immer aktiv, datenschutzfreundlich, keine personenbezogenen Daten.
+Zwei Counter-Tabellen in <code>wp_options</code>:</p>
+<ul>
+<li><code>creationell_captcha_analytics</code> — Tageszähler je
+Ereignistyp</li>
+<li><code>creationell_captcha_analytics_hourly</code> — Stundenzähler je
+Ereignistyp (für die 24-h-Sicht)</li>
+</ul>
+<h3 id="detail-event-log">Detail-Event-Log</h3>
+<p>Optional, schaltbar im Analytics-Tab. Schreibt in die eigene Tabelle
+<code>&lt;prefix&gt;creationell_captcha_events</code> mit 15
+Spalten:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Spalte</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>id</code></td>
+<td>Auto-Increment</td>
+</tr>
+<tr class="even">
+<td><code>event_type</code></td>
+<td><code>verified</code> / <code>failed</code> / <code>firewall</code>
+/ <code>ratelimit</code> / <code>underattack</code> /
+<code>underattack_passed</code> / <code>challenge</code></td>
+</tr>
+<tr class="odd">
+<td><code>created_at</code></td>
+<td>UTC-Zeitstempel</td>
+</tr>
+<tr class="even">
+<td><code>ip</code></td>
+<td>Client-IP (anonymisiert, wenn konfiguriert)</td>
+</tr>
+<tr class="odd">
+<td><code>path</code></td>
+<td>Request-Pfad (REQUEST_URI ohne Query-Args — keine GET-Token im
+Log)</td>
+</tr>
+<tr class="even">
+<td><code>user_id</code></td>
+<td>WordPress-User-ID (falls eingeloggt)</td>
+</tr>
+<tr class="odd">
+<td><code>user_agent</code></td>
+<td>UA-String</td>
+</tr>
+<tr class="even">
+<td><code>referrer</code></td>
+<td>HTTP-Referer</td>
+</tr>
+<tr class="odd">
+<td><code>plugin</code></td>
+<td>Auslösendes Modul (<code>cf7</code> / <code>forminator</code> /
+<code>wpforms</code> / <code>wc-checkout</code> / …)</td>
+</tr>
+<tr class="even">
+<td><code>action</code></td>
+<td>Action-Name (bei admin-post/admin-ajax)</td>
+</tr>
+<tr class="odd">
+<td><code>form_id</code></td>
+<td>Plugin-spezifische Form-ID (z. B. WPForms-/Forminator-ID)</td>
+</tr>
+<tr class="even">
+<td><code>interceptor</code></td>
+<td>Interceptor-Pfadmuster, das gegriffen hat</td>
+</tr>
+<tr class="odd">
+<td><code>reason</code></td>
+<td>Klartext-Grund (z. B. „IP-Allowlist”, „Replay-Schutz”, „PoW-Hash
+falsch”)</td>
+</tr>
+<tr class="even">
+<td><code>verification_data</code></td>
+<td>Eingereichter Captcha-Payload (gekürzt)</td>
+</tr>
+<tr class="odd">
+<td><code>request_body</code></td>
+<td>Body-Fingerprint (JSON-Map Feldname → Wertlänge; sensitive Felder
+gehasht)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistik-dashboard">Statistik-Dashboard</h3>
+<p><strong>CreaCaptcha → Statistik</strong> liefert drei Tabs:</p>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tab</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Übersicht</td>
+<td>Vier KPI-Kacheln für die letzten 24 h (Captcha gelöst, Abgewehrt =
+Firewall + Rate-Limit, Under-Attack Abfragen/bestanden, Captcha
+fehlgeschlagen) plus thematisch gruppierte Vergleichstabellen
+(Formular-Captchas / Abgewehrte Zugriffe / Under-Attack-Modus /
+Technisch) über vier Zeitfenster (24 h / 7 Tage / 30 Tage / 90
+Tage)</td>
+</tr>
+<tr class="even">
+<td>Verlauf</td>
+<td>Zeitreihen-Plot je Ereignistyp über das gewählte Fenster</td>
+</tr>
+<tr class="odd">
+<td>Ereignisse</td>
+<td>Filterbare Tabelle der Detail-Events, seitenweise (50/Seite), mit
+Detail-Modal je Eintrag und CSV-Export der gefilterten Menge</td>
+</tr>
+</tbody>
+</table>
+<p>Die Filter-Leiste im Ereignisse-Tab kombiniert Freitextsuche (IP +
+Pfad), Ereignistyp-Filter und Von/Bis-Datumsbereich.</p>
+<h3 id="performance">Performance</h3>
+<p>Seit v0.26.0:</p>
+<ul>
+<li><code>Analytics::record()</code> sammelt Counter-Deltas in
+Class-Statics und flusht sie auf <code>shutdown</code> in einem einzigen
+<code>get_option</code>/<code>update_option</code>-Paar je
+Counter-Tabelle — statt zwei Roundtrips pro Event</li>
+<li>Composite-Index
+<code>event_type_created (event_type, created_at)</code> auf der
+Events-Tabelle: typgefilterte Range-Queries laufen als reiner
+Index-Range-Scan ohne Filesort</li>
+<li><code>creationell_captcha_get_settings()</code> cacht das
+Default-Merge-Ergebnis pro Request</li>
+</ul>
+<hr />
+<h2 id="e-mail-schutz-obfuskation">E-Mail-Schutz (Obfuskation)</h2>
+<h3 id="zwei-modi">Zwei Modi</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modus</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Content</td>
+<td><code>the_content</code>, <code>the_excerpt</code>,
+<code>widget_text</code>, <code>widget_block_content</code>,
+<code>comment_text</code> durchlaufen
+<code>EmailObfuscator::process()</code></td>
+</tr>
+<tr class="even">
+<td>Buffer</td>
+<td>Ganzseiten-<code>ob_start()</code> auf
+<code>template_redirect</code> —
+<code>EmailObfuscator::process_page()</code> verarbeitet den gesamten
+<code>&lt;body&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="verschleierung">Verschleierung</h3>
+<p><code>mailto:</code>-Hrefs werden zu
+<code>href="#" data-cce="&lt;hex&gt;"</code>, Klartext-Adressen zu
+<code>&lt;span data-cce="&lt;hex&gt;"&gt;[E-Mail-Adresse — bitte JavaScript aktivieren]&lt;/span&gt;</code>.
+Der Hex-String ist eine XOR-Verschlüsselung der Adresse mit einem
+einmaligen Per-Page-Key.</p>
+<h3 id="decoder">Decoder</h3>
+<p><code>assets/js/email-obfuscation.js</code> läuft auf
+<code>DOMContentLoaded</code>, bindet sich auf alle
+<code>[data-cce]</code>-Elemente und stellt die Original-Adresse im
+Browser wieder her.</p>
+<h3 id="ausnahmen">Ausnahmen</h3>
+<p><code>&lt;head&gt;</code>, <code>&lt;script&gt;</code>,
+<code>&lt;style&gt;</code> werden im Buffer-Modus übersprungen.
+Feed-Requests, <code>wp-admin</code> und der Kill-Switch umgehen die
+Obfuskation immer.</p>
+<hr />
+<h2 id="wp-cli">WP-CLI</h2>
+<p>Alle Plugin-Funktionen sind per <code>wp creacaptcha</code>
+automatisierbar. Eine Übersicht aller Befehle:</p>
+<pre><code>wp help creacaptcha</code></pre>
+<h3 id="betriebsbefehle">Betriebsbefehle</h3>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Befehl</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp creacaptcha status</code></td>
+<td>Übersicht: Kill-Switch, Module, Listengrößen, Proxy/CF-Trust,
+Code-Challenge, Watchlist, Form-Plugin-Toggles</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha info</code></td>
+<td>Diagnose: Plugin-Version, Lib-Version, Algorithmus, HMAC-Secrets
+vorhanden, Event-Log-Tabelle</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha stats [--window=24h\|7d\|30d\|90d\|all]</code></td>
+<td>Analytics-Kennzahlen für das gewählte Fenster</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha enable &lt;feature&gt;</code></td>
+<td>Modul/Feature aktivieren (siehe unten)</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha disable &lt;feature&gt;</code></td>
+<td>Modul/Feature deaktivieren</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha repair</code></td>
+<td>Selbstheilung: fehlende Secrets generieren, Event-Log-Tabelle
+anlegen, Default-Keys ergänzen</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha doctor</code></td>
+<td>Pflicht-Checks: Lib, Secrets, Tabelle, Cron, Konflikte,
+PHP-/GD-/Sodium-Versionen, Settings-Defaults</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha test-bypass [--ip=…] [--ua=…] [--cookie=…]</code></td>
+<td>Simuliert die Bypass-Auswertung; Exit 0 bei Bypass, Exit 1
+sonst</td>
+</tr>
+</tbody>
+</table>
+<p>Die <code>&lt;feature&gt;</code>-Schlüssel für
+<code>enable</code>/<code>disable</code>: <code>captcha</code>,
+<code>comments</code>, <code>login</code>, <code>registration</code>,
+<code>password-reset</code>, <code>cf7</code>, <code>forminator</code>,
+<code>wpforms</code>, <code>woocommerce</code>,
+<code>wc-checkout</code>, <code>wc-login</code>,
+<code>wc-registration</code>, <code>wc-lost-password</code>,
+<code>firewall</code>, <code>ratelimit</code>,
+<code>under-attack</code>, <code>analytics</code>,
+<code>event-log</code>, <code>email-obfuscation</code>,
+<code>code-challenge</code>.</p>
+<h3 id="einstellungen">Einstellungen</h3>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Befehl</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp creacaptcha settings list</code></td>
+<td>Alle Settings mit aktuellen Werten ausgeben</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha settings get &lt;key&gt;</code></td>
+<td>Einen Wert lesen</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha settings set &lt;key&gt; &lt;value&gt;</code></td>
+<td>Einen Wert setzen (bool / int / text / color / textblock / list /
+json)</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha settings export [--file=…]</code></td>
+<td>JSON-Export aller Settings</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha settings import --file=…</code></td>
+<td>JSON-Import</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha settings reset</code></td>
+<td>Voller Werksreset inklusive aller Listen</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha settings load-defaults</code></td>
+<td>Nur Konfigwerte zurücksetzen, Listen bleiben</td>
+</tr>
+</tbody>
+</table>
+<h3 id="listen-pflege">Listen-Pflege</h3>
+<p>Jede Liste hat denselben Subcommand-Baukasten:
+<code>add &lt;eintrag&gt;</code>, <code>remove &lt;eintrag&gt;</code>,
+<code>list</code>, <code>clear</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Befehl</th>
+<th>Liste</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp creacaptcha blocklist …</code></td>
+<td>IP-Blockliste</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha allowlist …</code></td>
+<td>IP-Erlaubnisliste (global wirksam)</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha ua-blocklist …</code></td>
+<td>User-Agent-Blockliste</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha paths …</code></td>
+<td>Geschützte Pfade</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha actions …</code></td>
+<td>Geschützte Aktionen</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha inject-paths …</code></td>
+<td>Inject-Pfade</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha trusted-proxies …</code></td>
+<td>Vertrauenswürdige Proxies</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha bypass-ua …</code></td>
+<td>UA-Bypass-Liste</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha bypass-cookies …</code></td>
+<td>Cookie-Bypass (<code>name=wert</code>)</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha watchlist …</code></td>
+<td>Code-Challenge-Watchlist</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cloudflare-cache">Cloudflare-Cache</h3>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Befehl</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp creacaptcha cloudflare refresh</code></td>
+<td>CF-v4/v6-Ranges aktualisieren</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha cloudflare status</code></td>
+<td>Status des CF-Caches (Anzahl Ranges, letzter Refresh, nächster Cron,
+Quelle)</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha cloudflare clear</code></td>
+<td>CF-Cache leeren</td>
+</tr>
+</tbody>
+</table>
+<p>Der ältere Alias <code>wp creacaptcha refresh-cloudflare-ips</code>
+bleibt vorerst als Deprecation-Alias erhalten.</p>
+<h3 id="event-log">Event-Log</h3>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Befehl</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp creacaptcha log list [--fields=…] [--format=…] [--limit=…]</code></td>
+<td>Event-Log-Einträge auflisten; ohne <code>--fields</code>
+4-Spalten-Default, mit <code>--fields=</code> alle 15 Spalten
+verfügbar</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha log show &lt;id&gt;</code></td>
+<td>Einen Event mit allen 15 Spalten anzeigen</td>
+</tr>
+<tr class="odd">
+<td><code>wp creacaptcha log clear</code></td>
+<td>Event-Log komplett leeren</td>
+</tr>
+<tr class="even">
+<td><code>wp creacaptcha log prune</code></td>
+<td>Alte Einträge gemäß Aufbewahrungsdauer löschen</td>
+</tr>
+</tbody>
+</table>
+<p>Die Werkzeuge-Seite im Backend (siehe nächster Abschnitt) bietet
+dieselben Export-/Import-/Reset-/Load-Defaults-Aktionen.</p>
+<hr />
+<h2 id="werkzeuge">Werkzeuge</h2>
+<p><strong>CreaCaptcha → Werkzeuge</strong> ist die Backend-Entsprechung
+der wichtigsten CLI-Aktionen. Fünf Karten:</p>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Karte</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Einstellungen exportieren</td>
+<td>Lädt alle Settings als JSON-Datei herunter</td>
+</tr>
+<tr class="even">
+<td>Einstellungen importieren</td>
+<td>JSON-Upload, Validierung gegen das Settings-Schema</td>
+</tr>
+<tr class="odd">
+<td>Standardwerte laden</td>
+<td>Konfigwerte auf Default zurücksetzen; <strong>Listen bleiben
+unverändert</strong></td>
+</tr>
+<tr class="even">
+<td>Auf Werkseinstellungen zurücksetzen</td>
+<td>Voller Werksreset inklusive aller Listen (mit Warn-Box und
+Confirm-Dialog)</td>
+</tr>
+<tr class="odd">
+<td>Cloudflare-IP-Cache</td>
+<td>Status + Buttons „Jetzt aktualisieren” und „Cache leeren”</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="developer-reference">Developer Reference</h2>
+<p>Die wichtigsten Konstanten, Hooks und Filter im Überblick:</p>
+<h3 id="konstanten-wp-config.php-überschreibbar">Konstanten
+(wp-config.php überschreibbar)</h3>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Konstante</th>
+<th>Default</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_VERSION</code></td>
+<td><code>'0.30.1'</code></td>
+<td>Plugin-Version</td>
+</tr>
+<tr class="even">
+<td><code>CREATIONELL_CAPTCHA_FILE</code></td>
+<td><code>__FILE__</code></td>
+<td>Plugin-Hauptdatei</td>
+</tr>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_PLUGIN_PATH</code></td>
+<td><code>plugin_dir_path(...)</code></td>
+<td>Plugin-Ordner</td>
+</tr>
+<tr class="even">
+<td><code>CREATIONELL_CAPTCHA_PLUGIN_URL</code></td>
+<td><code>plugin_dir_url(...)</code></td>
+<td>Plugin-URL</td>
+</tr>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_MIN_PHP</code></td>
+<td><code>'8.3'</code></td>
+<td>PHP-Mindestversion</td>
+</tr>
+<tr class="even">
+<td><code>CREATIONELL_CAPTCHA_MIN_WP</code></td>
+<td><code>'6.9'</code></td>
+<td>WordPress-Mindestversion</td>
+</tr>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_DEBUG</code></td>
+<td><code>WP_DEBUG</code></td>
+<td>Aktiviert Debug-Logging</td>
+</tr>
+<tr class="even">
+<td><code>CREATIONELL_CAPTCHA_DISABLE</code></td>
+<td><em>ungesetzt</em></td>
+<td>Wenn <code>true</code>: globaler Kill-Switch — alle Module aus</td>
+</tr>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_HMAC_SECRET</code></td>
+<td><em>autogeneriert</em></td>
+<td>Override für das Challenge-HMAC-Secret</td>
+</tr>
+<tr class="even">
+<td><code>CREATIONELL_CAPTCHA_HMAC_KEY_SECRET</code></td>
+<td><em>autogeneriert</em></td>
+<td>Override für das HMAC-Key-Secret</td>
+</tr>
+<tr class="odd">
+<td><code>CREATIONELL_CAPTCHA_TRUSTED_PROXIES</code></td>
+<td><em>ungesetzt</em></td>
+<td>Array von zusätzlich vertrauenswürdigen Proxy-CIDRs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hooks-actions">Hooks (Actions)</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hook</th>
+<th>Wann</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>creationell_captcha_loaded</code></td>
+<td>Nach dem Plugin-Bootstrap, alle Module geladen</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_deactivated</code></td>
+<td>Beim Deaktivieren des Plugins</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_event</code></td>
+<td>Bei jedem Aggregat-Event-Bump (<code>$type</code>,
+<code>$context</code>)</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_firewall_blocked</code></td>
+<td>Firewall hat eine IP/UA geblockt</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_ratelimit_exceeded</code></td>
+<td>Rate-Limit für eine IP überschritten</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_interceptor_blocked</code></td>
+<td>Interceptor hat eine Submission abgewiesen</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_interceptor_passed</code></td>
+<td>Interceptor hat eine Submission durchgelassen</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hooks-filter">Hooks (Filter)</h3>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Filter</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>creationell_captcha_interceptor_paths</code></td>
+<td>Pfad-Liste runtime modifizieren</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_interceptor_actions</code></td>
+<td>Action-Liste runtime modifizieren</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_interceptor_bypass</code></td>
+<td>Eigene Bypass-Logik anhängen (<code>true</code> = durchlassen)</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_interceptor_guarded</code></td>
+<td>Modifiziert die Liste der „immer geschützten” Anker-Pfade</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_firewall_block</code></td>
+<td>Eigene Block-Logik anhängen (<code>true</code> = blocken)</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_forminator_autoinject</code></td>
+<td>Forminator-Autoinject je Formular toggeln (<code>bool</code>,
+<code>int $form_id</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_wpforms_autoinject</code></td>
+<td>WPForms-Autoinject je Formular toggeln</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_wc_checkout_autoinject</code></td>
+<td>WooCommerce-Checkout-Autoinject toggeln</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_wc_login_autoinject</code></td>
+<td>WooCommerce-Login-Autoinject toggeln</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_wc_registration_autoinject</code></td>
+<td>WooCommerce-Registrierungs-Autoinject toggeln</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_wc_lost_password_autoinject</code></td>
+<td>WooCommerce-Lost-Password-Autoinject toggeln</td>
+</tr>
+<tr class="even">
+<td><code>creationell_captcha_request_body_sensitive_patterns</code></td>
+<td>Sensitive Feldnamen-Patterns für die Body-Fingerprint-Maskierung
+erweitern</td>
+</tr>
+<tr class="odd">
+<td><code>creationell_captcha_doctor_checks</code></td>
+<td>Eigene Doctor-Checks zur WP-CLI-Diagnose ergänzen</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rest-endpoints-1">REST-Endpoints</h3>
+<p>Alle Routes unter dem Namespace
+<code>creationell-captcha/v1</code>:</p>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Methode</th>
+<th>Route</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>GET</code></td>
+<td><code>/challenge</code></td>
+<td>Neue PoW-Challenge ausstellen</td>
+</tr>
+<tr class="even">
+<td><code>GET</code></td>
+<td><code>/code-image?t=&lt;token&gt;</code></td>
+<td>PNG der Bild-Code-Challenge ausliefern</td>
+</tr>
+<tr class="odd">
+<td><code>POST</code></td>
+<td><code>/code-verify</code></td>
+<td>Eingegebenen Code prüfen, signierte ALTCHA-Payload zurückgeben</td>
+</tr>
+</tbody>
+</table>
+<h3 id="wichtige-php-helper">Wichtige PHP-Helper</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Schutz für eigene Pfade registrieren</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>creationell_captcha_protect_path( <span class="st">&#39;/checkout/step2&#39;</span> )<span class="ot">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Widget rendern (Template-Tag-Variante)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>creationell_captcha_widget()<span class="ot">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Settings memoiziert laden</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="va">$settings</span> <span class="op">=</span> creationell_captcha_get_settings()<span class="ot">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Bypass-Auswertung manuell aufrufen</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="va">$bypass_active</span> <span class="op">=</span> creationell_captcha_request_bypassed()<span class="ot">;</span></span></code></pre></div>
+<h3 id="architektur">Architektur</h3>
+<p>Das Plugin folgt einer require-basierten
+Classic-WordPress-Architektur. Die Klassen liegen unter
+<code>Creationell\Captcha\…</code> in <code>includes/class-*.php</code>;
+prozedurale Bootstrap-Helper in <code>includes/&lt;modul&gt;.php</code>.
+Die geprefixte ALTCHA-Library landet via Strauss in
+<code>lib/Creationell\Captcha\Vendor\…</code>. Es gibt
+<strong>keinen</strong> Composer-Autoloader im Release-ZIP — alle
+Requires sind explizit.</p>
+<hr />
+<h2 id="faq">FAQ</h2>
+<h3 id="sendet-creacaptcha-daten-an-externe-dienste">Sendet CreaCaptcha
+Daten an externe Dienste?</h3>
+<p>Nein. Das Plugin arbeitet vollständig selbst-gehostet — es gibt keine
+API-Aufrufe, kein Telemetrie-Backend, keinen Lizenz-Check und keine
+SaaS-Anbindung. Die einzige optionale externe Anfrage ist der
+Cloudflare-IP-Refresh aus den offiziellen Cloudflare-Listen, der
+ausschließlich auf expliziten Toggle läuft.</p>
+<h3 id="welcher-captcha-algorithmus-läuft-im-hintergrund">Welcher
+Captcha-Algorithmus läuft im Hintergrund?</h3>
+<p>CreaCaptcha nutzt die offizielle MIT-Bibliothek
+<code>altcha-org/altcha</code>. Standardmäßig kommt PBKDF2/SHA-256 zum
+Einsatz (kein PHP-Extension-Bedarf). Optional lässt sich auf Argon2id
+umschalten, dafür wird <code>ext-sodium</code> benötigt.</p>
+<h3 id="funktioniert-das-plugin-ohne-javascript">Funktioniert das Plugin
+ohne JavaScript?</h3>
+<p>Nein — die Proof-of-Work-Sicherheitsabfrage muss vom Browser gelöst
+werden. Ohne JavaScript erscheint das Widget als Hinweistext, und die
+Server-Verifikation wird die Submission abweisen. Für ein vollständig
+JS-loses Schutz-Setup ist die Firewall+Rate-Limit-Schicht der richtige
+Ansatz.</p>
+<h3 id="welche-form-plugins-werden-unterstützt">Welche Form-Plugins
+werden unterstützt?</h3>
+<p>Mit dedizierten Integrationen: <strong>Contact Form 7</strong>,
+<strong>Forminator</strong>, <strong>WPForms</strong> (Lite und Pro),
+<strong>WooCommerce</strong> (Checkout, My-Account-Login, Registrierung,
+Lost-Password). Beliebige andere Formulare lassen sich über
+<code>[creationell_captcha]</code> und die Geschützte-Pfade-Liste
+absichern. Für AJAX-/Admin-Post-Endpoints gibt es zusätzlich die
+Geschützte-Aktionen-Liste.</p>
+<h3
+id="wie-schütze-ich-ein-eigenes-formular-auf-einer-beliebigen-seite">Wie
+schütze ich ein eigenes Formular auf einer beliebigen Seite?</h3>
+<p>Drei Schritte: (1) Den Shortcode <code>[creationell_captcha]</code>
+oder das Template-Tag <code>creationell_captcha_widget()</code> ins
+Formular einbauen. (2) Den Pfad der Seite oder den Submit-Pfad in
+<strong>Captcha → Interceptor → Geschützte Pfade</strong> eintragen. (3)
+Bei AJAX-/Admin-Post-Submissions zusätzlich den
+<code>action</code>-Namen in <strong>Geschützte Aktionen</strong>. Der
+Interceptor verifiziert dann automatisch jede Submission.</p>
+<h3 id="was-passiert-mit-ungelösten-bot-submissions">Was passiert mit
+ungelösten Bot-Submissions?</h3>
+<p>Der Server lehnt die Submission ab. Bei klassischen Formularen erhält
+der Browser die normale Validierungs-Fehlermeldung des jeweiligen
+Plugins. Bei AJAX wird <code>403 Forbidden</code> mit JSON-Body
+geliefert. Der Bot bekommt keine Hilfe in Form von Hinweisen, woran das
+Captcha gescheitert ist — der <code>reason</code> landet nur im
+Event-Log.</p>
+<h3
+id="wie-kann-ich-mich-selbst-aussperren-und-wie-komme-ich-wieder-rein">Wie
+kann ich mich selbst aussperren — und wie komme ich wieder rein?</h3>
+<p>Wer durch eigene Firewall-Regeln, Rate-Limit oder einen kaputten
+Under-Attack-Modus ausgesperrt wird, kann zu jeder Zeit per
+<code>wp-config.php</code> den Kill-Switch setzen:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;CREATIONELL_CAPTCHA_DISABLE&#39;</span><span class="ot">,</span> <span class="kw">true</span> )<span class="ot">;</span></span></code></pre></div>
+<p>Sofort sind <strong>alle</strong> Module aus — Firewall, Rate-Limit,
+Captcha, Under-Attack, Interceptor. Anschließend lassen sich die
+problematischen Einstellungen im Backend korrigieren. Ohne
+SSH/FTP-Zugriff bleibt der direkte Datenbank-Eingriff:
+<code>wp option update creationell_captcha_settings …</code> oder per
+<code>wp creacaptcha settings load-defaults</code>.</p>
+<h3
+id="funktioniert-das-plugin-hinter-cloudflare-oder-einem-reverse-proxy">Funktioniert
+das Plugin hinter Cloudflare oder einem Reverse-Proxy?</h3>
+<p>Ja. Im Tab <strong>Firewall</strong> unter „Proxy &amp;
+IP-Ermittlung” den Proxy-Modus aktivieren und den passenden
+Forwarded-Header wählen. Für Cloudflare zusätzlich „Cloudflare-IPs
+vertrauen” und optional den Auto-Refresh einschalten — die offiziellen
+Cloudflare-v4/v6-Ranges werden dann täglich neu geladen. Ohne
+Trust-Konfiguration wird der Header ignoriert, damit Angreifer nicht
+beliebige IPs spoofen können.</p>
+<h3 id="wie-viel-performance-kostet-das-plugin">Wie viel Performance
+kostet das Plugin?</h3>
+<p>Sehr wenig. Die Captcha-Berechnung läuft im Browser, nicht auf dem
+Server. Die Firewall-Auswertung ist eine reine IP-/Pattern-Prüfung
+(keine externen Lookups). Analytics-Counter werden seit v0.26.0 pro
+Request gesammelt und in einem einzigen DB-Roundtrip auf
+<code>shutdown</code> geschrieben. Das Event-Log nutzt seit derselben
+Version einen Composite-Index, der typgefilterte Dashboard-Queries ohne
+Filesort beantwortet.</p>
+<h3 id="wie-dsgvo-konform-ist-das-plugin">Wie DSGVO-konform ist das
+Plugin?</h3>
+<p>Out-of-the-box ist die IP-Anonymisierung im Event-Log aktiv (IPv4 auf
+letztes Oktett, IPv6 auf letzte 80 Bit trunkiert). Aggregat-Zähler
+enthalten keinerlei personenbezogene Daten. Im Event-Log werden keine
+Query-String-Werte (GET-Token, Magic-Links, API-Keys) gespeichert — der
+Pfad wird vor dem Schreiben auf den reinen Pfadanteil reduziert.
+Request-Body-Fingerprints enthalten nur Feldnamen und Wertlängen;
+sensitive Feldnamen werden zusätzlich gehasht.</p>
+<h3 id="wie-deaktiviere-ich-das-plugin-sauber">Wie deaktiviere ich das
+Plugin sauber?</h3>
+<p>Über <strong>Plugins → Installierte Plugins</strong> deaktivieren
+reicht für den Betrieb. Wer auch die Daten loswerden will, kann das
+Plugin anschließend löschen — der <code>uninstall.php</code>-Cleanup
+entfernt alle Options, Transients (inklusive <code>_cc_*</code>-Caches
+und <code>_git_update_*</code>-Locks) sowie die Event-Tabelle.</p>
+<h3 id="funktioniert-das-plugin-mit-multisite">Funktioniert das Plugin
+mit Multisite?</h3>
+<p>Ja, allerdings pro Site einzeln aktivierbar. Es gibt aktuell keine
+Network-Activate-Logik mit zentralen Settings — jede Site hat ihre
+eigene Konfiguration. Network-weite Aktivierung ist möglich, hat aber
+denselben Effekt wie eine Aktivierung pro Site.</p>
+<h3
+id="kann-ich-creacaptcha-parallel-zu-einem-anderen-captcha-plugin-betreiben">Kann
+ich CreaCaptcha parallel zu einem anderen Captcha-Plugin betreiben?</h3>
+<p>Technisch ja — die Code-Pfade kollidieren nicht.
+<code>wp creacaptcha doctor</code> prüft auf bekannte Captcha-Plugins
+(reCAPTCHA, hCaptcha, Turnstile, ALTCHA-WordPress) und warnt, weil zwei
+Captcha-Layer auf demselben Formular für den Nutzer unzumutbar werden.
+Empfehlung: nur eines aktiv lassen.</p>
+<h3 id="wo-finde-ich-logs-wenn-etwas-nicht-funktioniert">Wo finde ich
+Logs, wenn etwas nicht funktioniert?</h3>
+<p>Mit <code>define( 'CREATIONELL_CAPTCHA_DEBUG', true );</code> (oder
+global <code>WP_DEBUG</code>) schreibt das Plugin Debug-Hinweise nach
+<code>wp-content/debug.log</code>. Zusätzlich liefert
+<code>wp creacaptcha doctor</code> einen kompletten Diagnose-Lauf, und
+das Event-Log zeigt alle abgewiesenen Requests samt Grund.</p>
+<h3 id="wie-aktualisiere-ich-auf-eine-neue-version">Wie aktualisiere ich
+auf eine neue Version?</h3>
+<p>Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue
+Versionen automatisch im <strong>Plugins</strong>-Bildschirm — wie ein
+normales wp.org-Update. (2) ZIP von der GitHub-Release-Seite
+herunterladen und manuell über <strong>Plugins → Installieren → Plugin
+hochladen</strong> einspielen. (3) Per WP-CLI:
+<code>wp plugin install --activate &lt;release-url&gt;</code> mit der
+URL aus den GitHub-Releases.</p>
+<hr />
+<h2 id="changelog">Changelog</h2>
+<h3 id="section">0.30.1</h3>
+<p>Wartungsrelease: Release-Infrastruktur umgestellt — keine
+funktionalen Änderungen am Plugin.</p>
+<ul>
+<li>Die Plugin-Releases werden ab dieser Version aus dem dedizierten,
+öffentlichen Release-Repository
+<code>github.com/creationell-dev/creationell-captcha</code>
+veröffentlicht. Download-, Update- und Dokumentations-URLs bleiben
+unverändert.</li>
+<li>Build-Pipeline gehärtet: GitHub-Actions und phpDocumentor auf feste
+Versionen gepinnt, Build-Staging vom Paketinhalt ausgeschlossen.</li>
+</ul>
+<h3 id="section-1">0.30.0</h3>
+<p>Under-Attack Pass-Event &amp; Statistik-Übersicht — das Backend
+unterscheidet jetzt, ob ein Besucher die Under-Attack-Prüfung bestanden
+hat oder hängen blieb, und die Statistik-Übersicht erklärt ihre Zahlen
+selbst.</p>
+<ul>
+<li>Neuer Event-Typ <code>underattack_passed</code>: feuert, wenn ein
+Besucher die Under-Attack-PoW-Prüfung löst und das Pass-Cookie
+ausgestellt wird. Erscheint in Übersicht, Verlauf, Ereignis-Filter,
+CSV-Export und WP-CLI (<code>wp creacaptcha stats</code>,
+<code>log list --type=underattack_passed</code>).</li>
+<li>Neues Log-Gate „Bestandene Under-Attack-Prüfungen loggen” (Default:
+an); Aggregat-Zähler laufen unabhängig davon.</li>
+<li>Statistik-Übersicht: vier KPI-Kacheln statt drei — „Abgewehrt (24
+h)” zählt nur noch echte Blocks (Firewall + Rate-Limit), Under-Attack
+hat eine eigene Kachel „Abfragen / bestanden”.</li>
+<li>Statistik-Übersicht: die flache Ereignis-Tabelle ist in vier
+thematische Gruppen mit Erklärungstext gegliedert (Formular-Captchas /
+Abgewehrte Zugriffe / Under-Attack-Modus / Technisch); nicht zugeordnete
+Typen landen automatisch in einer Auffanggruppe „Weitere
+Ereignisse”.</li>
+<li>Keine DB-Migration nötig; bestehende Events und Zähler bleiben
+unverändert gültig.</li>
+</ul>
+<h3 id="section-2">0.29.0</h3>
+<p>Logo im Under-Attack-Interstitial — die 503-Seite kann jetzt ein Logo
+oberhalb der Überschrift anzeigen.</p>
+<ul>
+<li>Neues optionales Feld „Logo-URL” in der Under-Attack-Section
+„Erscheinungsbild”. Leer = kein Logo (Default); bestehende Sites sehen
+ohne Aktion keine Änderung.</li>
+<li><code>UnderAttack::serve_interstitial()</code> reicht die URL als
+<code>$logo_url</code> ans Template; das Template rendert ein
+zentriertes <code>&lt;img class="crea-ua-logo"&gt;</code> vor dem
+<code>&lt;h1&gt;</code>, gedeckelt auf <code>max-height: 128px</code>.
+Alt-Text = Website-Name (<code>get_bloginfo('name')</code>).</li>
+<li>Sanitization via <code>esc_url_raw()</code> beim Speichern
+entschärft gefährliche Schemata (<code>javascript:</code> o. Ä.);
+Ausgabe zusätzlich mit <code>esc_url()</code>.</li>
+<li>Größe per <code>.crea-ua-logo</code> über das vorhandene „Eigenes
+CSS”-Feld überschreibbar. Setzbar über
+<code>wp creacaptcha settings set   underattack_logo_url &lt;url&gt;</code>.</li>
+</ul>
+<h3 id="section-3">0.28.0</h3>
+<p>Feature-Modul 21 — Under-Attack-Customization: Wording und
+Erscheinungsbild der Interstitial-Seite sind ab sofort über das Backend
+konfigurierbar, ohne Plugin-Code zu patchen.</p>
+<ul>
+<li>Neue Section „Erscheinungsbild” im Under-Attack-Tab mit sieben
+optionalen Feldern: vier Texte (Browser-Tab-Titel, Überschrift,
+Hinweistext, NoScript-Hinweis), zwei Farben (Hintergrund, Textfarbe) und
+ein freies Custom-CSS-Feld.</li>
+<li>Renderer in <code>UnderAttack::serve_interstitial()</code> baut die
+drei Variablen <code>$texts</code> / <code>$colors</code> /
+<code>$user_css</code> und reicht sie ans Template weiter; leere Felder
+fallen auf die existierenden Hartcode-Defaults zurück.</li>
+<li>Template (<code>includes/under-attack-interstitial.php</code>) nutzt
+zwei neue CSS-Variablen <code>--creationell-captcha-ua-bg</code> und
+<code>--creationell-captcha-ua-text</code> für die Farben. Ein zweiter
+<code>&lt;style&gt;</code>-Block direkt nach dem Default-Stylesheet
+nimmt das Custom-CSS auf — alle Regeln des Defaults sind dort
+überschreibbar.</li>
+<li>Sanitization analog zu <code>widget_custom_css</code>:
+<code>wp_strip_all_tags()</code> neutralisiert
+<code>&lt;/style&gt;&lt;script&gt;</code>-Injection bevor der Wert die
+Template-Ausgabe erreicht.</li>
+<li>Alle sieben Felder sind über das bestehende
+<code>wp creacaptcha settings set &lt;key&gt; &lt;value&gt;</code>-CLI
+setzbar — neue Field-Typen waren nicht nötig, alle Typen
+(<code>text</code>, <code>color</code>, <code>textblock</code>) gibt es
+seit Modul 14.</li>
+</ul>
+<p>Sites nach Update sehen ohne Aktion <strong>keine</strong> visuelle
+Veränderung — alle sieben Felder sind initial leer und das Template
+fällt damit auf die bisherigen Default-Werte zurück.</p>
+<h3 id="section-4">0.27.2</h3>
+<p>Metadaten-Anpassung an WordPress 7.0 / 6.9.</p>
+<ul>
+<li><strong>Plugin-Header &amp; README:</strong>
+<code>Requires at least</code> von 6.8 auf 6.9 angehoben,
+<code>Tested up to</code> von 6.8 auf 7.0 nachgezogen. WordPress 7.0 ist
+seit kurzem produktiv; der Plugin-Test-Lauf der bisherigen Module 1–20
+ist gegen 7.0 sauber.</li>
+<li><strong>Konstante:</strong> <code>CREATIONELL_CAPTCHA_MIN_WP</code>
+von <code>'6.8'</code> auf <code>'6.9'</code> angehoben. Sites auf
+WordPress 6.8 oder älter erhalten beim Aktivieren jetzt die bestehende
+Hinweisleiste „Erfordert WordPress 6.9 oder neuer.” statt das Plugin zu
+laden.</li>
+<li>Inline-Kommentar im Plugin-Bootstrap (<code>WordPress 6.8+</code> →
+<code>WordPress 6.9+</code>) und die interne Entwickler-Dokumentation
+konsistent nachgezogen.</li>
+</ul>
+<p>Keine funktionalen Code-Änderungen.</p>
+<h3 id="section-5">0.27.1</h3>
+<p>CSS-Fix: Widget-Abstand zum darauffolgenden Element im
+Standard-Modus.</p>
+<ul>
+<li><code>assets/css/widget.css</code>: Die Block-Flow-Abstandsregel auf
+<code>&lt;altcha-widget&gt;</code> ist von <code>margin-block-end</code>
+auf <code>padding-block-end</code> umgestellt und auf den
+<code>display="standard"</code>-Modus eingeschränkt. Hintergrund: das
+Widget ist auf den geschützten Formularen typischerweise das letzte Kind
+im <code>&lt;form&gt;</code> — der bisherige
+<code>margin-block-end</code> kollabierte deshalb mit der Bottom-Kante
+des Form-Elements (kein
+<code>padding-bottom</code>/<code>border-bottom</code>/eigene BFC),
+sodass visuell überhaupt kein Abstand zum nachfolgenden Inhalt blieb.
+Padding kollabiert nicht — der konfigurierbare Abstand (Default jetzt
+<code>1rem</code> statt <code>1.5em</code>) ist daher zuverlässig
+sichtbar. Der CSS-Variablenname
+(<code>--creationell-captcha-widget-margin-block-end</code>) bleibt aus
+Kompatibilitätsgründen gleich.</li>
+<li>Floating/Overlay/Bar/Invisible-Modi bekommen den Abstand nicht mehr
+spurious mitgegeben — ihre eigentliche Widget-Darstellung ist
+position-fixed bzw. display:none, ein Inline-Spacer wäre dort nur ein
+toter 1.5em-Gap.</li>
+</ul>
+<h3 id="section-6">0.27.0</h3>
+<p>Feature-Modul 20 — Widget-i18n: Die Sicherheitsabfrage erscheint
+endlich in der korrekten Sprache, ohne dass der Admin etwas
+konfigurieren muss.</p>
+<ul>
+<li>Neue 20 vendorierte ALTCHA-Locale-Dateien unter
+<code>assets/js/altcha-i18n/</code> (DE, EN, FR-FR/CA, ES-ES/419, IT,
+NL, PT-PT/BR, PL, CS, SK, DA, SV, FI, NB, HU, RO, EL) — je ~3 KB,
+Page-Load lädt weiterhin nur eine Datei.</li>
+<li>Neuer Helper
+<code>creationell_captcha_resolve_widget_locale()</code> mit
+Lookup-Tabelle (48 WP-Locale-Strings, inkl. formal/informal- Varianten)
+auf 20 ALTCHA-Codes.</li>
+<li><code>creationell_captcha_build_widget_markup()</code> enqueued die
+passende Locale-Datei lazy (analog zum Theme-CSS-Pattern) und setzt
+<code>language="&lt;code&gt;"</code> am
+<code>&lt;altcha-widget&gt;</code>. Locales ohne Mapping überspringen
+beide Schritte — das Widget nutzt dann seine eigene
+<code>&lt;html lang&gt;</code>/Browser-Detection.</li>
+<li>Zwei neue Filter <code>creationell_captcha_widget_locale_map</code>
+und <code>creationell_captcha_widget_locale</code> für Projekt-Overrides
+ohne Plugin-Patch.</li>
+<li><code>wp creacaptcha status</code> zeigt eine neue Zeile
+„Widget-Sprache” mit dem effektiven ALTCHA-Code plus dem
+WP-Locale-Ursprung.</li>
+<li><code>widget_strings_override</code> bleibt unverändert und greift
+weiterhin als Pro-Schlüssel-Override <strong>on top</strong> der
+Auto-Locale.</li>
+</ul>
+<h3 id="section-7">0.26.2</h3>
+<p>Bugfix-Release: schließt eine Verify-Regression aus v0.22.0 / Commit
+<code>c322b96</code>, die seit der Korrektur des
+<code>configuration</code>-JSON-Attributs das ALTCHA-Widget dazu
+brachte, bei jedem gelösten PoW die <code>/code-verify</code>-Route
+aufzurufen — und dort mit 400 <code>invalid_request</code> abgewiesen zu
+werden, weil im Plain-Mode (ohne Code-Challenge im
+<code>/challenge</code>-Response) das <code>code</code>-Feld im Body
+fehlt.</p>
+<ul>
+<li><code>includes/widget.php</code>: <code>verifyUrl</code> wird im
+<code>configuration</code>-JSON nur noch dann emittiert, wenn das
+Master-Setting <code>code_challenge_enabled</code> aktiv ist. Im
+Standardfall (Code-Challenge aus) verifiziert das Widget wieder rein
+client-seitig, ohne den überflüssigen Server-Roundtrip.</li>
+<li><code>includes/code-challenge.php</code>: <code>/code-verify</code>
+akzeptiert das <code>code</code>-Feld jetzt als optional. Plain-Mode
+(<code>{ payload }</code> ohne <code>code</code>) durchläuft
+<code>Engine::verify_structural()</code>, prüft die Original-Signatur
+über den gleichen Single-Use-Transient-Schlüssel wie
+<code>Engine::verify()</code> (verhindert, dass eine einzelne gelöste
+PoW in N frische Payloads multipliziert wird) und gibt eine frische
+signierte Payload zurück. Code-Challenge-Modus bleibt funktional
+unverändert.</li>
+</ul>
+<p>Die ALTCHA-<code>verifyUrl</code>-Mechanik schaltet das Widget
+pauschal in den Server-Verify-Modus — auch ohne Code-Challenge im
+Response. Beide Fixes zusammen: saubere Standard-Konfiguration ohne
+Roundtrip <em>und</em> Defense-in-Depth, falls
+<code>code_challenge_enabled</code> aktiv ist aber kein Trigger
+greift.</p>
+<h3 id="section-8">0.26.1</h3>
+<p>UX-Polish-Release: schließt die drei nicht-essenziellen UX-Befunde
+aus dem Qualitäts-Audit (Modul 18) ab.</p>
+<ul>
+<li>Neue <code>requires_select</code>-Semantik im Settings-Schema:
+Felder können jetzt nicht nur an einen booleschen Vorbedingungs-Toggle
+gekoppelt werden (<code>requires =&gt; 'foo_enabled'</code>), sondern
+auch an einen konkreten Wert eines anderen Select-Feldes
+(<code>requires_select =&gt; ['widget_display' =&gt;   'floating']</code>).
+Render-Layer setzt <code>disabled</code>, Sanitizer-Cascade bewahrt den
+gespeicherten Wert. Anwendung: die drei Floating-Felder
+<code>widget_floating_anchor</code>/<code>widget_floating_placement</code>/
+<code>widget_floating_offset</code> werden jetzt nur aktiv geschaltet,
+wenn der Widget-Anzeige-Modus auf „Schwebend” steht — in jedem anderen
+Modus bleiben sie ausgegraut.</li>
+<li>Tools-Page „Auf Werkseinstellungen zurücksetzen”: deutliche
+<code>notice-warning</code>-Box oberhalb der Karte mit Hinweis auf die
+Listen-Leerung und Verweis auf die ungefährliche „Standardwerte
+laden”-Karte.</li>
+<li>Wortwahl „Sicherheitsabfrage” (user-facing Help-Texte) vs. „Captcha”
+(technische/Admin-Kontexte wie Tab-Label, Section-Titel, Engine-
+Begriffe) bleibt bestehen — das Audit hat die aktuelle Trennung als
+akzeptabel eingestuft.</li>
+</ul>
+<h3 id="section-9">0.26.0</h3>
+<p>Performance-Release: drei aufgeschobene Optimierungen aus dem
+Qualitäts-Audit (Modul 18) — Settings-Memoize, Analytics-Bump-Memoize
+und ein Composite-Index auf der Events-Tabelle.</p>
+<ul>
+<li><code>creationell_captcha_get_settings()</code> cacht das Ergebnis
+pro Request in einer statischen Variable. Bisher rief jede
+Modul-Komponente (Interceptor, Firewall, Rate-Limiter, Under-Attack,
+jede Form- Integration) die Funktion mehrfach pro Request, jedes Mal mit
+<code>array_merge</code> über ~70 Default-Keys. Invalidierung läuft über
+die
+<code>update_option</code>/<code>add_option</code>/<code>delete_option</code>-Hooks
+für <code>creationell_captcha_settings</code>, sodass Caller direkt nach
+einem Speichervorgang den frischen Wert sehen.</li>
+<li><code>Analytics::record()</code> sammelt die Daily- und
+Hourly-Counter-Deltas in request-lokalen Static-Caches und flusht sie
+via <code>add_action('shutdown', …)</code> in genau einem
+<code>get_option</code>/<code>update_option</code>-Paar pro
+Counter-Tabelle. Vorher: zwei Roundtrips pro Event — eine
+<code>/challenge</code>-Route mit aktivem
+<code>log_challenge</code>-Toggle und nachgelagerter Verifikation kommt
+damit bei 4–6 Roundtrips an. Jetzt: maximal 2 Roundtrips, unabhängig von
+der Anzahl der Events. Die Cutoff-Pruning-Logik wandert in
+<code>apply_deltas()</code> und läuft jetzt einmal je Counter statt
+einmal je Event. Konkurrente Updates aus parallelen Requests bleiben
+erhalten (Flush liest frischen Stand und addiert nur die eigenen
+Deltas).</li>
+<li>Composite-Index
+<code>event_type_created (event_type, created_at)</code> auf der
+Events-Tabelle. Dashboard-Queries mit <code>event_type</code>-Filter
+(Statistik-Tab, CSV-Export, Detail-Modal-Source) erzwangen bisher einen
+Filesort über den per-day-gesliceten Range. Mit dem Composite-Index
+läuft die typgefilterte Range-Abfrage als reiner Index-Range-Scan.
+Migration via <code>Analytics::ensure_table()</code> — dbDelta für
+Frischinstalls, <code>SHOW INDEX</code>-Guard plus
+<code>ALTER TABLE</code> als Fallback für bestehende Tabellen (dbDelta
+ist für Index-Adds historisch unzuverlässig).
+<code>%i</code>-Identifier-Platzhalter konsistent mit
+<code>clear_events()</code>.</li>
+</ul>
+<h3 id="section-10">0.25.0</h3>
+<p>Qualitäts-Audit-Release: Security-Härtung des Updaters,
+Event-Log-Privacy, Body-Fingerprint-Maskierung sowie umfassende
+UX-Hilfetexte und Konsistenz- Fixes im Backend.</p>
+<p><strong>Sicherheit:</strong> - Updater
+(<code>includes/class-plugin-updater.php</code>): Checksum-Vergleich
+nutzt jetzt <code>hash_equals()</code> (timing-safe). Slug-Heuristik in
+<code>verify_download_checksum()</code> durch Exakt-Match gegen
+<code>manifest.download_url</code> ergänzt — verhindert Bypass über ein
+manipuliertes Manifest mit Slug-freier Download-URL. Manifest-Fetch über
+<code>wp_safe_remote_get()</code> (Defense-in-Depth gegen SSRF). -
+Event-Log: <code>Analytics::current_path()</code> reduziert
+<code>REQUEST_URI</code> auf den Pfad-Anteil. GET-Token,
+Magic-Login-Links und API-Keys landen damit nicht mehr im persistenten
+Event-Log. - Request-Body-Fingerprint: Feldnamen mit sensitiven
+Substrings (<code>password</code>, <code>secret</code>,
+<code>token</code>, <code>iban</code>, <code>api_key</code>,
+<code>cvv</code>, …) werden vor dem JSON-Encode durch
+<code>[masked:&lt;sha256-8&gt;]</code> ersetzt, um Custom-Form- Schemata
+nicht im Event-Log preiszugeben. Neuer Filter
+<code>creationell_captcha_request_body_sensitive_patterns</code> für
+projektspezifische Erweiterungen. -
+<code>Analytics::clear_events()</code> nutzt jetzt
+<code>wpdb::prepare( 'DELETE FROM %i',   $table )</code> statt
+Roh-Interpolation (WP-6.2+-konform).</p>
+<p><strong>Backend-UX:</strong> - DSGVO-First: Default
+<code>analytics_anonymize_ip</code> von <code>false</code> auf
+<code>true</code>. Neue Installs anonymisieren IPs out-of-the-box;
+bestehende Installs behalten ihre Wahl. - Rate-Limit-Default
+<code>ratelimit_max</code> von 10 auf 30 (besser für Login-Scope — ein
+Nutzer mit Tippfehler-Marathon läuft nicht mehr ins 5-Minuten-Lockout).
+- Tab-Reihenfolge: „Analytics” steht nun vor „E-Mail-Schutz” (näher an
+den Schutzmodulen). - Firewall-Tab: Sektionen sortiert auf Proxy →
+Firewall → Bypass → Rate-Limit (Bypass folgt der Firewall, deren Regeln
+sie überstimmt). - <code>widget_code_challenge_display</code> in die
+Code-Challenge-Section verschoben und an
+<code>code_challenge_enabled</code> gekoppelt. - 21 fehlende oder
+schwache Settings-Hilfetexte ergänzt (<code>algorithm</code>,
+<code>difficulty</code>, <code>challenge_expiry</code>, alle
+<code>widget_*</code>-Customization-Felder, Core-Forms-Toggles, alle
+Form-Plugin-Toggles, Rate-Limit-Felder,
+<code>firewall_proxy_header</code>,
+<code>firewall_ip_block</code>/<code>ua_block</code>,
+<code>underattack_enabled</code>, <code>analytics_event_log</code>,
+<code>bypass_cookies</code>,
+<code>firewall_cloudflare_auto_refresh</code>,
+<code>interceptor_skip_logged_in</code>). Section-Renderer für Engine,
+Code-Challenge und Firewall mit erklärenden Texten ergänzt (PoW-Konzept,
+OR-Logik der Trigger, CIDR-Notation). -
+<code>interceptor_actions</code>-Hilfetext nennt jetzt die
+<code>edit_posts</code>-Exemption (Autoren/Editoren weiterhin
+ausgenommen). - Tools-Page: Reset-Karte + Confirm-Dialog erwähnen jetzt
+explizit auch Interceptor- und Bypass-Listen.</p>
+<p><strong>WP-CLI:</strong> - <code>wp creacaptcha status</code> zeigt
+drei neue Zeilen: Proxy-Modus, CF-Trust / CF-Auto-Refresh und
+IP-Anonymisierung. - <code>wp creacaptcha doctor</code> prüft
+<code>ext-sodium</code>, wenn der Algorithmus auf Argon2id steht — Error
+mit Fix-Vorschlag, wenn die Extension fehlt.</p>
+<p><strong>Code-Qualität:</strong> -
+<code>defined( constant_name: 'ABSPATH' )</code> →
+<code>defined( 'ABSPATH' )</code> in 48 Dateien. Named-Args auf
+PHP-Builtins sind nicht stabilitäts-garantiert und werden von
+Static-Analyzern als Anti-Pattern geflaggt. - PHPDoc: über 20 eigene
+<code>do_action</code>/<code>apply_filters</code>-Hooks vollständig
+dokumentiert (<code>creationell_captcha_event</code>,
+Interceptor-Filter-Familie, WPForms-/WC-Autoinject-Filter),
+Repeat-Dispatches mit WordPress-Core- style „This action is documented
+in …“-Verweisen. - REST-Callback-PHPDocs in
+<code>includes/rest.php</code> und
+<code>includes/code-challenge.php</code> ergänzt
+(<code>@param</code>/<code>@return</code> mit Status-Code-Tabelle).</p>
+<p><strong>Tooling &amp; Doku:</strong> - <code>phpdoc.xml</code>
+Version-Drift <code>0.1.0</code> → <code>0.25.0</code>. -
+Plugin-Header-Description nennt jetzt Firewall, Rate-Limit,
+Under-Attack, E-Mail-Obfuskation und Code-Challenge (vorher: nur
+PoW-Spamschutz). - README-Description um WPForms-,
+WooCommerce-Integrationen und Code-Challenge-Absatz erweitert. -
+<code>uninstall.php</code>: Transient-Cleanup vom
+<code>_used_</code>-Prefix auf das gesamte
+<code>creationell_captcha_</code>-Prefix erweitert; entfernt jetzt auch
+<code>_cc_*</code>, <code>_rl_*</code> und
+<code>_git_update_*</code>-Caches/Locks.</p>
+<p><strong>Behebt:</strong> - Inkorrekt formulierter
+IPv6-Anonymisierungs-Hilfetext (<code>includes/settings.php</code>):
+stimmt jetzt mit der Code-Logik überein (erste 48 Bit bleiben, letzte 80
+Bit auf 0). - Tippfehler „mehrmietigen” → „mehrmandantigen (Shared
+Hosting)“. - <code>Tested up to: 6.9</code> → <code>6.8</code>
+(WordPress 6.9 ist Stand 2026-05-28 noch nicht released).</p>
+<h3 id="section-11">0.24.0</h3>
+<ul>
+<li>WP-CLI-Nachzug Phase 2: schließt sieben CLI-Coverage-Lücken nach den
+Modulen 14–16.</li>
+<li>Neuer Listen-Befehl
+<code>wp creacaptcha watchlist add|remove|list|clear</code> für die
+Code-Challenge-Watchlist (<code>code_challenge_watchlist</code>).</li>
+<li><code>wp creacaptcha status</code> zeigt sechs zusätzliche Zeilen:
+Form-Plugin- Toggles (CF7, Forminator, WPForms, WooCommerce + gruppierte
+Zeile für die vier Woo-Sub-Toggles) und den
+Watchlist-Eintragszähler.</li>
+<li><code>wp creacaptcha enable code-challenge</code> /
+<code>disable code-challenge</code> togglet
+<code>code_challenge_enabled</code> über <code>feature_map()</code>.
+Doc-Strings von <code>enable</code>/<code>disable</code> listen jetzt
+alle 19 Features (vorher 12, fehlten WPForms, WooCommerce und die vier
+wc-* Mappings).</li>
+<li><code>wp creacaptcha settings set</code> unterstützt jetzt
+zusätzlich die Feldtypen <code>text</code>, <code>color</code> und
+<code>textblock</code> — damit werden die Widget-Customization-Felder
+(<code>widget_floating_anchor</code>, <code>widget_primary_color</code>,
+<code>widget_custom_css</code>, <code>widget_strings_override</code>)
+über die CLI setzbar. Verworfene JSON-/Hex-Werte werden via
+<code>WP_CLI::warning()</code> gemeldet.</li>
+<li><code>wp creacaptcha doctor</code> ergänzt einen GD-Extension-Check:
+wenn <code>code_challenge_enabled</code> aktiv ist, muss die
+PHP-GD-Extension geladen sein (sonst <code>error</code> mit Exit-Code
+1).</li>
+<li><code>wp creacaptcha log list</code> unterstützt jetzt
+<code>--fields=</code> (WP-CLI- Standard); Default-Output bleibt die
+bisherige 4-Spalten-Übersicht, verfügbar werden alle 15 Spalten der
+Event-Log-Tabelle.</li>
+<li>Neuer Befehl <code>wp creacaptcha log show &lt;id&gt;</code> zeigt
+einen einzelnen Event mit allen 15 Spalten als Key-Value-Tabelle (oder
+JSON/YAML/CSV via <code>--format</code>).</li>
+</ul>
+<h3 id="section-12">0.23.0</h3>
+<ul>
+<li>WPForms-Integration: Neues Setting „WPForms schützen” im
+Formulare-Tab. Aktiv, sobald das WPForms-Plugin installiert ist.
+Auto-Inject des Widgets vor dem Submit-Button
+(<code>wpforms_display_submit_before</code>); Verify über
+<code>wpforms_process</code>-Action, Fehlerausgabe via
+<code>wpforms()-&gt;process-&gt;errors[$form_id]['header']</code>.</li>
+<li>WooCommerce-Integration: Master-Toggle „WooCommerce schützen” plus
+vier Sub-Toggles für Checkout, My-Account-Login,
+My-Account-Registrierung und Lost-Password. Auto-Inject auf den nativen
+Woo-Hooks (<code>woocommerce_review_order_before_submit</code>,
+<code>woocommerce_login_form_end</code>,
+<code>woocommerce_register_form</code>,
+<code>woocommerce_lostpassword_form</code>); Verify auf
+<code>woocommerce_after_checkout_validation</code>,
+<code>woocommerce_process_login_errors</code>,
+<code>woocommerce_registration_errors</code>.</li>
+<li>Lost-Password ist Render-only: Server-Verifikation läuft über
+<code>protect_password_reset</code> (WordPress-Kernformular), weil
+Woo-Lost-Password über WP-Core <code>retrieve_password()</code>
+zurückläuft und damit <code>lostpassword_post</code> feuert.</li>
+<li>Produkt-Bewertungen werden bewusst nicht über einen eigenen
+Sub-Toggle abgebildet — Reviews sind WordPress-Kommentare und durch
+<code>protect_comments</code> abgedeckt; der Hilfetext am Master-Toggle
+weist darauf hin.</li>
+<li>Render-Override-Filter (alle fünf, einheitliche
+<code>(bool, int $form_id)</code>- Signatur):
+<code>creationell_captcha_wpforms_autoinject</code>,
+<code>creationell_captcha_wc_checkout_autoinject</code>,
+<code>creationell_captcha_wc_login_autoinject</code>,
+<code>creationell_captcha_wc_registration_autoinject</code>,
+<code>creationell_captcha_wc_lost_password_autoinject</code>. Bei
+<code>false</code> wird das Auto-Inject übersprungen; die Verifikation
+bleibt aktiv.</li>
+<li>WP-CLI: sechs neue Feature-Schlüssel für
+<code>wp creacaptcha enable|disable</code> — <code>wpforms</code>,
+<code>woocommerce</code>, <code>wc-checkout</code>,
+<code>wc-login</code>, <code>wc-registration</code> und
+<code>wc-lost-password</code>.</li>
+<li>Bypass-Kette und Kill-Switch wirken wie bei den bestehenden
+Integrationen: jeder Verify-Pfad ruft
+<code>creationell_captcha_request_bypassed()</code> und respektiert
+<code>CREATIONELL_CAPTCHA_DISABLE</code>.</li>
+</ul>
+<h3 id="section-13">0.22.0</h3>
+<ul>
+<li>Widget-Bugfix: Der
+ALTCHA-<code>&lt;altcha-widget&gt;</code>-Custom-Element-Tag erkennt nur
+9 spezifische HTML-Attribute (<code>auto</code>, <code>challenge</code>,
+<code>configuration</code>, <code>display</code>, <code>language</code>,
+<code>name</code>, <code>theme</code>, <code>type</code>,
+<code>workers</code>) — alle anderen Props (Verify-URL,
+Floating-Anchor/Placement/Offset, Code-Challenge- Display,
+Hide-Footer/Logo, Strings-Override) müssen als JSON-Blob über das
+<code>configuration</code>-Attribut übergeben werden. Bisher hat das
+Plugin diese Settings als Einzelattribute emittiert, die das Widget
+stillschweigend ignoriert hat. Sichtbare Folgen: Floating-Anchor griff
+nicht, ALTCHA-Footer/Logo blieben sichtbar, Code-Challenge-Modal-Modi
+(overlay/bottomsheet) wurden ignoriert, eigene Übersetzungen waren
+wirkungslos. Mit v0.22.0 wirken alle Modul-14-Settings korrekt — das ist
+eine Verhaltensänderung, falls jemand diese Felder auf Nicht- Default
+gesetzt hatte.</li>
+<li>Bild-Code-Challenge: Zweite Captcha-Stufe nach der
+Proof-of-Work-Verifikation — ein vom Server ausgestelltes PNG mit einem
+4–8-stelligen Code, den der User abtippen muss. Self-hosted, kein
+externer Dienst, kein ALTCHA Sentinel.</li>
+<li>Neue Section „Bild-Code-Challenge” im Captcha-Tab mit Master-Toggle
+und drei unabhängigen Trigger-Bedingungen: Under-Attack-Modus,
+Rate-Limit- Schwellwert (konfigurierbar 50–95 %) sowie eine eigene
+Watch-Liste von IPs/CIDRs. Mehrere Trigger gleichzeitig sind
+OR-verknüpft.</li>
+<li>Code-Optionen: Länge 4–8, Zeichensatz (nur Ziffern / alphanumerisch
+/ alphanumerisch ohne Verwechsler), Token-Gültigkeit 60–900
+Sekunden.</li>
+<li>Zwei neue REST-Endpoints:
+<code>GET /wp-json/creationell-captcha/v1/code-image</code> (PNG-Bild)
+und <code>POST /wp-json/creationell-captcha/v1/code-verify</code>
+(Code-Prüfung, liefert eine serverseitig gelöste ALTCHA-Payload, die
+durch den bestehenden Verifizierungspfad geht). Tokens sind opake
+Server- Identifier (32 Hex), Code lebt nur in einem WP-Transient — kein
+Client-side-Leak des erwarteten Codes.</li>
+<li>Trigger „Immer”: Vierter Trigger-Toggle in der
+Code-Challenge-Section, damit die Code-Challenge unabhängig von
+Under-Attack / Rate-Limit- Schwelle / Watch-Liste bei jedem
+Captcha-Request ausgespielt wird — sinnvoll fürs lokale Testen oder
+pauschal erhöhte Sicherheit. Default aus.</li>
+<li>Under-Attack-Schutz: Code-Challenge wird auf dem Under-Attack-Inter-
+stitial unterdrückt (das Interstitial-Widget ist invisible — ein Code-
+Modal könnte nicht angezeigt werden). Das Interstitial hängt einen
+HMAC-signierten Kontext-Token an die challenge-URL, der nur server-
+seitig signierbar ist; ein Angreifer kann die Suppression nicht selbst
+triggern.</li>
+<li>Das <code>&lt;altcha-widget&gt;</code> bekommt verifyUrl (sowie alle
+anderen Modul-14- Settings) via das
+<code>configuration</code>-JSON-Attribut, damit es vom Widget überhaupt
+gelesen wird.</li>
+<li>Bild-Rendering via PHP-GD mit vendorierter DejaVuSans-Bold-TTF unter
+<code>assets/fonts/captcha.ttf</code> und naiver Anti-OCR-Verzerrung
+(rotierte Zeichen, Querlinien, Rauschen). Wenn die TTF-Datei fehlt,
+fällt der Renderer auf den GD-Bitmap-Font 5 zurück.</li>
+<li>WP-CLI: <code>wp creacaptcha status</code> zeigt eine neue Zeile
+„Code-Challenge” mit dem effektiven Zustand (<code>an</code> /
+<code>aus</code> / <code>inaktiv (kein GD)</code>).</li>
+<li>Bypass-Schutz: <code>Engine::verify()</code> lehnt jeden Payload ab,
+in dem <code>parameters.data.ccode</code> gesetzt ist — verhindert, dass
+ein Angreifer den ursprünglichen Code-Challenge-Payload direkt am
+Form-Submit vorbei einreicht. Frische Payloads aus
+<code>Engine::issue_signed_payload()</code> haben kein
+<code>data.ccode</code> und passieren den Filter.</li>
+<li>Wenn die PHP-GD-Extension fehlt, deaktiviert sich das Feature
+stillschweigend, der bestehende PoW-Flow bleibt unangetastet, und in der
+Settings-Section erscheint eine Warn-Notice.</li>
+</ul>
+<h3 id="section-14">0.21.0</h3>
+<ul>
+<li>Widget: Vendoriert jetzt das ALTCHA-Basis-Stylesheet
+(<code>dist/external/altcha.css</code>) und die sieben Theme-CSS-Files
+(<code>dist/themes/*.min.css</code>). Ohne diese fehlten alle
+Display-Modus-Positionierungen (floating/overlay/bar) komplett, und das
+Theme-Attribut hatte keinen sichtbaren Effekt.</li>
+<li>Widget: <code>widget_display</code>-Option <code>bottomsheet</code>
+entfernt — der Wert war kein gültiger ALTCHA-<code>display</code>-Modus
+(nur Inline-Fallback auf standard). Stattdessen neues Setting
+<code>widget_code_challenge_display</code>
+(standard/overlay/bottomsheet) für die ALTCHA-Code-Challenge-Modal, wo
+<code>bottomsheet</code> tatsächlich hingehört.</li>
+<li>Widget: Drei neue Settings für den schwebenden Modus:
+<code>widget_floating_anchor</code> (CSS-Selektor, leer = erster
+Submit-Button), <code>widget_floating_placement</code>
+(auto/top/bottom), <code>widget_floating_offset</code> (px, 0-200). Ohne
+Anchor bleibt das schwebende Widget off-screen — Help-Text macht das
+jetzt klar.</li>
+<li>Update-Procedure für das Widget-Asset auf
+<code>sfw npm pack altcha@&lt;version&gt;</code> umgestellt
+(Socket-Firewall-Schutz vor kompromittierten npm-Paketen).</li>
+<li>Architektur: Neuer Field-Type <code>text</code> (single-line input)
+für CSS-Selektor- und ähnliche String-Settings.</li>
+</ul>
+<h3 id="section-15">0.20.0</h3>
+<ul>
+<li>Widget: Acht neue Customization-Settings unter „Captcha →
+Widget-Erscheinungsbild”. Display-Modus (standard, floating, overlay,
+bar, invisible, bottomsheet), Interaktions-Typ (checkbox/switch/native),
+automatische Auslösung (none/onload/onsubmit), eines der acht
+ALTCHA-v3-Themes, optionales Ausblenden des ALTCHA-Brandings,
+Akzentfarbe per Color-Picker, eigenes CSS und JSON-Override für die
+Widget-Texte.</li>
+<li>Widget: Das alte zusammengesetzte <code>widget_mode</code>-Setting
+(visible/auto/overlay) entfällt; ein Upgrade-Hook migriert beim ersten
+Admin-Aufruf automatisch auf die neuen Keys (<code>visible</code> →
+standard+none, <code>auto</code> → invisible+onload,
+<code>overlay</code> → floating+onsubmit).</li>
+<li>Widget: Der overlay-Modus aus Modul 11a wird jetzt korrekt mit der
+v3- Syntax <code>display="floating"</code> ausgespielt (vorher
+veraltetes <code>floating="auto"</code>).</li>
+<li>Widget: Inline-CSS-Variable
+<code>--creationell-captcha-primary</code> überschreibt die
+ALTCHA-Standard-Akzentfarbe, wenn <code>widget_primary_color</code>
+gesetzt ist. Eigenes CSS wird direkt danach ausgegeben und kann beliebig
+überschreiben.</li>
+<li>WP-CLI: <code>wp creacaptcha status</code> zeigt eine neue Zeile
+„Widget-Anzeige” mit dem aktiven Display-Modus.</li>
+<li>Architektur: Zwei neue Field-Typen <code>color</code> und
+<code>textblock</code> ergänzen das Settings-Framework.
+<code>textblock</code> speichert mehrzeiligen Text ohne die
+Line-Listen-Semantik des bisherigen <code>textarea</code>-Typs.</li>
+</ul>
+<h3 id="section-16">0.19.0</h3>
+<ul>
+<li>WP-CLI: Fünf neue Listen-Subbefehle für die seit v0.13.0
+hinzugekommenen Listen-Settings —
+<code>wp creacaptcha trusted-proxies|bypass-ua|bypass-cookies|actions|inject-paths</code>,
+jeweils mit <code>add|remove|list|clear</code>. Damit sind alle Listen
+über dedizierte Befehle pflegbar, ohne den Umweg über
+<code>settings set</code>.</li>
+<li>WP-CLI: Neue Subcommand-Gruppe
+<code>wp creacaptcha cloudflare</code> mit
+<code>refresh</code>/<code>clear</code>/<code>status</code>. Der alte
+Top-Level-Befehl <code>wp creacaptcha refresh-cloudflare-ips</code>
+bleibt als Deprecation-Alias erhalten (Entfernung frühestens
+v1.0.0).</li>
+<li>WP-CLI: Neuer Diagnose-Befehl
+<code>wp creacaptcha test-bypass</code>, simuliert die Bypass-Auswertung
+mit <code>--ip</code>/<code>--ua</code>/<code>--cookie</code>-Flags.
+Exit 0 bei Bypass, Exit 1 sonst.</li>
+<li>WP-CLI: Neuer Diagnose-Befehl <code>wp creacaptcha doctor</code> mit
+9 Pflicht-Checks (Vendored Library, HMAC-Secrets, Event-Log-Tabelle,
+Cloudflare-Refresh-Cron, Kill-Switch, Captcha-Plugin-Konflikte,
+PHP-Version, Cloudflare-Cache-Alter, Settings-Defaults). Erweiterbar
+über den Filter <code>creationell_captcha_doctor_checks</code>.</li>
+<li>WP-CLI: <code>wp creacaptcha status</code> listet jetzt auch die
+fünf neuen Listen mit Eintragszählern.</li>
+<li>Werkzeuge-Seite: Neuer fünfter Block „Cloudflare-IP-Cache” mit
+Status (gecachte v4/v6-Ranges, letzter Refresh, nächster Cron-Run,
+Quelle) und zwei Buttons („Jetzt aktualisieren”, „Cache leeren”). Beide
+Buttons rufen exakt die gleichen Helfer wie die CLI.</li>
+<li>Refactor: Die feldspezifische Validierung für Action-Patterns und
+Bypass-Cookies wurde aus
+<code>creationell_captcha_sanitize_settings()</code> in zwei
+wiederverwendbare Helfer extrahiert — Charset-Änderungen sind jetzt an
+einer Stelle gepflegt. Außerdem wurde <code>request_bypassed()</code> in
+eine reine <code>evaluate_bypass(?ip, ?ua, cookies)</code> plus dünnen
+Globals-Wrapper aufgeteilt; alle bestehenden Aufrufer bleiben
+unverändert.</li>
+</ul>
+<h3 id="section-17">0.18.0</h3>
+<ul>
+<li>Interceptor: Drei neue Mechaniken. Die Pfad-Liste
+(<code>Geschützte Pfade</code>) unterstützt jetzt <code>!</code>-Präfix
+für Ausschluss-Muster (Allow-Liste mit Ausnahmen), z. B.
+<code>/forms/*</code> zusammen mit <code>!/forms/whitelisted</code>.
+Eine neue Liste <code>Geschützte Aktionen</code> schützt
+WordPress-Action-Endpoints (das <code>$_POST[action]</code>- oder
+<code>$_GET[action]</code>-Feld auf admin-post.php / admin-ajax.php) —
+selbst wenn diese sonst durch den <code>is_admin()</code>-Bypass
+ausgenommen wären. Eine neue Liste <code>Inject-Pfade</code> injiziert
+die Sicherheitsabfrage automatisch vor jedem <code>&lt;/form&gt;</code>
+der passenden Seiten — nützlich für Theme- oder Drittanbieter-Formulare,
+die sich nicht direkt modifizieren lassen (idempotent: Formulare mit
+bereits eingebautem Widget werden übersprungen).</li>
+</ul>
+<h3 id="section-18">0.17.0</h3>
+<ul>
+<li>Logging-Granularität: Sechs neue Backend-Checkboxes
+(<code>Erfolgreiche   Verifikationen loggen</code>,
+<code>Fehlgeschlagene Verifikationen loggen</code>,
+<code>Firewall-Blocks loggen</code>,
+<code>Rate-Limit-Blocks loggen</code>,
+<code>Under-Attack-Abfragen loggen</code>,
+<code>Ausgestellte Challenges loggen</code>) steuern, welche
+Ereignistypen in den Detail-Event-Log geschrieben werden. Aggregierte
+Tages- und Stundenzähler erfassen alle Typen unabhängig davon.
+Per-Default sind die ersten fünf an,
+<code>Ausgestellte Challenges   loggen</code> ist aus
+(hochvolumig).</li>
+<li>Neuer Ereignistyp <code>challenge</code> — wird bei jedem
+REST-Aufruf der Challenge-Route gefeuert. Im Statistik-Dashboard
+erscheint die neue Kachel/Spalte „Challenges ausgestellt”
+automatisch.</li>
+<li>Request-Body-Fingerabdruck: Optionaler neuer Schalter
+<code>Request-Body-Fingerabdruck speichern</code>. Wenn aktiv, wird pro
+Event-Log-Zeile eine JSON-Map aus Feldnamen und Wertlängen mit abgelegt
+— ohne die Werte selbst. Hilft bei der Angriffsmuster-Analyse, ohne PII
+zu speichern.</li>
+<li>IP-Anonymisierung: Optionaler neuer Schalter
+<code>IP-Adressen anonymisieren</code> trunkiert IPv4-Adressen auf das
+letzte Oktett und IPv6 auf die letzten 80 Bit, bevor sie in den
+Event-Log geschrieben werden — DSGVO-konform.</li>
+</ul>
+<h3 id="section-19">0.16.0</h3>
+<ul>
+<li>Bypass: Neue Backend-Sektion „Bypass” im Firewall-Tab mit drei
+Eintragsarten, die jeweils Firewall, Rate-Limiter, Captcha und
+Under-Attack-Modus gleichermaßen umgehen — die bisherige
+IP-Erlaubnisliste (jetzt global), eine User-Agent-Wildcard-Liste und
+eine Cookie-Bypass-Liste im Format „name=wert”. Bypass-Treffer auf
+Formular-Ebene erscheinen im Event-Log als <code>verified</code>-Eintrag
+mit passendem Grund (IP-Allowlist / UA-Bypass / Cookie-Bypass).</li>
+<li>Widget: Dritter Anzeigemodus „Schwebendes Overlay” — die
+Sicherheits- abfrage erscheint als kleines Pop-up über dem Submit-Button
+und löst beim Submit automatisch.</li>
+</ul>
+<h3 id="section-20">0.15.0</h3>
+<ul>
+<li>Firewall/IP-Erkennung: Der weitergeleitete Header (X-Forwarded-For,
+X-Real-IP, CF-Connecting-IP, True-Client-IP) wird nur noch dann
+beachtet, wenn die direkte Verbindung aus einem vertrauenswürdigen Hop
+kommt. Neue Sektion „Proxy &amp; IP-Ermittlung” im Firewall-Tab mit
+Textarea für vertrauenswürdige Proxies, Toggles für Private-Netze und
+Cloudflare und optionalem täglichem Cron-Refresh der CF-Ranges.
+Cloudflare-Snapshot wird mitgeliefert. Die Trust-Liste lässt sich
+zusätzlich über die wp-config-Konstante
+<code>CREATIONELL_CAPTCHA_TRUSTED_PROXIES</code> ergänzen. Bei aktivem
+Proxy-Modus ohne konfigurierte Trust-Quelle erscheint im Backend ein
+Hinweis. Neuer WP-CLI-Befehl
+<code>wp creacaptcha refresh-cloudflare-ips</code>.</li>
+</ul>
+<h3 id="section-21">0.14.0</h3>
+<ul>
+<li>Statistik: Die Statistik-Seite hat einen „↻ Aktualisieren”-Button.
+Der „Ereignisse”-Tab erfasst je Ereignis zusätzlich Plugin/Integration,
+Aktion, Formular-ID, Auslöser-Grund, User-Agent, Referrer, Benutzer-ID
+und die eingereichten Verifizierungsdaten, zeigt eine erweiterte
+Spaltenauswahl und öffnet pro Zeile ein Detail-Fenster mit allen
+erfassten Feldern. Der CSV-Export enthält die neuen Felder.</li>
+</ul>
+<h3 id="section-22">0.13.0</h3>
+<ul>
+<li>WP-CLI: neue Befehlsgruppe <code>wp creacaptcha …</code> für Status,
+Diagnose, Statistik, Einstellungen
+(lesen/setzen/exportieren/importieren/zurücksetzen), Modul-Aktivierung,
+Pflege der IP- und User-Agent-Listen, Verwaltung des Event-Logs und eine
+Reparatur-Routine.</li>
+<li>Backend: neue Seite <strong>CreaCaptcha → Werkzeuge</strong> zum
+Exportieren und Importieren der Einstellungen, für einen vollständigen
+Reset auf Werkseinstellungen sowie zum Laden der Standardwerte unter
+Beibehaltung der gepflegten Listen.</li>
+</ul>
+<h3 id="section-23">0.12.0</h3>
+<ul>
+<li>Statistik: Der „Ereignisse”-Tab hat jetzt eine Filter-Leiste —
+Freitextsuche über IP-Adresse und Pfad, Filter nach Ereignistyp und ein
+Von/Bis-Datumsbereich —, blättert seitenweise durch alle aufgezeichneten
+Ereignisse und bietet einen CSV-Export der jeweils gefilterten
+Ereignismenge zur weiteren Analyse.</li>
+</ul>
+<h3 id="section-24">0.11.0</h3>
+<ul>
+<li>Statistik: Die Statistik-Seite ist jetzt ein Dashboard mit drei Tabs
+(Übersicht, Verlauf, Ereignisse). Der „Übersicht”-Tab zeigt KPI-Kacheln
+für den 24-Stunden-Blick und eine Vergleichstabelle über vier
+Zeitfenster (24 Stunden, 7 Tage, 30 Tage, 90 Tage); ein neuer
+stündlicher Zähler liefert die Daten für das 24-Stunden-Fenster.</li>
+</ul>
+<h3 id="section-25">0.10.0</h3>
+<ul>
+<li>Backend: Die Einstellungsseite ist jetzt in sechs thematische Tabs
+gegliedert (Captcha, Formulare, Firewall, Under-Attack, E-Mail-Schutz,
+Analytics) statt einer langen Liste — übersichtlicher, mit weiterhin
+einem gemeinsamen „Änderungen speichern” für alle Tabs.</li>
+</ul>
+<h3 id="section-26">0.9.0</h3>
+<ul>
+<li>E-Mail-Schutz: zusätzlicher Ganzseiten-Buffer-Modus, der das gesamte
+Seiten-HTML verarbeitet und damit auch theme-hart-kodierte
+<code>mailto:</code>-Links und Adressen (z. B. in Footer-Templates)
+verschleiert; der Modus ist unter „Einstellungen → CreaCaptcha →
+E-Mail-Schutz” wählbar.</li>
+</ul>
+<h3 id="section-27">0.8.0</h3>
+<ul>
+<li>E-Mail-Obfuskation: <code>mailto:</code>-Links und
+Klartext-E-Mail-Adressen in Inhalten, Auszügen, Text-Widgets und
+Kommentaren werden im Seitenquelltext verschleiert und per JavaScript
+erst im Browser wiederhergestellt; ohne JavaScript erscheint ein
+neutraler Platzhalter.</li>
+</ul>
+<h3 id="section-28">0.7.0</h3>
+<ul>
+<li>Analytics &amp; Event-Logging: datenschutzfreundliche aggregierte
+Tageszähler je Ereignistyp und ein Statistik-Dashboard; optional ein
+detaillierter Event-Log (eigene Tabelle, IP-Adressen) mit
+konfigurierbarer Aufbewahrung.</li>
+</ul>
+<h3 id="section-29">0.6.0</h3>
+<ul>
+<li>Under-Attack-Modus: ein einschaltbarer Notfall-Modus, der jeden
+anonymen Besucher per Interstitial-Proof-of-Work-Abfrage prüft, bevor er
+die Website erreicht; ein zeitlich begrenzter, signierter Pass-Cookie
+lässt geprüfte Besucher danach frei surfen.</li>
+</ul>
+<h3 id="section-30">0.5.0</h3>
+<ul>
+<li>Firewall &amp; Rate-Limiting: IP-Blockliste/-Erlaubnisliste (inkl.
+CIDR-Bereiche), User-Agent-Blockliste und ein per-IP-Rate-Limiter mit
+wählbarem Wirkungsbereich. Beide laufen als frühe Request-Guards, mit
+Proxy-Modus für die Client-IP-Ermittlung.</li>
+</ul>
+<h3 id="section-31">0.4.0</h3>
+<ul>
+<li>Integrationen für Contact Form 7 und Forminator: automatischer
+Proof-of-Work-Schutz für die Formulare beider Plugins, mit
+<code>[creationell_captcha]</code>-Platzhalter zur Positionierung und je
+einem Einstellungs-Schalter.</li>
+</ul>
+<h3 id="section-32">0.3.0</h3>
+<ul>
+<li>Interceptor-Modul: generischer serverseitiger Request-Schutz für
+eigene Formular-Pfade (<code>*</code>-Wildcards, fail-closed), Shortcode
+<code>[creationell_captcha]</code> und Template-Tag
+<code>creationell_captcha_widget()</code> zum Einbau des Widgets in
+beliebige Formulare.</li>
+</ul>
+<h3 id="section-33">0.2.0</h3>
+<ul>
+<li>Captcha-Mechanik: Proof-of-Work-Sicherheitsabfrage (PBKDF2/SHA-256
+oder Argon2id), Challenge-REST-Endpoint, gebündelte
+ALTCHA-Widget-Web-Component, Replay-Schutz und Schutz der vier
+WordPress-Kernformulare.</li>
+</ul>
+<h3 id="section-34">0.1.0</h3>
+<ul>
+<li>Erstes Grundgerüst: Plugin-Bootstrap, Settings-API-Seite, gebündelte
+ALTCHA-Bibliothek (Composer + Strauss) und
+Self-Hosted-GitHub-Updater.</li>
+</ul>

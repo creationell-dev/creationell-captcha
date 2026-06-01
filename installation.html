@@ -1,0 +1,38 @@
+<ol type="1">
+<li>Den Plugin-Ordner <code>creationell-captcha</code> nach
+<code>/wp-content/plugins/</code> hochladen — entweder als ZIP über
+<strong>Plugins → Installieren → Plugin hochladen</strong> oder per
+FTP/SSH/<code>wp plugin install</code>.</li>
+<li>Unter <strong>Plugins → Installierte Plugins</strong> das Plugin
+<strong>CreaCaptcha</strong> aktivieren.</li>
+<li>Den neuen Menüpunkt <strong>CreaCaptcha</strong> im
+WordPress-Adminbereich öffnen.</li>
+<li>Unter <strong>CreaCaptcha → Einstellungen</strong> im Tab
+<strong>Captcha</strong> den Master-Toggle prüfen (Standard: aktiv) und
+den Tab <strong>Formulare</strong> durchgehen, um
+WordPress-Kernformulare und Form-Plugins zu aktivieren.</li>
+<li>Falls eigene Formular-Pfade abgesichert werden sollen: im Tab
+<strong>Captcha → Interceptor</strong> die Liste <strong>Geschützte
+Pfade</strong> pflegen.</li>
+<li>Empfohlen: einmal <strong>CreaCaptcha → Statistik</strong> öffnen,
+damit der Event-Log aktiviert werden kann (optional — die
+Aggregat-Statistik läuft auch ohne).</li>
+</ol>
+<h3 id="anforderungen">Anforderungen</h3>
+<ul>
+<li>WordPress <strong>6.9</strong> oder höher</li>
+<li>PHP <strong>8.3</strong> oder höher</li>
+<li>Für die Bild-Code-Challenge: PHP-Erweiterung
+<strong>GD</strong></li>
+<li>Für den optionalen Argon2id-Algorithmus: PHP-Erweiterung
+<strong>Sodium</strong></li>
+</ul>
+<p>Das Plugin prüft die Mindestversionen beim Aktivieren und zeigt im
+Admin-Bereich eine deutliche Hinweisleiste, wenn die Umgebung zu alt
+ist.</p>
+<h3 id="updates">Updates</h3>
+<p>Updates kommen direkt aus dem GitHub-Repo. Der eingebaute
+Self-Hosted-Updater (<code>includes/class-plugin-updater.php</code>)
+prüft regelmäßig das Manifest, vergleicht Versionen und installiert das
+offiziell signierte ZIP samt SHA-256-Checksum.</p>
+<hr />

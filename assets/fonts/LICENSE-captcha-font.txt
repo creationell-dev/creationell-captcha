@@ -1,0 +1,13 @@
+captcha.ttf — DejaVuSans-Bold from dejavu-fonts v2.37
+Source: https://github.com/dejavu-fonts/dejavu-fonts/releases/tag/version_2_37
+
+License: Bitstream Vera Fonts Copyright + DejaVu modifications,
+both free for redistribution and modification. Full text in the
+upstream release archive (LICENSE file).
+
+Used by: includes/code-challenge-image.php (PNG code-image rendering,
+Feature-Modul 15).
+
+To refresh: download a newer dejavu-fonts release ZIP and replace
+captcha.ttf with the extracted ttf/DejaVuSans-Bold.ttf. Update the
+version number above. No subsetting in this revision.

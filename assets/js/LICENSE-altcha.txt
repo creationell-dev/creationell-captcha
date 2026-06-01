@@ -1,0 +1,98 @@
+ALTCHA widget — vendored from the npm package "altcha" v3.0.9
+Source: https://github.com/altcha-org/altcha  (MIT License)
+
+Vendored files (30 in total):
+
+  Web-Component + Worker (this directory):
+    assets/js/altcha.min.js                  <- dist/main/altcha.umd.min.cjs
+    assets/js/altcha-argon2id.worker.js      <- dist/workers/argon2id.js
+
+  Base stylesheet (default CSS variables, display-mode positioning,
+  base styling for checkbox/switch/popover/spinner — under assets/css/):
+    assets/css/altcha.css                    <- dist/external/altcha.css
+
+  Theme stylesheets (variable overrides per theme — under assets/css/altcha-themes/):
+    assets/css/altcha-themes/aqua.css        <- dist/themes/aqua.min.css
+    assets/css/altcha-themes/business.css    <- dist/themes/business.min.css
+    assets/css/altcha-themes/caramel.css     <- dist/themes/caramel.min.css
+    assets/css/altcha-themes/cupcake.css     <- dist/themes/cupcake.min.css
+    assets/css/altcha-themes/cyberpunk.css   <- dist/themes/cyberpunk.min.css
+    assets/css/altcha-themes/lime.css        <- dist/themes/lime.min.css
+    assets/css/altcha-themes/wireframe.css   <- dist/themes/wireframe.min.css
+
+  (The `default` theme uses the base stylesheet only — no extra file.)
+
+  Locale bundles (UMD, self-registering — under assets/js/altcha-i18n/):
+    assets/js/altcha-i18n/de.js              <- dist/i18n/de.umd.cjs
+    assets/js/altcha-i18n/en.js              <- dist/i18n/en.umd.cjs
+    assets/js/altcha-i18n/fr-fr.js           <- dist/i18n/fr-fr.umd.cjs
+    assets/js/altcha-i18n/fr-ca.js           <- dist/i18n/fr-ca.umd.cjs
+    assets/js/altcha-i18n/es-es.js           <- dist/i18n/es-es.umd.cjs
+    assets/js/altcha-i18n/es-419.js          <- dist/i18n/es-419.umd.cjs
+    assets/js/altcha-i18n/it.js              <- dist/i18n/it.umd.cjs
+    assets/js/altcha-i18n/nl.js              <- dist/i18n/nl.umd.cjs
+    assets/js/altcha-i18n/pt-pt.js           <- dist/i18n/pt-pt.umd.cjs
+    assets/js/altcha-i18n/pt-br.js           <- dist/i18n/pt-br.umd.cjs
+    assets/js/altcha-i18n/pl.js              <- dist/i18n/pl.umd.cjs
+    assets/js/altcha-i18n/cs.js              <- dist/i18n/cs.umd.cjs
+    assets/js/altcha-i18n/sk.js              <- dist/i18n/sk.umd.cjs
+    assets/js/altcha-i18n/da.js              <- dist/i18n/da.umd.cjs
+    assets/js/altcha-i18n/sv.js              <- dist/i18n/sv.umd.cjs
+    assets/js/altcha-i18n/fi.js              <- dist/i18n/fi.umd.cjs
+    assets/js/altcha-i18n/nb.js              <- dist/i18n/nb.umd.cjs
+    assets/js/altcha-i18n/hu.js              <- dist/i18n/hu.umd.cjs
+    assets/js/altcha-i18n/ro.js              <- dist/i18n/ro.umd.cjs
+    assets/js/altcha-i18n/el.js              <- dist/i18n/el.umd.cjs
+
+Update procedure (from the plugin root):
+
+  V=3.0.10  # set to the target altcha version
+  cd /tmp && rm -rf altcha-vendor && mkdir altcha-vendor && cd altcha-vendor
+
+  # `sfw` is the Socket Firewall wrapper — REQUIRED in this environment
+  # to protect against compromised npm packages. Never run plain `npm pack`.
+  sfw npm pack altcha@$V
+
+  tar -xzf altcha-$V.tgz
+
+  # Copy the non-locale files into the plugin:
+  P=/home/jpk/wp/ALTCHA/creationell-captcha
+  cp package/dist/main/altcha.umd.min.cjs   $P/assets/js/altcha.min.js
+  cp package/dist/workers/argon2id.js       $P/assets/js/altcha-argon2id.worker.js
+  cp package/dist/external/altcha.css       $P/assets/css/altcha.css
+  for t in aqua business caramel cupcake cyberpunk lime wireframe; do
+      cp package/dist/themes/$t.min.css     $P/assets/css/altcha-themes/$t.css
+  done
+
+  for l in de en fr-fr fr-ca es-es es-419 it nl pt-pt pt-br pl cs sk \
+           da sv fi nb hu ro el; do
+      cp package/dist/i18n/$l.umd.cjs       $P/assets/js/altcha-i18n/$l.js
+  done
+
+  cd /tmp && rm -rf altcha-vendor
+
+  # Then refresh this notice (bump the version line at the top).
+
+---
+
+MIT License
+
+Copyright (c) 2023-2026 Daniel Regeci, BAU Software s.r.o.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
