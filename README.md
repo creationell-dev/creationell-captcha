@@ -3,15 +3,15 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 0.30.1  
+**Version:** 1.0.0  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
-**Contributors:** creationell-dev  
+**Contributors:** creationell-dev, JPKCom  
 **Tags:** captcha, spam, anti-spam, anti-bot, proof of work  
 **Requires at least:** 6.9  
 **Tested up to:** 7.0  
 **Requires PHP:** 8.3  
-**Stable tag:** 0.30.1  
+**Stable tag:** 1.0.0  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -77,6 +77,19 @@ Das Plugin prüft die Mindestversionen beim Aktivieren und zeigt im Admin-Bereic
 ### Updates
 
 Updates kommen direkt aus dem GitHub-Repo. Der eingebaute Self-Hosted-Updater (`includes/class-plugin-updater.php`) prüft regelmäßig das Manifest, vergleicht Versionen und installiert das offiziell signierte ZIP samt SHA-256-Checksum.
+
+---
+
+## Dokumentation
+
+| Ressource | URL |
+|-----------|-----|
+| Plugin-Dokumentation (Web) | https://creationell-dev.github.io/creationell-captcha/ |
+| Update-Manifest (JSON) | https://creationell-dev.github.io/creationell-captcha/plugin_creationell-captcha.json |
+| API-Referenz (PHPDoc) | https://creationell-dev.github.io/creationell-captcha/docs/api/ |
+
+Das Plugin aktualisiert sich über das Update-Manifest selbst — es ist kein
+Eintrag im WordPress.org-Plugin-Verzeichnis erforderlich.
 
 ---
 
@@ -609,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'0.30.1'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.0'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -754,6 +767,40 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.0.0
+
+Erstes stabiles Release. CreaCaptcha ist ein vollständig selbst-gehosteter
+Spamschutz für WordPress — ohne externe Dienste, ohne Tracking, ohne
+Lizenz-Gate.
+
+Funktionsumfang:
+
+- Proof-of-Work-Captcha (ALTCHA-kompatibel, PBKDF2/Argon2id) für Kommentare,
+  Login, Registrierung und Passwort-Reset
+- Formular-Integrationen: Contact Form 7, Forminator, WPForms, WooCommerce
+  (Checkout, Login, Registrierung, Lost-Password)
+- Generischer Interceptor für beliebige URL-Pfade und WordPress-Actions
+- Firewall (IP-/CIDR-/User-Agent-Listen), per-IP-Rate-Limiter, Proxy-Support
+  inkl. Cloudflare
+- Under-Attack-Modus mit anpassbarer 503-Interstitial-Seite (Texte, Farben,
+  Logo, Custom-CSS)
+- Bild-Code-Challenge als optionale zweite Captcha-Stufe
+- E-Mail-Obfuskation (Content-Filter oder Ganzseiten-Buffer)
+- Statistik-Dashboard, Event-Log mit Suche/Filter/CSV-Export
+- Umfassende WP-CLI-Integration (`wp creacaptcha …`)
+- Widget-Anpassung (Themes, Farben, Custom-CSS, 20 Sprachen)
+
+Neu in diesem Release:
+
+- Plugin-Banner für den WordPress-Update-Screen
+- Dokumentations-Sektion in der README (Web-Doku, Update-Manifest,
+  API-Referenz)
+- Contributors-Angabe im Update-Manifest erweitert
+
+Das Update von v0.30.x erfolgt ohne Datenbank-Migration und ohne Breaking
+Changes — bestehende Einstellungen, Listen und Statistiken bleiben
+unverändert erhalten.
 
 ### 0.30.1
 
@@ -1218,8 +1265,8 @@ Fixes im Backend.
   `widget_floating_placement` (auto/top/bottom),
   `widget_floating_offset` (px, 0-200). Ohne Anchor bleibt das schwebende
   Widget off-screen — Help-Text macht das jetzt klar.
-- Update-Procedure für das Widget-Asset auf `sfw npm pack altcha@<version>`
-  umgestellt (Socket-Firewall-Schutz vor kompromittierten npm-Paketen).
+- Update-Procedure für das Widget-Asset auf einen abgesicherten npm-Bezug
+  umgestellt (Schutz vor kompromittierten npm-Paketen).
 - Architektur: Neuer Field-Type `text` (single-line input) für CSS-Selektor-
   und ähnliche String-Settings.
 
