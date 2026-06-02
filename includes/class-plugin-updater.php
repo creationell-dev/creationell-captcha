@@ -12,6 +12,10 @@
  * Plugin-local changes vs. the shared upstream:
  * - Namespace renamed `JPKComPostFilterGitUpdate` → `Creationell\Captcha\GitUpdate`
  * - Class renamed `JPKComGitPluginUpdater` → `CreationellCaptchaGitPluginUpdater`
+ * - Contributors entries include `display_name` (WP core expects it in the
+ *   plugin-information popup; fix pending upstream port)
+ * - no_update entries include `new_version`/`package`/`tested`/`requires_php`
+ *   (WP-CLI reads new_version in `wp plugin list`; fix pending upstream port)
  *
  * Both renames are necessary to avoid `Cannot redeclare class` fatals
  * when more than one of Jean Pierre's plugins (each carrying its own
@@ -248,14 +252,17 @@ final class CreationellCaptchaGitPluginUpdater {
         foreach ( $contributors as $key => $value ) {
             if ( is_string( value: $value ) ) {
                 $wp_contributors[$value] = [
-                    'profile' => sprintf( format: 'https://profiles.wordpress.org/%s', values: $value ),
-                    'avatar'  => sprintf( format: 'https://wordpress.org/grav-redirect.php?user=%s&s=36', values: $value ),
+                    'display_name' => sanitize_text_field( $value ),
+                    'profile'      => sprintf( format: 'https://profiles.wordpress.org/%s', values: $value ),
+                    'avatar'       => sprintf( format: 'https://wordpress.org/grav-redirect.php?user=%s&s=36', values: $value ),
                 ];
             } elseif ( is_array( value: $value ) || is_object( value: $value ) ) {
                 $value = (array) $value;
                 $wp_contributors[$key] = [
-                    'profile' => $value['profile'] ?? sprintf( format: 'https://profiles.wordpress.org/%s', values: $key ),
-                    'avatar'  => $value['avatar']  ?? sprintf( format: 'https://wordpress.org/grav-redirect.php?user=%s&s=36', values: $key ),
+                    // `??` only catches null/missing; an empty-string display_name falls through to WP core's own username fallback.
+                    'display_name' => sanitize_text_field( $value['display_name'] ?? $key ),
+                    'profile'      => $value['profile'] ?? sprintf( format: 'https://profiles.wordpress.org/%s', values: $key ),
+                    'avatar'       => $value['avatar']  ?? sprintf( format: 'https://wordpress.org/grav-redirect.php?user=%s&s=36', values: $key ),
                 ];
             }
         }
@@ -371,9 +378,13 @@ final class CreationellCaptchaGitPluginUpdater {
             $icon_url = $remote->icons->default ?? $remote->icon ?? "https://s.w.org/plugins/geopattern-icon/{$this->plugin_slug}.svg";
 
             $transient->no_update[ $plugin_basename ] = (object) [
-                'slug'   => $this->plugin_slug,
-                'plugin' => $plugin_basename,
-                'icons'  => [
+                'slug'         => $this->plugin_slug,
+                'plugin'       => $plugin_basename,
+                'new_version'  => sanitize_text_field( $remote->version ?? $this->current_version ),
+                'package'      => '',
+                'tested'       => sanitize_text_field( $remote->tested ?? '' ),
+                'requires_php' => sanitize_text_field( $remote->requires_php ?? '' ),
+                'icons'        => [
                     'default' => esc_url_raw( $icon_url )
                 ]
             ];

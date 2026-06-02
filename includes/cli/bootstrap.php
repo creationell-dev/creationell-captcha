@@ -22,7 +22,6 @@ require_once __DIR__ . '/class-cli-settings-command.php';
 require_once __DIR__ . '/class-cli-list-command.php';
 require_once __DIR__ . '/class-cli-log-command.php';
 require_once __DIR__ . '/class-cli-cloudflare-command.php';
-require_once __DIR__ . '/class-cli-cloudflare-refresh-alias.php';
 require_once __DIR__ . '/class-cli-test-bypass-command.php';
 require_once __DIR__ . '/class-cli-doctor-command.php';
 
@@ -40,6 +39,5 @@ WP_CLI::add_command( 'creacaptcha inject-paths', new \Creationell\Captcha\CLI\Li
 WP_CLI::add_command( 'creacaptcha watchlist', new \Creationell\Captcha\CLI\List_Command( 'code_challenge_watchlist', 'ip' ) );
 WP_CLI::add_command( 'creacaptcha log', new \Creationell\Captcha\CLI\Log_Command() );
 WP_CLI::add_command( 'creacaptcha cloudflare', new \Creationell\Captcha\CLI\Cloudflare_Command() );
-WP_CLI::add_command( 'creacaptcha refresh-cloudflare-ips', new \Creationell\Captcha\CLI\Cloudflare_Refresh_Alias() );
 WP_CLI::add_command( 'creacaptcha test-bypass', new \Creationell\Captcha\CLI\Test_Bypass_Command() );
 WP_CLI::add_command( 'creacaptcha doctor', new \Creationell\Captcha\CLI\Doctor_Command() );

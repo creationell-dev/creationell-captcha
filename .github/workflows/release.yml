@@ -169,6 +169,7 @@ jobs:
               username = username.strip()
               if username:
                   contributors[username] = {
+                      "display_name": username,
                       "profile": f"https://profiles.wordpress.org/{username}",
                       "avatar": f"https://wordpress.org/grav-redirect.php?user={username}&s=36"
                   }
