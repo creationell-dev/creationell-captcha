@@ -119,6 +119,10 @@ file as a downstream copy of that shared codebase.</p>
 <ul>
 <li>Namespace renamed <code class="prettyprint">JPKComPostFilterGitUpdate</code> → <code class="prettyprint">Creationell\Captcha\GitUpdate</code></li>
 <li>Class renamed <code class="prettyprint">JPKComGitPluginUpdater</code> → <code class="prettyprint">CreationellCaptchaGitPluginUpdater</code></li>
+<li>Contributors entries include <code class="prettyprint">display_name</code> (WP core expects it in the
+plugin-information popup; fix pending upstream port)</li>
+<li>no_update entries include <code class="prettyprint">new_version</code>/<code class="prettyprint">package</code>/<code class="prettyprint">tested</code>/<code class="prettyprint">requires_php</code>
+(WP-CLI reads new_version in <code class="prettyprint">wp plugin list</code>; fix pending upstream port)</li>
 </ul>
 <p>Both renames are necessary to avoid <code class="prettyprint">Cannot redeclare class</code> fatals
 when more than one of Jean Pierre's plugins (each carrying its own

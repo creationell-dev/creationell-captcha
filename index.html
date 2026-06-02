@@ -100,7 +100,7 @@ https://github.com/creationell-dev/creationell-captcha<br />
 Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus,
 E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet
 ohne externe Dienste.<br />
-<strong>Version:</strong> 1.0.0<br />
+<strong>Version:</strong> 1.0.1<br />
 <strong>Author:</strong> creationell® – die Werbeagentur <a
 href="mailto:marketing@creationell.de"
 class="email">marketing@creationell.de</a><br />
@@ -111,7 +111,7 @@ work<br />
 <strong>Requires at least:</strong> 6.9<br />
 <strong>Tested up to:</strong> 7.0<br />
 <strong>Requires PHP:</strong> 8.3<br />
-<strong>Stable tag:</strong> 1.0.0<br />
+<strong>Stable tag:</strong> 1.0.1<br />
 <strong>License:</strong> GPL-2.0-or-later<br />
 <strong>License URI:</strong>
 https://www.gnu.org/licenses/gpl-2.0.html<br />
@@ -1534,8 +1534,9 @@ Quelle)</td>
 </tr>
 </tbody>
 </table>
-<p>Der ältere Alias <code>wp creacaptcha refresh-cloudflare-ips</code>
-bleibt vorerst als Deprecation-Alias erhalten.</p>
+<p>Der frühere Alias <code>wp creacaptcha refresh-cloudflare-ips</code>
+wurde mit v1.0.1 entfernt — bitte
+<code>wp creacaptcha cloudflare refresh</code> verwenden.</p>
 <h3 id="event-log">Event-Log</h3>
 <table>
 <colgroup>
@@ -1632,7 +1633,7 @@ Confirm-Dialog)</td>
 <tbody>
 <tr class="odd">
 <td><code>CREATIONELL_CAPTCHA_VERSION</code></td>
-<td><code>'1.0.0'</code></td>
+<td><code>'1.0.1'</code></td>
 <td>Plugin-Version</td>
 </tr>
 <tr class="even">
@@ -1986,7 +1987,25 @@ hochladen</strong> einspielen. (3) Per WP-CLI:
 URL aus den GitHub-Releases.</p>
 <hr />
 <h2 id="changelog">Changelog</h2>
-<h3 id="section">1.0.0</h3>
+<h3 id="section">1.0.1</h3>
+<ul>
+<li>Fix: Contributor-Einträge im Plugin-Detail-Popup erhalten jetzt
+einen <code>display_name</code> — zuvor loggte WordPress-Core eine
+PHP-Warning und zeigte die Contributor-Namen nicht an. Das
+Update-Manifest liefert das Feld nun mit; der Updater ergänzt es als
+Fallback auch für ältere Manifeste.</li>
+<li>Fix: Der <code>no_update</code>-Eintrag des Updaters enthält jetzt
+<code>new_version</code>, <code>package</code>, <code>tested</code> und
+<code>requires_php</code> — zuvor loggte WP-CLI bei
+<code>wp plugin list</code> eine PHP-Warning, wenn das Plugin aktuell
+war.</li>
+<li>Entfernt: Der seit v0.19.0 veraltete WP-CLI-Alias
+<code>wp creacaptcha refresh-cloudflare-ips</code>. Bitte
+<code>wp creacaptcha cloudflare refresh</code> verwenden.</li>
+<li>Verbessert: Die Plugin-Banner werden jetzt verlustfrei als AVIF
+kodiert.</li>
+</ul>
+<h3 id="section-1">1.0.0</h3>
 <p>Erstes stabiles Release. CreaCaptcha ist ein vollständig
 selbst-gehosteter Spamschutz für WordPress — ohne externe Dienste, ohne
 Tracking, ohne Lizenz-Gate.</p>
@@ -2018,7 +2037,7 @@ API-Referenz)</li>
 <p>Das Update von v0.30.x erfolgt ohne Datenbank-Migration und ohne
 Breaking Changes — bestehende Einstellungen, Listen und Statistiken
 bleiben unverändert erhalten.</p>
-<h3 id="section-1">0.30.1</h3>
+<h3 id="section-2">0.30.1</h3>
 <p>Wartungsrelease: Release-Infrastruktur umgestellt — keine
 funktionalen Änderungen am Plugin.</p>
 <ul>
@@ -2030,7 +2049,7 @@ unverändert.</li>
 <li>Build-Pipeline gehärtet: GitHub-Actions und phpDocumentor auf feste
 Versionen gepinnt, Build-Staging vom Paketinhalt ausgeschlossen.</li>
 </ul>
-<h3 id="section-2">0.30.0</h3>
+<h3 id="section-3">0.30.0</h3>
 <p>Under-Attack Pass-Event &amp; Statistik-Übersicht — das Backend
 unterscheidet jetzt, ob ein Besucher die Under-Attack-Prüfung bestanden
 hat oder hängen blieb, und die Statistik-Übersicht erklärt ihre Zahlen
@@ -2054,7 +2073,7 @@ Ereignisse”.</li>
 <li>Keine DB-Migration nötig; bestehende Events und Zähler bleiben
 unverändert gültig.</li>
 </ul>
-<h3 id="section-3">0.29.0</h3>
+<h3 id="section-4">0.29.0</h3>
 <p>Logo im Under-Attack-Interstitial — die 503-Seite kann jetzt ein Logo
 oberhalb der Überschrift anzeigen.</p>
 <ul>
@@ -2073,7 +2092,7 @@ Ausgabe zusätzlich mit <code>esc_url()</code>.</li>
 CSS”-Feld überschreibbar. Setzbar über
 <code>wp creacaptcha settings set   underattack_logo_url &lt;url&gt;</code>.</li>
 </ul>
-<h3 id="section-4">0.28.0</h3>
+<h3 id="section-5">0.28.0</h3>
 <p>Feature-Modul 21 — Under-Attack-Customization: Wording und
 Erscheinungsbild der Interstitial-Seite sind ab sofort über das Backend
 konfigurierbar, ohne Plugin-Code zu patchen.</p>
@@ -2105,7 +2124,7 @@ seit Modul 14.</li>
 <p>Sites nach Update sehen ohne Aktion <strong>keine</strong> visuelle
 Veränderung — alle sieben Felder sind initial leer und das Template
 fällt damit auf die bisherigen Default-Werte zurück.</p>
-<h3 id="section-5">0.27.2</h3>
+<h3 id="section-6">0.27.2</h3>
 <p>Metadaten-Anpassung an WordPress 7.0 / 6.9.</p>
 <ul>
 <li><strong>Plugin-Header &amp; README:</strong>
@@ -2123,7 +2142,7 @@ laden.</li>
 konsistent nachgezogen.</li>
 </ul>
 <p>Keine funktionalen Code-Änderungen.</p>
-<h3 id="section-6">0.27.1</h3>
+<h3 id="section-7">0.27.1</h3>
 <p>CSS-Fix: Widget-Abstand zum darauffolgenden Element im
 Standard-Modus.</p>
 <ul>
@@ -2147,7 +2166,7 @@ spurious mitgegeben — ihre eigentliche Widget-Darstellung ist
 position-fixed bzw. display:none, ein Inline-Spacer wäre dort nur ein
 toter 1.5em-Gap.</li>
 </ul>
-<h3 id="section-7">0.27.0</h3>
+<h3 id="section-8">0.27.0</h3>
 <p>Feature-Modul 20 — Widget-i18n: Die Sicherheitsabfrage erscheint
 endlich in der korrekten Sprache, ohne dass der Admin etwas
 konfigurieren muss.</p>
@@ -2176,7 +2195,7 @@ WP-Locale-Ursprung.</li>
 weiterhin als Pro-Schlüssel-Override <strong>on top</strong> der
 Auto-Locale.</li>
 </ul>
-<h3 id="section-8">0.26.2</h3>
+<h3 id="section-9">0.26.2</h3>
 <p>Bugfix-Release: schließt eine Verify-Regression aus v0.22.0 / Commit
 <code>c322b96</code>, die seit der Korrektur des
 <code>configuration</code>-JSON-Attributs das ALTCHA-Widget dazu
@@ -2207,7 +2226,7 @@ Response. Beide Fixes zusammen: saubere Standard-Konfiguration ohne
 Roundtrip <em>und</em> Defense-in-Depth, falls
 <code>code_challenge_enabled</code> aktiv ist aber kein Trigger
 greift.</p>
-<h3 id="section-9">0.26.1</h3>
+<h3 id="section-10">0.26.1</h3>
 <p>UX-Polish-Release: schließt die drei nicht-essenziellen UX-Befunde
 aus dem Qualitäts-Audit (Modul 18) ab.</p>
 <ul>
@@ -2231,7 +2250,7 @@ laden”-Karte.</li>
 Begriffe) bleibt bestehen — das Audit hat die aktuelle Trennung als
 akzeptabel eingestuft.</li>
 </ul>
-<h3 id="section-10">0.26.0</h3>
+<h3 id="section-11">0.26.0</h3>
 <p>Performance-Release: drei aufgeschobene Optimierungen aus dem
 Qualitäts-Audit (Modul 18) — Settings-Memoize, Analytics-Bump-Memoize
 und ein Composite-Index auf der Events-Tabelle.</p>
@@ -2271,7 +2290,7 @@ ist für Index-Adds historisch unzuverlässig).
 <code>%i</code>-Identifier-Platzhalter konsistent mit
 <code>clear_events()</code>.</li>
 </ul>
-<h3 id="section-11">0.25.0</h3>
+<h3 id="section-12">0.25.0</h3>
 <p>Qualitäts-Audit-Release: Security-Härtung des Updaters,
 Event-Log-Privacy, Body-Fingerprint-Maskierung sowie umfassende
 UX-Hilfetexte und Konsistenz- Fixes im Backend.</p>
@@ -2359,7 +2378,7 @@ stimmt jetzt mit der Code-Logik überein (erste 48 Bit bleiben, letzte 80
 Bit auf 0). - Tippfehler „mehrmietigen” → „mehrmandantigen (Shared
 Hosting)“. - <code>Tested up to: 6.9</code> → <code>6.8</code>
 (WordPress 6.9 ist Stand 2026-05-28 noch nicht released).</p>
-<h3 id="section-12">0.24.0</h3>
+<h3 id="section-13">0.24.0</h3>
 <ul>
 <li>WP-CLI-Nachzug Phase 2: schließt sieben CLI-Coverage-Lücken nach den
 Modulen 14–16.</li>
@@ -2395,7 +2414,7 @@ Event-Log-Tabelle.</li>
 einen einzelnen Event mit allen 15 Spalten als Key-Value-Tabelle (oder
 JSON/YAML/CSV via <code>--format</code>).</li>
 </ul>
-<h3 id="section-13">0.23.0</h3>
+<h3 id="section-14">0.23.0</h3>
 <ul>
 <li>WPForms-Integration: Neues Setting „WPForms schützen” im
 Formulare-Tab. Aktiv, sobald das WPForms-Plugin installiert ist.
@@ -2440,7 +2459,7 @@ Integrationen: jeder Verify-Pfad ruft
 <code>creationell_captcha_request_bypassed()</code> und respektiert
 <code>CREATIONELL_CAPTCHA_DISABLE</code>.</li>
 </ul>
-<h3 id="section-14">0.22.0</h3>
+<h3 id="section-15">0.22.0</h3>
 <ul>
 <li>Widget-Bugfix: Der
 ALTCHA-<code>&lt;altcha-widget&gt;</code>-Custom-Element-Tag erkennt nur
@@ -2509,7 +2528,7 @@ Form-Submit vorbei einreicht. Frische Payloads aus
 stillschweigend, der bestehende PoW-Flow bleibt unangetastet, und in der
 Settings-Section erscheint eine Warn-Notice.</li>
 </ul>
-<h3 id="section-15">0.21.0</h3>
+<h3 id="section-16">0.21.0</h3>
 <ul>
 <li>Widget: Vendoriert jetzt das ALTCHA-Basis-Stylesheet
 (<code>dist/external/altcha.css</code>) und die sieben Theme-CSS-Files
@@ -2533,7 +2552,7 @@ npm-Bezug umgestellt (Schutz vor kompromittierten npm-Paketen).</li>
 <li>Architektur: Neuer Field-Type <code>text</code> (single-line input)
 für CSS-Selektor- und ähnliche String-Settings.</li>
 </ul>
-<h3 id="section-16">0.20.0</h3>
+<h3 id="section-17">0.20.0</h3>
 <ul>
 <li>Widget: Acht neue Customization-Settings unter „Captcha →
 Widget-Erscheinungsbild”. Display-Modus (standard, floating, overlay,
@@ -2562,7 +2581,7 @@ gesetzt ist. Eigenes CSS wird direkt danach ausgegeben und kann beliebig
 <code>textblock</code> speichert mehrzeiligen Text ohne die
 Line-Listen-Semantik des bisherigen <code>textarea</code>-Typs.</li>
 </ul>
-<h3 id="section-17">0.19.0</h3>
+<h3 id="section-18">0.19.0</h3>
 <ul>
 <li>WP-CLI: Fünf neue Listen-Subbefehle für die seit v0.13.0
 hinzugekommenen Listen-Settings —
@@ -2600,7 +2619,7 @@ eine reine <code>evaluate_bypass(?ip, ?ua, cookies)</code> plus dünnen
 Globals-Wrapper aufgeteilt; alle bestehenden Aufrufer bleiben
 unverändert.</li>
 </ul>
-<h3 id="section-18">0.18.0</h3>
+<h3 id="section-19">0.18.0</h3>
 <ul>
 <li>Interceptor: Drei neue Mechaniken. Die Pfad-Liste
 (<code>Geschützte Pfade</code>) unterstützt jetzt <code>!</code>-Präfix
@@ -2616,7 +2635,7 @@ der passenden Seiten — nützlich für Theme- oder Drittanbieter-Formulare,
 die sich nicht direkt modifizieren lassen (idempotent: Formulare mit
 bereits eingebautem Widget werden übersprungen).</li>
 </ul>
-<h3 id="section-19">0.17.0</h3>
+<h3 id="section-20">0.17.0</h3>
 <ul>
 <li>Logging-Granularität: Sechs neue Backend-Checkboxes
 (<code>Erfolgreiche   Verifikationen loggen</code>,
@@ -2644,7 +2663,7 @@ zu speichern.</li>
 letzte Oktett und IPv6 auf die letzten 80 Bit, bevor sie in den
 Event-Log geschrieben werden — DSGVO-konform.</li>
 </ul>
-<h3 id="section-20">0.16.0</h3>
+<h3 id="section-21">0.16.0</h3>
 <ul>
 <li>Bypass: Neue Backend-Sektion „Bypass” im Firewall-Tab mit drei
 Eintragsarten, die jeweils Firewall, Rate-Limiter, Captcha und
@@ -2657,7 +2676,7 @@ mit passendem Grund (IP-Allowlist / UA-Bypass / Cookie-Bypass).</li>
 Sicherheits- abfrage erscheint als kleines Pop-up über dem Submit-Button
 und löst beim Submit automatisch.</li>
 </ul>
-<h3 id="section-21">0.15.0</h3>
+<h3 id="section-22">0.15.0</h3>
 <ul>
 <li>Firewall/IP-Erkennung: Der weitergeleitete Header (X-Forwarded-For,
 X-Real-IP, CF-Connecting-IP, True-Client-IP) wird nur noch dann
@@ -2672,7 +2691,7 @@ Proxy-Modus ohne konfigurierte Trust-Quelle erscheint im Backend ein
 Hinweis. Neuer WP-CLI-Befehl
 <code>wp creacaptcha refresh-cloudflare-ips</code>.</li>
 </ul>
-<h3 id="section-22">0.14.0</h3>
+<h3 id="section-23">0.14.0</h3>
 <ul>
 <li>Statistik: Die Statistik-Seite hat einen „↻ Aktualisieren”-Button.
 Der „Ereignisse”-Tab erfasst je Ereignis zusätzlich Plugin/Integration,
@@ -2681,7 +2700,7 @@ und die eingereichten Verifizierungsdaten, zeigt eine erweiterte
 Spaltenauswahl und öffnet pro Zeile ein Detail-Fenster mit allen
 erfassten Feldern. Der CSV-Export enthält die neuen Felder.</li>
 </ul>
-<h3 id="section-23">0.13.0</h3>
+<h3 id="section-24">0.13.0</h3>
 <ul>
 <li>WP-CLI: neue Befehlsgruppe <code>wp creacaptcha …</code> für Status,
 Diagnose, Statistik, Einstellungen
@@ -2693,7 +2712,7 @@ Exportieren und Importieren der Einstellungen, für einen vollständigen
 Reset auf Werkseinstellungen sowie zum Laden der Standardwerte unter
 Beibehaltung der gepflegten Listen.</li>
 </ul>
-<h3 id="section-24">0.12.0</h3>
+<h3 id="section-25">0.12.0</h3>
 <ul>
 <li>Statistik: Der „Ereignisse”-Tab hat jetzt eine Filter-Leiste —
 Freitextsuche über IP-Adresse und Pfad, Filter nach Ereignistyp und ein
@@ -2701,7 +2720,7 @@ Von/Bis-Datumsbereich —, blättert seitenweise durch alle aufgezeichneten
 Ereignisse und bietet einen CSV-Export der jeweils gefilterten
 Ereignismenge zur weiteren Analyse.</li>
 </ul>
-<h3 id="section-25">0.11.0</h3>
+<h3 id="section-26">0.11.0</h3>
 <ul>
 <li>Statistik: Die Statistik-Seite ist jetzt ein Dashboard mit drei Tabs
 (Übersicht, Verlauf, Ereignisse). Der „Übersicht”-Tab zeigt KPI-Kacheln
@@ -2709,14 +2728,14 @@ für den 24-Stunden-Blick und eine Vergleichstabelle über vier
 Zeitfenster (24 Stunden, 7 Tage, 30 Tage, 90 Tage); ein neuer
 stündlicher Zähler liefert die Daten für das 24-Stunden-Fenster.</li>
 </ul>
-<h3 id="section-26">0.10.0</h3>
+<h3 id="section-27">0.10.0</h3>
 <ul>
 <li>Backend: Die Einstellungsseite ist jetzt in sechs thematische Tabs
 gegliedert (Captcha, Formulare, Firewall, Under-Attack, E-Mail-Schutz,
 Analytics) statt einer langen Liste — übersichtlicher, mit weiterhin
 einem gemeinsamen „Änderungen speichern” für alle Tabs.</li>
 </ul>
-<h3 id="section-27">0.9.0</h3>
+<h3 id="section-28">0.9.0</h3>
 <ul>
 <li>E-Mail-Schutz: zusätzlicher Ganzseiten-Buffer-Modus, der das gesamte
 Seiten-HTML verarbeitet und damit auch theme-hart-kodierte
@@ -2724,7 +2743,7 @@ Seiten-HTML verarbeitet und damit auch theme-hart-kodierte
 verschleiert; der Modus ist unter „Einstellungen → CreaCaptcha →
 E-Mail-Schutz” wählbar.</li>
 </ul>
-<h3 id="section-28">0.8.0</h3>
+<h3 id="section-29">0.8.0</h3>
 <ul>
 <li>E-Mail-Obfuskation: <code>mailto:</code>-Links und
 Klartext-E-Mail-Adressen in Inhalten, Auszügen, Text-Widgets und
@@ -2732,35 +2751,35 @@ Kommentaren werden im Seitenquelltext verschleiert und per JavaScript
 erst im Browser wiederhergestellt; ohne JavaScript erscheint ein
 neutraler Platzhalter.</li>
 </ul>
-<h3 id="section-29">0.7.0</h3>
+<h3 id="section-30">0.7.0</h3>
 <ul>
 <li>Analytics &amp; Event-Logging: datenschutzfreundliche aggregierte
 Tageszähler je Ereignistyp und ein Statistik-Dashboard; optional ein
 detaillierter Event-Log (eigene Tabelle, IP-Adressen) mit
 konfigurierbarer Aufbewahrung.</li>
 </ul>
-<h3 id="section-30">0.6.0</h3>
+<h3 id="section-31">0.6.0</h3>
 <ul>
 <li>Under-Attack-Modus: ein einschaltbarer Notfall-Modus, der jeden
 anonymen Besucher per Interstitial-Proof-of-Work-Abfrage prüft, bevor er
 die Website erreicht; ein zeitlich begrenzter, signierter Pass-Cookie
 lässt geprüfte Besucher danach frei surfen.</li>
 </ul>
-<h3 id="section-31">0.5.0</h3>
+<h3 id="section-32">0.5.0</h3>
 <ul>
 <li>Firewall &amp; Rate-Limiting: IP-Blockliste/-Erlaubnisliste (inkl.
 CIDR-Bereiche), User-Agent-Blockliste und ein per-IP-Rate-Limiter mit
 wählbarem Wirkungsbereich. Beide laufen als frühe Request-Guards, mit
 Proxy-Modus für die Client-IP-Ermittlung.</li>
 </ul>
-<h3 id="section-32">0.4.0</h3>
+<h3 id="section-33">0.4.0</h3>
 <ul>
 <li>Integrationen für Contact Form 7 und Forminator: automatischer
 Proof-of-Work-Schutz für die Formulare beider Plugins, mit
 <code>[creationell_captcha]</code>-Platzhalter zur Positionierung und je
 einem Einstellungs-Schalter.</li>
 </ul>
-<h3 id="section-33">0.3.0</h3>
+<h3 id="section-34">0.3.0</h3>
 <ul>
 <li>Interceptor-Modul: generischer serverseitiger Request-Schutz für
 eigene Formular-Pfade (<code>*</code>-Wildcards, fail-closed), Shortcode
@@ -2768,14 +2787,14 @@ eigene Formular-Pfade (<code>*</code>-Wildcards, fail-closed), Shortcode
 <code>creationell_captcha_widget()</code> zum Einbau des Widgets in
 beliebige Formulare.</li>
 </ul>
-<h3 id="section-34">0.2.0</h3>
+<h3 id="section-35">0.2.0</h3>
 <ul>
 <li>Captcha-Mechanik: Proof-of-Work-Sicherheitsabfrage (PBKDF2/SHA-256
 oder Argon2id), Challenge-REST-Endpoint, gebündelte
 ALTCHA-Widget-Web-Component, Replay-Schutz und Schutz der vier
 WordPress-Kernformulare.</li>
 </ul>
-<h3 id="section-35">0.1.0</h3>
+<h3 id="section-36">0.1.0</h3>
 <ul>
 <li>Erstes Grundgerüst: Plugin-Bootstrap, Settings-API-Seite, gebündelte
 ALTCHA-Bibliothek (Composer + Strauss) und

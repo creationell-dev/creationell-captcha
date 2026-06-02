@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.0.0  
+**Version:** 1.0.1  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.0  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.0.0  
+**Stable tag:** 1.0.1  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -585,7 +585,7 @@ Jede Liste hat denselben Subcommand-Baukasten: `add <eintrag>`, `remove <eintrag
 | `wp creacaptcha cloudflare status` | Status des CF-Caches (Anzahl Ranges, letzter Refresh, nächster Cron, Quelle) |
 | `wp creacaptcha cloudflare clear` | CF-Cache leeren |
 
-Der ältere Alias `wp creacaptcha refresh-cloudflare-ips` bleibt vorerst als Deprecation-Alias erhalten.
+Der frühere Alias `wp creacaptcha refresh-cloudflare-ips` wurde mit v1.0.1 entfernt — bitte `wp creacaptcha cloudflare refresh` verwenden.
 
 ### Event-Log
 
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.0'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.1'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -767,6 +767,20 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.0.1
+
+- Fix: Contributor-Einträge im Plugin-Detail-Popup erhalten jetzt einen
+  `display_name` — zuvor loggte WordPress-Core eine PHP-Warning und zeigte
+  die Contributor-Namen nicht an. Das Update-Manifest liefert das Feld nun
+  mit; der Updater ergänzt es als Fallback auch für ältere Manifeste.
+- Fix: Der `no_update`-Eintrag des Updaters enthält jetzt `new_version`,
+  `package`, `tested` und `requires_php` — zuvor loggte WP-CLI bei
+  `wp plugin list` eine PHP-Warning, wenn das Plugin aktuell war.
+- Entfernt: Der seit v0.19.0 veraltete WP-CLI-Alias
+  `wp creacaptcha refresh-cloudflare-ips`. Bitte
+  `wp creacaptcha cloudflare refresh` verwenden.
+- Verbessert: Die Plugin-Banner werden jetzt verlustfrei als AVIF kodiert.
 
 ### 1.0.0
 

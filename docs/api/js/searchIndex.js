@@ -611,16 +611,6 @@ Search.appendIndex(
             "summary": "Shows\u0020the\u0020current\u0020Cloudflare\u002Dcache\u0020state.",
             "url": "classes/Creationell-Captcha-CLI-Cloudflare-Command.html#method_status"
         },                {
-            "fqsen": "\\Creationell\\Captcha\\CLI\\Cloudflare_Refresh_Alias",
-            "name": "Cloudflare_Refresh_Alias",
-            "summary": "Single\u002Dmethod\u0020alias\u0020for\u0020the\u0020legacy\u0020\u0060refresh\u002Dcloudflare\u002Dips\u0060\u0020top\u002Dlevel\ncommand.\u0020Emits\u0020a\u0020deprecation\u0020warning\u0020and\u0020forwards\u0020to\n\u0060Cloudflare_Command\u003A\u003Arefresh\u0028\u0029\u0060.",
-            "url": "classes/Creationell-Captcha-CLI-Cloudflare-Refresh-Alias.html"
-        },                {
-            "fqsen": "\\Creationell\\Captcha\\CLI\\Cloudflare_Refresh_Alias\u003A\u003A__invoke\u0028\u0029",
-            "name": "__invoke",
-            "summary": "",
-            "url": "classes/Creationell-Captcha-CLI-Cloudflare-Refresh-Alias.html#method___invoke"
-        },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Command",
             "name": "Command",
             "summary": "Inspects\u0020and\u0020controls\u0020CreaCaptcha\u0020from\u0020the\u0020command\u0020line.",
