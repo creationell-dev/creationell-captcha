@@ -32,9 +32,10 @@ function creationell_captcha_wpforms_active(): bool {
  * widget emits is part of the WPForms submission.
  *
  * @param array<string, mixed> $form_data WPForms form configuration.
- * @param mixed                $form      WPForms form post (unused).
+ * @param mixed                $form      WPForms form post (unused, optional — der
+ *                                        Hook `wpforms_display_submit_before` liefert nur $form_data).
  */
-function creationell_captcha_wpforms_inject( array $form_data, $form ): void {
+function creationell_captcha_wpforms_inject( array $form_data, $form = null ): void {
     unset( $form );
 
     if ( ! creationell_captcha_wpforms_active() ) {
@@ -57,7 +58,7 @@ function creationell_captcha_wpforms_inject( array $form_data, $form ): void {
 
     creationell_captcha_render_widget();
 }
-add_action( 'wpforms_display_submit_before', 'creationell_captcha_wpforms_inject', 10, 2 );
+add_action( 'wpforms_display_submit_before', 'creationell_captcha_wpforms_inject', 10, 1 );
 
 /**
  * Verifies the captcha on a WPForms submission.

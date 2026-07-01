@@ -3,7 +3,7 @@
 Plugin Name: CreaCaptcha
 Plugin URI: https://github.com/creationell-dev/creationell-captcha
 Description: Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.
-Version: 1.0.1
+Version: 1.0.2
 Author: creationell® – die Werbeagentur
 Author URI: https://www.creationell.de/
 Contributors: creationell-dev
@@ -11,7 +11,7 @@ Tags: captcha, spam, anti-spam, anti-bot, proof of work
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: creationell-captcha
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'CREATIONELL_CAPTCHA_VERSION', '1.0.1' );
+define( 'CREATIONELL_CAPTCHA_VERSION', '1.0.2' );
 define( 'CREATIONELL_CAPTCHA_FILE', __FILE__ );
 define( 'CREATIONELL_CAPTCHA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'CREATIONELL_CAPTCHA_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
