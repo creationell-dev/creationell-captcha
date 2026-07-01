@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.0.1  
+**Version:** 1.0.2  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.0  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.0.1  
+**Stable tag:** 1.0.2  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.1'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.2'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -767,6 +767,15 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.0.2
+
+- Fix: Die WPForms-Integration registrierte `creationell_captcha_wpforms_inject()`
+  am Hook `wpforms_display_submit_before` mit zwei Pflicht-Argumenten, während der
+  Hook nur `$form_data` übergibt. Das löste beim Rendern jeder Seite mit einem
+  WPForms-Formular einen Fatal Error („Too few arguments") aus und brach die
+  Seitenausgabe ab. Der zweite, ohnehin ungenutzte Parameter ist jetzt optional
+  (`$form = null`) und `accepted_args` auf 1 korrigiert.
 
 ### 1.0.1
 

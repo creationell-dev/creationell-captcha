@@ -251,7 +251,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_VERSION">CREATIONELL_CAPTCHA_VERSION</a>
     <span>
-        &nbsp;= &#039;1.0.1&#039;                            </span>
+        &nbsp;= &#039;1.0.2&#039;                            </span>
 </dt>
 
     </dl>
@@ -1858,7 +1858,7 @@ than patching this constant.</p>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;1.0.1&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;1.0.2&#039;</span>
 </code>
 
 
@@ -6003,7 +6003,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/wpforms.php"><a href="files/includes-integrations-wpforms.html"><abbr title="includes/integrations/wpforms.php">wpforms.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
     </aside>
 
@@ -6012,7 +6012,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_wpforms_inject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$form_data</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$form</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wpforms_inject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$form_data</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$form</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
         <section class="phpdocumentor-description"><p>Fires inside the <form> element, so the hidden <code class="prettyprint">altcha</code> input that the
 widget emits is part of the WPForms submission.</p>
@@ -6032,9 +6032,10 @@ widget emits is part of the WPForms submission.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$form</span>
                 : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
-                            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>WPForms form post (unused).</p>
+                    <section class="phpdocumentor-description"><p>WPForms form post (unused, optional — der
+Hook <code class="prettyprint">wpforms_display_submit_before</code> liefert nur $form_data).</p>
 </section>
 
             </dd>
@@ -6053,7 +6054,7 @@ widget emits is part of the WPForms submission.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/wpforms.php"><a href="files/includes-integrations-wpforms.html"><abbr title="includes/integrations/wpforms.php">wpforms.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
     </aside>
 
