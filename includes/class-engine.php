@@ -297,12 +297,24 @@ class Engine {
 
         // CM-2 (Wurzel 3.1): the challenge signature is the only thing that
         // binds cost, memoryCost, keyLength, nonce, salt, expiresAt and
-        // data.ccode to THIS server. The vendor library checks it only when
-        // it is present (lib/altcha-org/altcha/src/Altcha.php, verifySolution:
-        // `if (null !== $payload->challenge->signature …)`) and otherwise walks
-        // straight into the full re-derivation path with client-chosen
-        // parameters. So the requirement has to live here — and it has to run
-        // before any derivation, not after it.
+        // data.ccode to THIS server.
+        //
+        // Up to altcha-org/altcha v2.0.2 the vendor library checked it only
+        // when it was present and otherwise walked straight into the full
+        // re-derivation path with client-chosen parameters — that was the
+        // finding. Since v2.0.3 the library rejects a missing signature itself
+        // (lib/altcha-org/altcha/src/Altcha.php, verifySolution(), block
+        // "Verify challenge signature"), and it does so before deriving.
+        //
+        // The guard stays regardless, for two reasons that outlive the version
+        // bump: the library only runs that block when an HMAC signature secret
+        // is configured — with none set it skips straight to derivation, which
+        // is exactly what the fail-closed branch below catches — and a
+        // dependency update must never be able to silently remove a security
+        // property of this plugin. Defence in depth, not redundancy by
+        // accident. Measured in Modul 28; see the note in
+        // tests/test-engine-signature-caps.php on what this means for the
+        // proof power of that suite.
         $signature = isset( $data['challenge']['signature'] ) && is_string( $data['challenge']['signature'] )
             ? $data['challenge']['signature']
             : '';

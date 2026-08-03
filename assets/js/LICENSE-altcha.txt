@@ -1,4 +1,4 @@
-ALTCHA widget — vendored from the npm package "altcha" v3.0.9
+ALTCHA widget — vendored from the npm package "altcha" v3.2.1
 Source: https://github.com/altcha-org/altcha  (MIT License)
 
 Vendored files (30 in total):

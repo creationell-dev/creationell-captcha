@@ -26,7 +26,7 @@
         }
     },
     "require-dev": {
-        "brianhenryie/strauss": "^0.27.2"
+        "brianhenryie/strauss": "^0.28.1"
     },
     "scripts": {
         "strauss": "@php vendor/bin/strauss",

@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.1.0  
+**Version:** 1.1.1  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.0  
+**Stable tag:** 1.1.1  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.0'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.1'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -778,6 +778,25 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.1.1
+
+Wartungs-Release: Die mitgelieferten Fremdbestandteile stehen wieder auf dem
+aktuellen Stand. Für eine laufende Installation ändert sich nichts an der
+Konfiguration, es gibt keine neuen Einstellungen und keine Datenbank-Migration.
+
+- Das mitgelieferte Captcha-Widget wurde von 3.0.9 auf 3.2.1 gehoben. Die
+  Änderungen betreffen die Erkennung von Content-Security-Policy-Nonces, ein
+  doppeltes Registrieren des Elements auf Seiten mit mehreren Formularen, die
+  Ladereihenfolge der Sprachdateien und den Fokusrahmen in Safari. Der Umfang
+  der mitgelieferten Sprachen ist unverändert.
+- Die zugrundeliegende Proof-of-Work-Bibliothek wurde von 2.0.2 auf 2.1.0
+  gehoben. Sie weist eine Anfrage ohne Challenge-Signatur seit 2.0.3 selbst ab.
+  Das Plugin tut das ohnehin schon länger selbst, und zwar früher in der
+  Verarbeitung — die Prüfung liegt damit jetzt doppelt vor, statt nur einmal.
+- Es lag zu keinem Zeitpunkt eine bekannte Schwachstelle vor: Für keinen der
+  mitgelieferten Bestandteile war die ausgelieferte Version von einer
+  veröffentlichten Sicherheitsmeldung betroffen — weder in 1.1.0 noch davor.
 
 ### 1.1.0
 
