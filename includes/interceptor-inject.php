@@ -42,10 +42,26 @@ function creationell_captcha_interceptor_inject_buffer_start(): void {
         return;
     }
 
-    $uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
-    $path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+    // C1: same request-path root as the guard — the inject list and the guard
+    // list must not disagree about `//kontakt` either (that decoupling is what
+    // BK-16/CM-11 set out to close).
+    $raw_path = creationell_captcha_request_path();
 
-    if ( ! \Creationell\Captcha\Interceptor::match_path( $path, $patterns ) ) {
+    // BK-5: match on the decoded path, exactly once and only after the query
+    // has been split off — same contract as Interceptor::context(). Without it
+    // the inject list and the guard list would disagree about /%6Bontakt: the
+    // page would be served without a widget while the follow-up POST is
+    // blocked (the decoupling BK-16/CM-11 describe).
+    //
+    // Both spellings are matched (Interceptor::match_request_path()) for the
+    // same reason as the guard: an inject path that was configured
+    // percent-encoded — the only spelling that worked up to 1.0.2 for a
+    // non-ASCII slug — would otherwise stop rendering the widget on update,
+    // leaving a form that looks unprotected. Symmetry with the guard list is
+    // what keeps CM-11 from reappearing.
+    $path = rawurldecode( $raw_path );
+
+    if ( ! \Creationell\Captcha\Interceptor::match_request_path( $path, $raw_path, $patterns ) ) {
         return;
     }
 
@@ -92,5 +108,25 @@ function creationell_captcha_interceptor_inject_buffer( string $html ): string {
         $html
     );
 
-    return is_string( $result ) ? $result : $html;
+    if ( ! is_string( $result ) ) {
+        /*
+         * BK-16: preg_replace_callback() returns null on a PCRE runtime error
+         * — most plausibly `pcre.backtrack_limit` on a large page. Falling back
+         * to the untouched HTML is the right call and stays fail-closed (the
+         * interceptor keeps rejecting the subsequent POST), but it used to be
+         * completely silent: the admin saw a form without a widget whose
+         * submission 403s and had nothing to go on. Log the PCRE reason so the
+         * cause is findable. Deliberately a log line, not a behaviour change.
+         */
+        creationell_captcha_log(
+            'interceptor inject: preg_replace_callback failed ('
+            . preg_last_error_msg()
+            . ') — page served without widget; POSTs to guarded paths keep failing closed. '
+            . 'Check pcre.backtrack_limit / pcre.recursion_limit.'
+        );
+
+        return $html;
+    }
+
+    return $result;
 }

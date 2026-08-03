@@ -61,7 +61,30 @@ class Firewall {
         if ( creationell_captcha_ip_in_list( $ip, $settings['firewall_ip_block'] ?? [] ) ) {
             $block  = true;
             $reason = __( 'IP-Adresse blockiert', 'creationell-captcha' );
-        } elseif ( creationell_captcha_wildcard_match( $context['user_agent'], $settings['firewall_ua_block'] ?? [] ) ) {
+        // BK-9, second call site: the User-Agent branch below spells both
+        // polarities of creationell_captcha_wildcard_match() out instead of
+        // inheriting them. They ARE the current defaults, so no request is
+        // decided differently than before — what was missing was the intent,
+        // and that was the point of the finding.
+        //
+        //  - `false` (empty subject does not match): a request without a
+        //    User-Agent header says nothing about its sender, and a BLOCK list
+        //    must not turn "nothing known" into "blocked". The bypass call site
+        //    in helpers.php passes false as well, but for the opposite reason
+        //    (an ALLOW list must not wave an unknown client through) — same
+        //    value, different argument, which is why neither side may inherit
+        //    it silently.
+        //  - `true` (a bare `*` is honoured): in a blocklist it means "block
+        //    every client that sends a User-Agent" — drastic, but a deliberate
+        //    admin decision and reversible in one click. In the allowlist the
+        //    same pattern switched the protection off, which is why it is
+        //    refused there.
+        } elseif ( creationell_captcha_wildcard_match(
+            $context['user_agent'],
+            $settings['firewall_ua_block'] ?? [],
+            false,
+            true
+        ) ) {
             $block  = true;
             $reason = __( 'User-Agent blockiert', 'creationell-captcha' );
         }
@@ -107,8 +130,23 @@ class Firewall {
      * @return array{ip: string, path: string, method: string, is_ajax: bool, user_agent: string}
      */
     private function context( string $ip ): array {
-        $uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
-        $path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+        /*
+         * C1, fifth call site. This one was named only in the reviewer's full
+         * text and was missing from the consolidated list, so the first fix
+         * wave converted four of five places. It used to read
+         * `wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH )`, which treats
+         * a request target beginning with `//` as a scheme-relative URL and
+         * hands back the HOST as the path — `//kontakt/` became `/`,
+         * `///kontakt/` became `''`.
+         *
+         * No firewall decision rides on this value, but it IS the payload of
+         * the `creationell_captcha_firewall_block` filter and the
+         * `creationell_captcha_firewall_blocked` action: a site-owned filter
+         * that decides on `$context['path']` decided on a truncated value, and
+         * the event log recorded `/` for a request to `//kontakt/` — for the
+         * very request shape the C1 fix exists to catch.
+         */
+        $path = creationell_captcha_request_path();
 
         $method = isset( $_SERVER['REQUEST_METHOD'] )
             ? strtoupper( (string) wp_unslash( $_SERVER['REQUEST_METHOD'] ) )

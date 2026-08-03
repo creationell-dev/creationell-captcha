@@ -353,6 +353,320 @@ function creationell_captcha_get_hmac_key_secret(): string {
 }
 
 /**
+ * Purpose label of the under-attack pass-cookie key.
+ */
+const CREATIONELL_CAPTCHA_PURPOSE_UA_PASS = 'underattack-pass';
+
+/**
+ * Purpose label of the under-attack code-challenge suppression token (`ctx`).
+ */
+const CREATIONELL_CAPTCHA_PURPOSE_UA_CTX = 'underattack-ctx';
+
+/**
+ * Lifetime (seconds) of a `ctx` suppression token. The interstitial widget
+ * fetches the challenge on load, i.e. within seconds of the 503 being
+ * rendered; two minutes is generous for that and replaces the ~10 minutes the
+ * old 5-minute-bucket pair accepted (BK-4).
+ */
+const CREATIONELL_CAPTCHA_UA_CTX_TTL = 120;
+
+/**
+ * Derives a purpose-bound HMAC key from the plugin's base signature secret.
+ *
+ * Wurzel 3.5: the challenge signature, the under-attack pass cookie and the
+ * `ctx` suppression token were all MACs under the SAME key. Cross-purpose use
+ * was only prevented by the differing message layout — a fragile property that
+ * breaks silently as soon as one token family changes its format. HKDF-style
+ * expansion with a purpose label makes the separation structural: a MAC minted
+ * for one purpose verifies under no other key.
+ *
+ * The base secret stays exactly where it is (`CREATIONELL_CAPTCHA_HMAC_SECRET`
+ * / the stored option) — the derivation sits in front of it, so the ALTCHA
+ * library keeps signing challenges with the unchanged base key.
+ *
+ * @since 1.1.0
+ * @param string $purpose Stable purpose label, e.g. `underattack-pass`.
+ * @return string 64-char hex key, or '' when no base secret is available
+ *                (callers must fail closed on '').
+ */
+function creationell_captcha_derive_hmac_key( string $purpose ): string {
+    $base = creationell_captcha_get_hmac_secret();
+    if ( '' === $base || '' === $purpose ) {
+        return '';
+    }
+
+    return hash_hmac( 'sha256', 'creationell-captcha/v1/' . $purpose, $base );
+}
+
+/**
+ * The request's User-Agent, capped at 256 bytes. MAC input for the
+ * under-attack tokens — never rendered, never stored.
+ *
+ * @since 1.1.0
+ */
+function creationell_captcha_client_ua(): string {
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- MAC input only, never echoed.
+    $ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : '';
+
+    return strlen( $ua ) > 256 ? substr( $ua, 0, 256 ) : $ua;
+}
+
+/**
+ * The fingerprint the under-attack pass cookie is bound to (BK-3).
+ *
+ * Two components, neither of which travels inside the cookie. Only one of them
+ * is load-bearing, and it is worth naming which: the NETWORK is what a
+ * recipient cannot bring along, because it is where his packets come from. The
+ * User-Agent he can bring along — he sends it himself, and whoever passes the
+ * cookie on passes the UA string on with it. So the UA is a cheap extra, the
+ * network is the half that actually refuses a transferred cookie.
+ *
+ *  - the client NETWORK (IPv4 /24, IPv6 /48 — the same reduction the analytics
+ *    anonymiser applies), resolved through `creationell_captcha_get_client_ip()`
+ *    so a forwarded header only counts behind a trusted proxy (BK-7/BK-8) and
+ *    never straight off an attacker-set header;
+ *  - the User-Agent.
+ *
+ * Trade-off, deliberately made here and not at the two call sites: the
+ * User-Agent alone is weak (whoever passes the cookie on passes the UA string
+ * on with it), the full address breaks on every mobile hand-over. The network
+ * is the middle ground — it survives the address churn inside one access
+ * network (CGNAT pool, IPv6 privacy extensions) and still refuses a cookie
+ * that travelled to a different one. A false negative costs exactly one extra
+ * proof-of-work: the visitor sees the interstitial again, solves it and gets a
+ * cookie bound to the new network. No lock-out, no loop.
+ *
+ * @since 1.1.0
+ * @return string Binding string; '' disables the binding entirely.
+ */
+function creationell_captcha_underattack_pass_binding(): string {
+    /**
+     * Filters the visitor fingerprint the under-attack pass cookie is bound to.
+     *
+     * Return `''` to switch the binding off completely — the cookie is then a
+     * pure bearer token again (the pre-1.1.0 behaviour) and can be handed to
+     * any number of clients until it expires. Sites whose visitors legitimately
+     * change network mid-session (carrier hand-over on long pass durations) can
+     * also narrow it down, e.g. to the User-Agent only.
+     *
+     * The value is MAC input only; it is never rendered and never stored.
+     *
+     * @since 1.1.0
+     * @param string $binding Default binding: client network + User-Agent.
+     */
+    return (string) apply_filters(
+        'creationell_captcha_underattack_pass_binding',
+        creationell_captcha_anonymize_ip( creationell_captcha_get_client_ip() )
+            . "\n" . creationell_captcha_client_ua()
+    );
+}
+
+/**
+ * Mints an under-attack pass token for the current visitor.
+ *
+ * @since 1.1.0
+ * @param int $expiry Absolute Unix timestamp the pass runs out at.
+ * @return string `<expiry>.<mac>` token, or '' when no key could be derived.
+ */
+function creationell_captcha_underattack_pass_issue( int $expiry ): string {
+    $key = creationell_captcha_derive_hmac_key( CREATIONELL_CAPTCHA_PURPOSE_UA_PASS );
+    if ( '' === $key ) {
+        return '';
+    }
+
+    return $expiry . '.' . hash_hmac(
+        'sha256',
+        $expiry . '|' . creationell_captcha_underattack_pass_binding(),
+        $key
+    );
+}
+
+/**
+ * Verifies an under-attack pass token against the CURRENT visitor.
+ *
+ * BK-3: before 1.1.0 the MAC covered the expiry timestamp and nothing else, so
+ * one solved interstitial produced a bearer token that worked from any client,
+ * any address, for up to `underattack_pass_duration` (86400 s). The MAC now
+ * covers the visitor binding as well, which is not part of the cookie value.
+ *
+ * @since 1.1.0
+ * @param string $cookie Raw cookie value.
+ */
+function creationell_captcha_underattack_pass_check( string $cookie ): bool {
+    $parts = explode( '.', $cookie, 2 );
+    if ( 2 !== count( $parts ) ) {
+        return false;
+    }
+    [ $expiry_raw, $mac ] = $parts;
+
+    if ( ! ctype_digit( $expiry_raw ) || (int) $expiry_raw <= time() ) {
+        return false;
+    }
+
+    $key = creationell_captcha_derive_hmac_key( CREATIONELL_CAPTCHA_PURPOSE_UA_PASS );
+    if ( '' === $key ) {
+        // No key, no decision we could trust — fail closed (interstitial stays).
+        return false;
+    }
+
+    $expected = hash_hmac(
+        'sha256',
+        $expiry_raw . '|' . creationell_captcha_underattack_pass_binding(),
+        $key
+    );
+
+    if ( hash_equals( $expected, $mac ) ) {
+        return true;
+    }
+
+    // Also the path every pre-1.1.0 cookie takes: the old MAC covered only the
+    // timestamp, so it cannot match. Those visitors see the interstitial once
+    // more and get a bound cookie — no lock-out, no loop.
+    creationell_captcha_log( 'under-attack pass: token rejected (binding or MAC mismatch)' );
+
+    return false;
+}
+
+/**
+ * Mints a single-use `ctx` suppression token for one interstitial rendering.
+ *
+ * BK-4/CM-4/W5: the old token was `HMAC(secret, 'ua-ctx|' . floor(time()/300))`
+ * — identical for every visitor inside a five-minute bucket and accepted for
+ * the current AND the previous bucket, i.e. up to ten minutes. It was handed
+ * to every anonymous 503 visitor inside the HTML. Unforgeable, yes — but
+ * trivially *obtainable*, transferable and replayable.
+ *
+ * The replacement carries a random nonce (so every rendering gets its own
+ * token), an explicit expiry and a MAC over nonce, expiry and the visitor's
+ * User-Agent. It is burned on first use in `…_ctx_check()`.
+ *
+ * What this closes, precisely — and what it does NOT:
+ *
+ *  - REPLAY is closed. The nonce is burned on first use, so one token buys at
+ *    most one suppressed challenge (1.0.2: unlimited inside its bucket pair).
+ *  - The accepted WINDOW shrinks from ~10 minutes to 120 seconds.
+ *  - ACQUISITION stays open. One GET of a 503 page still yields one fresh
+ *    token, i.e. one code-stage-free challenge. Closing that needs the issued
+ *    challenge itself to be marked under-attack-only and checked on redemption
+ *    inside `Engine::verify()` — outside this file (R1 in the task report).
+ *  - HANDING A FRESH TOKEN ON stays open as well. The MAC covers the
+ *    User-Agent, but the User-Agent is a value the RECIPIENT sends himself:
+ *    whoever passes the token to a bot passes the UA string along with it. The
+ *    binding costs an attacker one header, no more. It is kept because it is
+ *    free and it does stop a token that leaked WITHOUT its UA (log excerpt,
+ *    referrer, a URL shared out of band). It is not a transfer barrier, and no
+ *    comment on this token may claim that it is — W5 was exactly that kind of
+ *    claim, made about exactly this token.
+ *
+ * WHAT SINGLE USE COSTS (m7): the token is spent by the FIRST challenge fetch
+ * of the interstitial that carried it. If the very same 503 HTML reaches a
+ * browser a second time — restored from the back/forward cache, or replayed by
+ * a full-page cache or CDN that ignores the response headers — the widget
+ * fetches again with a token that is already burned. `/challenge` then answers
+ * without the suppression, and with `code_challenge_enabled` on that means the
+ * INVISIBLE interstitial widget receives an image code it cannot display: that
+ * visitor never passes the gate at all. The interstitial itself asks not to be
+ * stored (`nocache_headers()` sends `no-store, private`, measured against the
+ * WordPress 7.0.2 of the test instance), so this needs a cache that disregards
+ * that — but such caches exist, and "under attack" is exactly when an operator
+ * puts one in front of the site. Making that visible is a `doctor` job
+ * ("under-attack mode on and a full-page cache detected"); it cannot be fixed
+ * from the token side without giving up the single use that closed BK-4.
+ *
+ * Why no client-network binding here, unlike the pass cookie: it would not
+ * reduce what an attacker can do — every bot can fetch its own 503 page, so
+ * handing a token around buys nothing over simply acquiring one — while a
+ * false negative here is a dead end instead of a retry. A rejected pass cookie
+ * costs one extra proof-of-work; a rejected `ctx` gets the interstitial's
+ * invisible widget an image code it cannot display, and that visitor never
+ * passes the gate at all. On top of that the address is not even constant
+ * across the two requests of ONE visitor: the XHR that fetches the challenge
+ * can leave through a different address than the page view that carried the
+ * token (dual-stack clients pick the family per connection, egress pools
+ * rotate well beyond a /24).
+ *
+ * @since 1.1.0
+ * @return string `<nonce>.<expiry>.<mac>`, or '' when no key could be derived.
+ */
+function creationell_captcha_underattack_ctx_issue(): string {
+    $key = creationell_captcha_derive_hmac_key( CREATIONELL_CAPTCHA_PURPOSE_UA_CTX );
+    if ( '' === $key ) {
+        return '';
+    }
+
+    $nonce  = bin2hex( random_bytes( 16 ) );
+    $expiry = time() + CREATIONELL_CAPTCHA_UA_CTX_TTL;
+
+    return $nonce . '.' . $expiry . '.' . hash_hmac(
+        'sha256',
+        $nonce . '|' . $expiry . '|' . creationell_captcha_client_ua(),
+        $key
+    );
+}
+
+/**
+ * Verifies a `ctx` suppression token and consumes it.
+ *
+ * Returns true at most ONCE per token: the nonce is recorded for the rest of
+ * the token's lifetime, every later presentation of the same token fails.
+ *
+ * @since 1.1.0
+ * @param string $token Raw `ctx` query value.
+ */
+function creationell_captcha_underattack_ctx_check( string $token ): bool {
+    $parts = explode( '.', $token, 3 );
+    if ( 3 !== count( $parts ) ) {
+        return false;
+    }
+    [ $nonce, $expiry_raw, $mac ] = $parts;
+
+    if ( 32 !== strlen( $nonce ) || ! ctype_xdigit( $nonce ) || ! ctype_digit( $expiry_raw ) ) {
+        return false;
+    }
+
+    $now    = time();
+    $expiry = (int) $expiry_raw;
+    // Upper bound as well as lower: a token may never claim a longer life than
+    // this server is willing to mint.
+    if ( $expiry <= $now || $expiry > $now + CREATIONELL_CAPTCHA_UA_CTX_TTL ) {
+        return false;
+    }
+
+    $key = creationell_captcha_derive_hmac_key( CREATIONELL_CAPTCHA_PURPOSE_UA_CTX );
+    if ( '' === $key ) {
+        return false;
+    }
+
+    $expected = hash_hmac(
+        'sha256',
+        $nonce . '|' . $expiry . '|' . creationell_captcha_client_ua(),
+        $key
+    );
+    if ( ! hash_equals( $expected, $mac ) ) {
+        return false;
+    }
+
+    // Single use. The marker outlives the token by a minute so a replay right
+    // at the expiry edge still finds it.
+    //
+    // Deliberately a plain get/set pair and not the atomic INSERT-IGNORE claim
+    // the replay marker in class-engine.php uses (CM-9): two exactly parallel
+    // presentations of the same token could both win the race and get one
+    // suppressed challenge each. That is worth nothing to an attacker — a
+    // second 503 request hands out a second token anyway. The atomic path
+    // costs an options row plus a cron sweep per interstitial and would be
+    // paid precisely while the site is under attack.
+    $marker = 'creationell_captcha_uactx_' . $nonce;
+    if ( false !== get_transient( $marker ) ) {
+        creationell_captcha_log( 'under-attack ctx: token already spent' );
+        return false;
+    }
+    set_transient( $marker, 1, ( $expiry - $now ) + 60 );
+
+    return true;
+}
+
+/**
  * Shared captcha engine instance.
  */
 function creationell_captcha_engine(): \Creationell\Captcha\Engine {
@@ -368,12 +682,82 @@ function creationell_captcha_engine(): \Creationell\Captcha\Engine {
 /**
  * Write a message to the debug log when CREATIONELL_CAPTCHA_DEBUG is active.
  *
+ * W1-13: Steuerzeichen werden entfernt, BEVOR die Zeile geschrieben wird —
+ * dieselbe Reduktion, die `Analytics::current_path()` für die Log-Tabelle
+ * vornimmt. Mehrere Meldungen tragen vom Absender bestimmte Bestandteile in
+ * die Zeile, allen voran der Interceptor („interceptor blocked POST to " plus
+ * dem EINMAL dekodierten Pfad, class-interceptor.php): ein anonymer
+ * `POST /kontakt%0A` auf einen per `/kontakt*` geschützten Pfad wird von
+ * WordPress geroutet (`WP::parse_request()` trimmt, und die Rewrite-Regel
+ * `^kontakt/?$` trifft dank `$` vor dem Zeilenumbruch), der Interceptor
+ * blockiert — und die Logzeile enthielt einen echten Zeilenumbruch. Damit
+ * bestimmte der Absender, wo eine Zeile im PHP-Fehlerlog endet, und konnte
+ * eine zweite, frei gewählte anhängen.
+ *
+ * Bewusst hier und nicht an der einen Aufrufstelle: dies ist die Senke, durch
+ * die JEDE Meldung des Plugins geht, und keine von ihnen enthält eine
+ * beabsichtigte mehrzeilige Ausgabe (nachgezählt über alle Aufrufer). Eine
+ * Reparatur je Aufrufstelle wäre dieselbe Zeile mehrfach — und die nächste
+ * neue Meldung hätte sie wieder nicht.
+ *
  * @param string $message Message to log.
  */
 function creationell_captcha_log( string $message ): void {
     if ( defined( 'CREATIONELL_CAPTCHA_DEBUG' ) && CREATIONELL_CAPTCHA_DEBUG ) {
-        error_log( '[creationell-captcha] ' . $message );
+        error_log( '[creationell-captcha] ' . (string) preg_replace( '/[\x00-\x1F\x7F]/', '', $message ) );
     }
+}
+
+/**
+ * Canonicalises an IPv4-mapped IPv6 address (`::ffff:a.b.c.d`) into its plain
+ * IPv4 spelling. Every other value — including anything that is not an IP at
+ * all — is handed back unchanged.
+ *
+ * WHY (audit module 27, finding I2)
+ * ---------------------------------
+ * On every server whose PHP sees the peer address in IPv4-mapped notation
+ * (nginx `listen [::]:443 ipv6only=off`, Apache on an IPv6 socket, plenty of
+ * container and proxy setups) `REMOTE_ADDR` reads `::ffff:203.0.113.7` for an
+ * ordinary IPv4 client. That string passes `FILTER_VALIDATE_IP` — it is a
+ * perfectly valid IPv6 address — so nothing ever complained, but:
+ *
+ *   - `ip_in_cidr()` refuses a family change (4 vs. 16 bytes, correctly so),
+ *     and `ip_in_list()` otherwise compares plain strings;
+ *   - so `firewall_ip_block`, `firewall_ip_allow`, `firewall_trusted_proxies`
+ *     and `code_challenge_watchlist` matched NOTHING for those clients — the
+ *     IP firewall was silently inert, and the admin who allow-listed his own
+ *     address locked himself out anyway;
+ *   - `anonymize_ip()` reduced all of them to `::`, which took the network
+ *     half out of the BK-3 under-attack pass binding and left a pure bearer
+ *     token behind.
+ *
+ * The check runs on the binary form rather than on the string, so the rarer
+ * spellings (`::FFFF:cb00:7107`, `0:0:0:0:0:ffff:203.0.113.7`) are caught as
+ * well. `::` and `::ffff:0:0:0` are NOT mapped addresses and stay untouched.
+ *
+ * @since 1.1.0
+ *
+ * @param string $ip Candidate address.
+ * @return string Plain IPv4 spelling for mapped addresses, else the input.
+ */
+function creationell_captcha_normalize_ip( string $ip ): string {
+    if ( '' === $ip || ! str_contains( $ip, ':' ) ) {
+        return $ip;
+    }
+
+    $bin = @inet_pton( $ip );
+    if ( false === $bin || 16 !== strlen( $bin ) ) {
+        return $ip;
+    }
+
+    // RFC 4291 §2.5.5.2: 80 zero bits, 16 one bits, then the IPv4 address.
+    if ( "\0\0\0\0\0\0\0\0\0\0\xff\xff" !== substr( $bin, 0, 12 ) ) {
+        return $ip;
+    }
+
+    $plain = @inet_ntop( substr( $bin, 12 ) );
+
+    return is_string( $plain ) ? $plain : $ip;
 }
 
 /**
@@ -382,11 +766,36 @@ function creationell_captcha_log( string $message ): void {
  * Returns the validated REMOTE_ADDR by default. When the `firewall_behind_proxy`
  * setting is on, the configured forwarded header is used instead — falling back
  * to REMOTE_ADDR if it yields no valid IP.
+ *
+ * This is the single ingress for client addresses: every list check, the
+ * rate-limit bucket key, the pass binding and the event log take their value
+ * from here. Canonicalising IPv4-mapped addresses therefore happens HERE and
+ * not at each of those places (I2).
+ *
+ * WHAT THE FALLBACK COSTS (m3 / W2-3) — say it here, because it is not obvious
+ * at the call sites: every `return $remote` below hands the PROXY's address to
+ * everything downstream. That is the safe direction (BK-8: an entry we cannot
+ * classify must never let a forged one to its left win), but it is not a free
+ * one. If a fallback fires on EVERY request — an upstream that appends
+ * `unknown` or an obfuscated identifier per RFC 7239, an Azure-style
+ * `ip:port` hop, a `firewall_proxy_header` naming a header this installation
+ * does not actually receive — then all visitors share one address:
+ *
+ *  - the rate limiter counts the whole site into one bucket and locks everyone
+ *    out at the threshold;
+ *  - `firewall_ip_block` and `code_challenge_watchlist` hit all or nothing;
+ *  - and if the proxy address happens to sit in `firewall_ip_allow`, every
+ *    visitor is bypassed.
+ *
+ * Each fallback therefore names itself through `creationell_captcha_log()`.
+ * That is only visible with `CREATIONELL_CAPTCHA_DEBUG`; making it visible
+ * without the debug switch belongs to the settings help text and to
+ * `wp creacaptcha doctor`, not here.
  */
 function creationell_captcha_get_client_ip(): string {
     // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated via FILTER_VALIDATE_IP.
     $remote = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
-    $remote = filter_var( $remote, FILTER_VALIDATE_IP ) ? $remote : '';
+    $remote = filter_var( $remote, FILTER_VALIDATE_IP ) ? creationell_captcha_normalize_ip( $remote ) : '';
 
     $settings = creationell_captcha_get_settings();
     if ( empty( $settings['firewall_behind_proxy'] ) ) {
@@ -399,8 +808,33 @@ function creationell_captcha_get_client_ip(): string {
         'cf-connecting-ip' => 'HTTP_CF_CONNECTING_IP',
         'true-client-ip'   => 'HTTP_TRUE_CLIENT_IP',
     ];
-    $choice     = (string) ( $settings['firewall_proxy_header'] ?? 'x-forwarded-for' );
-    $server_key = $header_map[ $choice ] ?? 'HTTP_X_FORWARDED_FOR';
+    $choice = (string) ( $settings['firewall_proxy_header'] ?? 'x-forwarded-for' );
+
+    /*
+     * m2: the fallback used to be applied to the SERVER KEY only
+     * (`$header_map[ $choice ] ?? 'HTTP_X_FORWARDED_FOR'`), so an unknown value
+     * read X-Forwarded-For but kept the single-value splitting below —
+     * `'x-forwarded-for' === $choice` stayed false. A real chain
+     * ("198.51.100.23, 203.0.113.10") then arrived as ONE entry, failed
+     * FILTER_VALIDATE_IP, broke the walk, and get_client_ip() returned
+     * REMOTE_ADDR on every request: the proxy mode was off and nothing said so.
+     * Since REMOTE_ADDR is the trusted proxy in that branch, every visitor
+     * collapsed onto one address — the rate limiter counts them together, and
+     * if that address sits in firewall_ip_allow it is a bypass for the whole
+     * site.
+     *
+     * Correcting the CHOICE instead of the key keeps header and splitting in
+     * step. Only reachable by writing the option directly (`wp option patch`, a
+     * restored backup, a foreign update_option()); the settings page offers the
+     * four known values only.
+     */
+    if ( ! isset( $header_map[ $choice ] ) ) {
+        creationell_captcha_log(
+            'client-ip: unknown firewall_proxy_header "' . $choice . '" — falling back to x-forwarded-for'
+        );
+        $choice = 'x-forwarded-for';
+    }
+    $server_key = $header_map[ $choice ];
 
     if ( '' === $remote ) {
         // No REMOTE_ADDR at all: cannot evaluate trust → safest is to bail
@@ -420,36 +854,64 @@ function creationell_captcha_get_client_ip(): string {
     // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated below.
     $raw = (string) wp_unslash( $_SERVER[ $server_key ] );
 
-    if ( 'x-forwarded-for' === $choice ) {
-        // Walk the XFF chain right-to-left, skipping trusted hops; the first
-        // non-trusted, valid entry is the genuine client.
-        $entries = array_reverse( array_map( 'trim', explode( ',', $raw ) ) );
-        foreach ( $entries as $entry ) {
-            if ( '' === $entry || false === filter_var( $entry, FILTER_VALIDATE_IP ) ) {
-                continue;
-            }
-            if ( creationell_captcha_is_trusted_proxy( $entry ) ) {
-                continue;
-            }
-            creationell_captcha_log( 'client-ip: ' . $entry . ' (via XFF, trusted remote ' . $remote . ')' );
-            return $entry;
+    // BK-7: the single-value headers (x-real-ip, cf-connecting-ip,
+    // true-client-ip) used to be taken at face value the moment the peer was
+    // trusted — they never saw the per-entry trust check the XFF chain got.
+    // Both shapes now run through the SAME walk below; the only difference is
+    // how many hops the header can carry.
+    $entries = ( 'x-forwarded-for' === $choice )
+        ? array_map( 'trim', explode( ',', $raw ) )
+        : [ trim( $raw ) ];
+
+    // BK-8: walk right to left and stop at the FIRST hop that is not one of
+    // our own proxies — that hop is what our infrastructure actually saw, and
+    // it is the genuine client. Everything further left was written by
+    // somebody we do not trust and is freely forgeable, so it must never win.
+    // The old loop `continue`d past entries it could not classify, which let a
+    // forged entry sitting left of an unparsable one become the client IP.
+    for ( $i = count( $entries ) - 1; $i >= 0; $i-- ) {
+        $entry = $entries[ $i ];
+
+        if ( '' === $entry || false === filter_var( $entry, FILTER_VALIDATE_IP ) ) {
+            // Chain broken: we cannot tell who appended what to the left of a
+            // hop we cannot even parse. Fall back to the one address the TCP
+            // stack vouched for.
+            creationell_captcha_log( 'client-ip: ' . $remote . ' (fallback: unparsable hop in ' . $choice . ')' );
+            return $remote;
         }
-        // Chain was entirely trusted (or empty/invalid) — bail to REMOTE_ADDR.
-        return $remote;
+
+        // I2: a hop may arrive IPv4-mapped just like REMOTE_ADDR can — and a
+        // mapped hop would miss the trusted-proxy list below, which would make
+        // our OWN proxy look like the client.
+        $entry = creationell_captcha_normalize_ip( $entry );
+
+        if ( creationell_captcha_is_trusted_proxy( $entry ) ) {
+            continue;
+        }
+
+        creationell_captcha_log( 'client-ip: ' . $entry . ' (via ' . $choice . ', trusted remote ' . $remote . ')' );
+        return $entry;
     }
 
-    // Single-value headers: X-Real-IP, CF-Connecting-IP, True-Client-IP.
-    $candidate = trim( $raw );
-    if ( false !== filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
-        creationell_captcha_log( 'client-ip: ' . $candidate . ' (via ' . $choice . ', trusted remote ' . $remote . ')' );
-        return $candidate;
-    }
-
+    // Every hop was one of our own proxies (or the header was empty) — no
+    // client address in there, bail to REMOTE_ADDR.
     return $remote;
 }
 
 /**
  * Whether an IP matches any entry in a list of IPs or CIDR ranges.
+ *
+ * This is the choke point all four address lists run through — blocklist,
+ * allowlist, trusted proxies and the code-challenge watchlist — which is why
+ * the IPv4-mapped canonicalisation is applied here and not four times over.
+ *
+ * Admin-typed entries are canonicalised as well, so an installation that spelled
+ * an entry `::ffff:203.0.113.7` (the only spelling that worked on an affected
+ * server before this release) keeps matching. CIDR entries are deliberately NOT
+ * rewritten: a mapped range like `::ffff:0:0/96` would widen to "every IPv4
+ * address", and silently widening a TRUSTED-PROXY range is the one direction
+ * this plugin must never take (LK-13/AF-5). A CIDR written in mapped notation
+ * therefore stops matching — see the note on ip_in_cidr().
  *
  * @param string $ip   The client IP.
  * @param mixed  $list A list of IPs / CIDR ranges (non-arrays are ignored).
@@ -459,7 +921,16 @@ function creationell_captcha_ip_in_list( string $ip, $list ): bool {
         return false;
     }
 
+    $ip = creationell_captcha_normalize_ip( $ip );
+
     foreach ( $list as $entry ) {
+        // A stored list is an ordinary option: a restored backup or a
+        // `wp option patch` can put a nested array or an object in there. The
+        // (string) cast below would warn on the first and raise an uncatchable
+        // Error on the second, on every request that reaches this list.
+        if ( ! is_scalar( $entry ) ) {
+            continue;
+        }
         $entry = trim( (string) $entry );
         if ( '' === $entry ) {
             continue;
@@ -468,7 +939,7 @@ function creationell_captcha_ip_in_list( string $ip, $list ): bool {
             if ( creationell_captcha_ip_in_cidr( $ip, $entry ) ) {
                 return true;
             }
-        } elseif ( 0 === strcasecmp( $ip, $entry ) ) {
+        } elseif ( 0 === strcasecmp( $ip, creationell_captcha_normalize_ip( $entry ) ) ) {
             return true;
         }
     }
@@ -479,13 +950,19 @@ function creationell_captcha_ip_in_list( string $ip, $list ): bool {
 /**
  * Whether an IP falls within a CIDR range. Supports IPv4 and IPv6.
  *
+ * The subject is canonicalised (I2); the RANGE is taken as written. A range
+ * spelled in IPv4-mapped notation (`::ffff:203.0.113.0/120`) consequently no
+ * longer matches an IPv4 client — deliberately, because converting it would
+ * mean rewriting prefix lengths, and a wrong prefix in a trusted-proxy list is
+ * the failure mode this plugin has already had to close twice.
+ *
  * @param string $ip   The client IP.
  * @param string $cidr A CIDR range, e.g. "203.0.113.0/24".
  */
 function creationell_captcha_ip_in_cidr( string $ip, string $cidr ): bool {
     [ $subnet, $bits ] = array_pad( explode( '/', $cidr, 2 ), 2, '' );
 
-    $ip_bin     = @inet_pton( $ip );
+    $ip_bin     = @inet_pton( creationell_captcha_normalize_ip( $ip ) );
     $subnet_bin = @inet_pton( $subnet );
     if ( false === $ip_bin || false === $subnet_bin ) {
         return false;
@@ -524,6 +1001,16 @@ function creationell_captcha_ip_in_cidr( string $ip, string $cidr ): bool {
 /**
  * Whether a string is a valid IP address or CIDR range (IPv4 or IPv6).
  *
+ * Prefix length 0 (`0.0.0.0/0`, `::/0`) is refused: it is valid CIDR notation
+ * but matches every address, so as a firewall-allow, trusted-proxy or
+ * blocklist entry it silently disables the very list it is in (AF-5). An admin
+ * who really wants to cover the whole address space can still spell it out as
+ * two halves (`0.0.0.0/1` + `128.0.0.0/1`) and thereby say so on purpose.
+ *
+ * This is an input guard only — it decides what may be STORED. Values already
+ * in the database keep working; reporting on those is the fail-safe migration's
+ * job, not this function's.
+ *
  * @param string $entry The candidate string.
  */
 function creationell_captcha_is_valid_ip_or_cidr( string $entry ): bool {
@@ -546,7 +1033,7 @@ function creationell_captcha_is_valid_ip_or_cidr( string $entry ): bool {
         return false;
     }
     $max = strlen( $subnet_bin ) * 8;
-    return (int) $bits >= 0 && (int) $bits <= $max;
+    return (int) $bits >= 1 && (int) $bits <= $max;
 }
 
 /**
@@ -555,16 +1042,68 @@ function creationell_captcha_is_valid_ip_or_cidr( string $entry ): bool {
  * The pattern alphabet is the same as the firewall UA-blocklist: `*` is the
  * single wildcard, everything else is matched literally.
  *
- * @param string $subject  The string to test.
- * @param mixed  $patterns A list of patterns; non-arrays return false.
+ * The two edge cases used to be decided implicitly, and the decision was wrong
+ * for one of the two call sites (BK-9). Both are now the caller's to make:
+ *
+ *  - `$empty_subject_matches` — a missing header is not "the empty string", it
+ *    is no information at all. For a blocklist "no match" is the safe answer,
+ *    for an allowlist it is too, but the two reach it for opposite reasons, so
+ *    neither may inherit it silently.
+ *  - `$allow_catch_all` — a pattern of nothing but `*` matches every non-empty
+ *    subject. Harmless in a blocklist, a total shutdown of the protection in
+ *    an allowlist. Pass false there and such a pattern is skipped.
+ *
+ * WHERE `$allow_catch_all` STOPS — READ THIS BEFORE TRUSTING IT
+ * ------------------------------------------------------------
+ * The guard is SYNTACTIC and nothing else: it drops a pattern when
+ * `trim( $pattern, '*' )` leaves nothing behind, i.e. `*`, `**`, `***`. It does
+ * NOT drop a pattern that merely happens to match everything in practice.
+ * Measured against the production path: star-slash-star (written out because the
+ * literal form would close this comment block) passes this guard and matches
+ * every realistic User-Agent — every one of them carries a slash. Same for
+ * star-dot-star. `false` here therefore means "no bare star", not "no
+ * catch-all".
+ *
+ * That boundary is deliberate. "Matches every real subject" is not a decidable
+ * property of a pattern; the nearest thing to it is the five-probe criterion in
+ * `creationell_captcha_hardening_matches_every_user_agent()`, and a heuristic
+ * has no business deciding a single request — least of all one that would run
+ * on every request, for every stored pattern. Applying it here would also
+ * silently reinterpret patterns an operator has already stored. Reporting such
+ * an entry is the fail-safe migration's job
+ * (`includes/hardening-migration.php`, section 3, finding class `jeder-ua`,
+ * `wirkung: aktiv`): it names the entry and leaves the decision with the
+ * operator. `tests/test-bypass-roots.php` section 4a pins both halves.
+ *
+ * @param string $subject               The string to test.
+ * @param mixed  $patterns              A list of patterns; non-arrays return false.
+ * @param bool   $empty_subject_matches What an empty subject means for this call
+ *                                      site. Default false (previous behaviour).
+ * @param bool   $allow_catch_all       Whether a bare `*` pattern is honoured.
+ *                                      Default true (previous behaviour).
  */
-function creationell_captcha_wildcard_match( string $subject, $patterns ): bool {
-    if ( ! is_array( $patterns ) || '' === $subject ) {
+function creationell_captcha_wildcard_match(
+    string $subject,
+    $patterns,
+    bool $empty_subject_matches = false,
+    bool $allow_catch_all = true
+): bool {
+    if ( ! is_array( $patterns ) ) {
         return false;
     }
     foreach ( $patterns as $pattern ) {
         $pattern = trim( (string) $pattern );
         if ( '' === $pattern ) {
+            continue;
+        }
+        if ( ! $allow_catch_all && '' === trim( $pattern, '*' ) ) {
+            creationell_captcha_log( 'wildcard-match: catch-all pattern "' . $pattern . '" refused for this list' );
+            continue;
+        }
+        if ( '' === $subject ) {
+            if ( $empty_subject_matches ) {
+                return true;
+            }
             continue;
         }
         $regex = '#^' . str_replace( '\*', '.*', preg_quote( $pattern, '#' ) ) . '$#i';
@@ -697,7 +1236,19 @@ function creationell_captcha_evaluate_bypass( ?string $ip, ?string $ua, array $c
     // 2. User-Agent bypass.
     if ( null !== $ua && '' !== $ua ) {
         $patterns = (array) ( $settings['bypass_ua_allow'] ?? [] );
-        if ( creationell_captcha_wildcard_match( $ua, $patterns ) ) {
+        // BK-9: this list GRANTS a bypass on a header the client picks freely,
+        // so both open ends of the matcher are nailed down here — a request
+        // without a User-Agent is never waved through, and a bare `*` (which
+        // would wave through every request there is) is refused. An admin who
+        // truly wants that must not be able to do it by accident.
+        //
+        // The second half of that is a SYNTACTIC guard and no more: `*/*` is
+        // not a bare star, passes it, and does wave through every request there
+        // is — measured, not assumed. It is deliberately NOT neutralised here
+        // (reasons in the docblock of creationell_captcha_wildcard_match());
+        // the fail-safe migration reports such an entry as `wirkung: aktiv`
+        // and the operator decides.
+        if ( creationell_captcha_wildcard_match( $ua, $patterns, false, false ) ) {
             return [
                 'reason' => 'UA-Bypass',
                 'source' => $ua,
@@ -715,7 +1266,12 @@ function creationell_captcha_evaluate_bypass( ?string $ip, ?string $ua, array $c
         }
         $name     = substr( $entry, 0, $pos );
         $expected = substr( $entry, $pos + 1 );
-        if ( '' === $name || ! array_key_exists( $name, $cookies ) ) {
+        // BK-14: an entry without a value (`freepass=`) turns the comparison
+        // below into hash_equals('', '') — true for anyone who sends the bare
+        // cookie name. The validator refuses such entries on input, but that
+        // only guards what is written from now on; this guard also covers the
+        // ones already sitting in the option.
+        if ( '' === $name || '' === $expected || ! array_key_exists( $name, $cookies ) ) {
             continue;
         }
         if ( hash_equals( $expected, (string) $cookies[ $name ] ) ) {
@@ -785,9 +1341,11 @@ function creationell_captcha_validate_action_pattern( string $entry ): ?string {
 /**
  * Validates a single bypass-cookie entry of the form `name=value`.
  *
- * Name must be alphanumeric, `_` or `-`. Value may be empty and is
- * length-capped to 200 bytes. The returned entry has the value passed
- * through `sanitize_text_field()`.
+ * Name must be alphanumeric, `_` or `-`. The value is length-capped to 200
+ * bytes and passed through `sanitize_text_field()`; an entry whose value is
+ * empty — before or after sanitising — is refused (BK-14): `hash_equals('','')`
+ * is true, so such an entry would let anybody past who sends the bare cookie
+ * name. A bypass cookie is a shared secret; a secret of zero length is none.
  *
  * @param string $entry Raw entry (already trimmed by the caller).
  * @return string|null  Normalised `name=value` entry, or null if invalid.
@@ -808,12 +1366,22 @@ function creationell_captcha_validate_cookie_entry( string $entry ): ?string {
     if ( strlen( $value ) > 200 ) {
         return null;
     }
-    return $name . '=' . sanitize_text_field( $value );
+    $value = sanitize_text_field( $value );
+    if ( '' === $value ) {
+        return null;
+    }
+    return $name . '=' . $value;
 }
 
 /**
  * Truncates an IP for DSGVO-compliant storage. IPv4 → last octet zeroed,
  * IPv6 → last 80 bits zeroed. Invalid IPs return ''.
+ *
+ * I2: an IPv4-mapped address is canonicalised first. Without that every such
+ * client reduced to `::` — one value for the whole IPv4 internet, which made
+ * the event log useless AND emptied the network half of the under-attack pass
+ * binding (BK-3). Callers normally pass `creationell_captcha_get_client_ip()`,
+ * which canonicalises already; this repeats it for the direct callers.
  *
  * @param string $ip A validated client IP address.
  */
@@ -821,6 +1389,8 @@ function creationell_captcha_anonymize_ip( string $ip ): string {
     if ( '' === $ip ) {
         return '';
     }
+
+    $ip = creationell_captcha_normalize_ip( $ip );
 
     if ( false !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
         $parts    = explode( '.', $ip );

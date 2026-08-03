@@ -110,13 +110,54 @@ function creationell_captcha_handle_import_settings(): void {
         creationell_captcha_tools_redirect( 'error', $result->get_error_message() );
     }
 
-    $message = __( 'Einstellungen importiert.', 'creationell-captcha' );
+    // AF-6: Der Import ist ein Vollersatz und die Datei ist ungeprüfter
+    // Herkunft — beides wird jetzt in der Erfolgsmeldung benannt, statt es
+    // stillschweigend zu tun.
+    $message = __( 'Einstellungen importiert — die bisherige Konfiguration wurde vollständig ersetzt.', 'creationell-captcha' );
+    if ( ! empty( $result['source_notice'] ) ) {
+        $message .= ' ' . $result['source_notice'];
+    }
     if ( ! empty( $result['version_notice'] ) ) {
         $message .= ' ' . $result['version_notice'];
     }
+
+    // AF-4: Der Import läuft über admin-post.php und endet in einem Redirect —
+    // die add_settings_error()-Warnungen des Sanitizers (verworfene IP-Zeilen,
+    // ungültiges Strings-JSON, Argon2id-Downgrade) gingen dabei verloren, weil
+    // sie nur im Request-globalen Array stehen. Sie werden hier eingesammelt
+    // und in die Werkzeuge-Meldung übernommen.
+    foreach ( creationell_captcha_collect_settings_error_messages() as $warning ) {
+        $message .= ' ' . $warning;
+    }
+
     creationell_captcha_tools_redirect( 'success', $message );
 }
 add_action( 'admin_post_creationell_captcha_import_settings', 'creationell_captcha_handle_import_settings' );
+
+/**
+ * Collects the plugin's queued settings-error messages, de-duplicated.
+ *
+ * Der Sanitizer läuft auf dem Importweg zweimal (einmal explizit, einmal über
+ * den `sanitize_option`-Filter in `update_option()`), meldet identische Funde
+ * also doppelt — deshalb `array_unique`.
+ *
+ * @return array<int, string>
+ */
+function creationell_captcha_collect_settings_error_messages(): array {
+    if ( ! function_exists( 'get_settings_errors' ) ) {
+        return [];
+    }
+
+    $messages = [];
+    foreach ( get_settings_errors( 'creationell_captcha_settings' ) as $error ) {
+        $text = trim( (string) ( $error['message'] ?? '' ) );
+        if ( '' !== $text ) {
+            $messages[] = $text;
+        }
+    }
+
+    return array_values( array_unique( $messages ) );
+}
 
 /**
  * Handles the full factory reset.
@@ -124,6 +165,12 @@ add_action( 'admin_post_creationell_captcha_import_settings', 'creationell_captc
 function creationell_captcha_handle_reset_settings(): void {
     creationell_captcha_tools_guard( 'creationell_captcha_reset_settings' );
     creationell_captcha_reset_settings();
+    // AF-3: Diese Meldung war bis zum Kontext-Fix falsch — die gegateten Listen
+    // (code_challenge_watchlist, firewall_trusted_proxies) überlebten den
+    // Backend-Reset, weil der sanitize_option-Filter sie mit Formular-Semantik
+    // aus dem Altzustand zurückschrieb. creationell_captcha_reset_settings()
+    // heftet den programmatischen Kontext jetzt explizit an; die Listen werden
+    // tatsächlich geleert, die Meldung stimmt.
     creationell_captcha_tools_redirect(
         'success',
         __( 'Auf Werkseinstellungen zurückgesetzt; die Listen wurden geleert.', 'creationell-captcha' )

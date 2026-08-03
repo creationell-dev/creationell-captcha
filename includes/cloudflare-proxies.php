@@ -23,10 +23,22 @@ function creationell_captcha_cloudflare_snapshot(): array {
 }
 
 /**
- * The active CF range list: cached option (if fresh) → bundled snapshot.
+ * The active CF range list: cached option (if fresh and valid) → bundled snapshot.
  *
  * The cached option is considered stale once it is older than 48 hours,
  * shielding against a silently broken cron job.
+ *
+ * Every entry is re-validated on read. The refresh path already filters what
+ * it fetches, but the option is a persisted value: it can predate the day
+ * `is_valid_ip_or_cidr()` started rejecting a prefix length of 0, and it can be
+ * written from outside this file (`wp option update`, a restored backup). One
+ * `0.0.0.0/0` in there turns every peer into a trusted proxy, which makes
+ * `X-Forwarded-For` — and with it the client IP the whole bypass chain runs on
+ * — spoofable (LK-13). The validator is the one in helpers.php, deliberately
+ * not a second copy of the rule.
+ *
+ * A cached list that does not survive validation is not partially used: the
+ * bundled snapshot is the safer answer than a list somebody has been editing.
  *
  * @return string[] IPv4 and IPv6 CIDR ranges, merged.
  */
@@ -44,7 +56,47 @@ function creationell_captcha_cloudflare_ranges(): array {
         return $bundled;
     }
 
-    return array_merge( (array) $cached['v4'], (array) $cached['v6'] );
+    $merged = array_merge( (array) $cached['v4'], (array) $cached['v6'] );
+    $valid  = [];
+    foreach ( $merged as $entry ) {
+        /*
+         * The guard above checks the CONTAINER, not the entries. A restored
+         * backup or a `wp option patch` can leave a nested array in there — the
+         * cast then warns on every request through the proxy chain — or a
+         * serialised object without __toString, which raises an uncatchable
+         * Error and turns the front end white as soon as `firewall_behind_proxy`
+         * and the Cloudflare trust are on.
+         *
+         * Bailing out rather than skipping: an entry we cannot even read means
+         * the option has been tampered with, and the bundled snapshot is the
+         * safer answer than the remainder of a list somebody edited. The count
+         * check below turns this into exactly that.
+         */
+        if ( ! is_scalar( $entry ) ) {
+            creationell_captcha_log(
+                'CF ranges: cached option holds a non-scalar entry (' . gettype( $entry )
+                . ') — falling back to the bundled snapshot'
+            );
+            return $bundled;
+        }
+        $entry = trim( (string) $entry );
+        if ( '' !== $entry && creationell_captcha_is_valid_ip_or_cidr( $entry ) ) {
+            $valid[] = $entry;
+        }
+    }
+
+    if ( count( $valid ) !== count( $merged ) ) {
+        creationell_captcha_log(
+            sprintf(
+                'CF ranges: cached option rejected (%d of %d entries invalid) — falling back to the bundled snapshot',
+                count( $merged ) - count( $valid ),
+                count( $merged )
+            )
+        );
+        return $bundled;
+    }
+
+    return $valid;
 }
 
 /**

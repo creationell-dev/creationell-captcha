@@ -164,7 +164,17 @@ function creationell_captcha_render_analytics_page(): void {
     ?>
     <div class="wrap creationell-captcha-analytics creationell-captcha-tabbed">
         <h1 class="wp-heading-inline"><?php echo esc_html__( 'CreaCaptcha — Statistik', 'creationell-captcha' ); ?></h1>
-        <a href="<?php echo esc_url( add_query_arg( [] ) ); ?>" class="page-title-action"><?php echo esc_html__( '↻ Aktualisieren', 'creationell-captcha' ); ?></a>
+        <?php
+        // ZWEITES Argument zwingend: ohne URL-Argument liest add_query_arg()
+        // $_SERVER['REQUEST_URI'] roh — auf `//wp-admin/admin.php?page=…`
+        // entsteht daraus ein protokollrelatives href, das der Browser als
+        // Host `wp-admin` liest, und esc_url() reicht es unverändert durch.
+        // creationell_captcha_request_target() statt $base_url, weil der
+        // Aktualisieren-Link dieselbe ANSICHT neu laden soll: Tab, Zeitfenster,
+        // Suche, Filter und Seitenzahl stehen in der Query und gingen mit der
+        // nackten Menü-URL verloren.
+        ?>
+        <a href="<?php echo esc_url( add_query_arg( [], creationell_captcha_request_target() ) ); ?>" class="page-title-action"><?php echo esc_html__( '↻ Aktualisieren', 'creationell-captcha' ); ?></a>
         <hr class="wp-header-end">
 
         <?php creationell_captcha_render_nav_tabs( $tabs, $active_tab, $base_url ); ?>

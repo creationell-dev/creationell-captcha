@@ -47,6 +47,17 @@ jobs:
           python-version: "3.x"
 
       # 5. Install Pandoc and GraphViz
+      #
+      # Bewusst ohne Versions-Pin: die Pakete kommen aus den signierten
+      # Ubuntu-Quellen des Runner-Images (apt prüft Repo-Signatur und Hash je
+      # Paket), und ein fester Pin bricht, sobald GitHub das Image dreht.
+      #
+      # Anders als phpDocumentor (Schritt 10, läuft NACH ZIP und Prüfsumme)
+      # laufen pandoc/jq in Schritt 6, also VOR dem Packen — ein manipuliertes
+      # Paket könnte dort in den Workspace schreiben, den Schritt 7 einpackt.
+      # Das Restrisiko ist bewusst akzeptiert und hängt an der apt-Signatur-
+      # kette; wer es weiter senken will, müsste die .deb-Dateien selbst mit
+      # Hash pinnen.
       - name: Install Pandoc and GraphViz
         run: |
           sudo apt-get update
@@ -62,11 +73,22 @@ jobs:
             pandoc README.md -f markdown -t html -o gh-pages-html/readme.html
           fi
 
+          # Stylesheet der Doku-Website: vendoriert unter .github/simple.min.css
+          # (von build-public-staging.sh aus .github/public-repo/simple.min.css
+          # dorthin kopiert) statt zur Build-Zeit von cdnjs geladen — W3-10/A-3:
+          # ein CDN-Ausfall oder eine zurückgezogene Version durfte vorher das
+          # gesamte Release kippen (kein ZIP, kein Manifest, kein gh-pages-
+          # Deploy), wegen eines reinen Doku-Stylesheets, das den Build vorher
+          # nie berühren konnte (`<link>`-Tag zur Laufzeit). git selbst sichert
+          # jetzt die Integrität der Datei; zum Aktualisieren siehe
+          # DEVELOPMENT.md, Abschnitt 7.
+          cp .github/simple.min.css gh-pages-html/simple.min.css
+
           # Original styled HTML für gh-pages Webseite (optional)
           pandoc README.md -f markdown -t html5 \
             -s -o gh-pages-html/index.html \
             --metadata title="Plugin Documentation" \
-            --css https://cdnjs.cloudflare.com/ajax/libs/simpledotcss/2.3.7/simple.min.css \
+            --css simple.min.css \
             --metadata pagetitle="CreaCaptcha Plugin Docs"
 
           # Extract sections
@@ -79,25 +101,53 @@ jobs:
           declare -A META
           while IFS=":" read -r key value; do
             key=$(echo "$key" | sed -E 's/^\*\*//;s/\*\*$//;s/[[:space:]]//g')
-            value=$(echo "$value" | sed -E 's/^\*\*//;s/\*\*$//;s/^[[:space:]]*//;s/[[:space:]]*$//')
+            # W3-11a: ein literales Tab MITTEN im Wert (z. B. "**Tested up to:**
+            # 6.9<TAB>(beta)") wuerde weiter unten von split("\t") als zweiter
+            # Trenner gelesen und den Teil danach still verwerfen — keine
+            # Injection (das war LK-15 und ist gefixt), aber eine stille
+            # Datenverkuerzung. Ein Tab traegt in einer README-Metazeile ohnehin
+            # keine Bedeutung, deshalb wird er hier durch ein Leerzeichen
+            # ersetzt, BEVOR er den Tab-getrennten Zwischenschritt erreicht.
+            value=$(echo "$value" | sed -E 's/^\*\*//;s/\*\*$//;s/^[[:space:]]*//;s/[[:space:]]*$//;s/\t/ /g')
             [ -n "$key" ] && META[$key]="$value"
           done < <(grep -E '^\*\*[^:]+:\*\*' README.md)
 
+          # JSON-Erzeugung über jq statt printf: ein Anführungszeichen oder
+          # Backslash in einer `**Key:**`-Zeile der README brach sonst entweder
+          # das JSON oder schleuste einen zusätzlichen Manifest-Schlüssel ein
+          # (`**Version:** 1.0.2", "Testedupto": "9.9` reichte). jq kodiert
+          # Schlüssel und Werte korrekt; Tab trennt beide, weil er in den
+          # Metazeilen nicht vorkommt — der obige `s/\t/ /g` stellt das jetzt
+          # auch für einen Wert mit einem eingebetteten Tab sicher.
           {
-            echo "{"
             for k in "${!META[@]}"; do
-              v=${META[$k]}
-              printf '  "%s": "%s",\n' "$k" "$v"
+              printf '%s\t%s\n' "$k" "${META[$k]}"
             done
-            echo "  \"_generated\": true"
-            echo "}"
-          } > gh-pages-json/readme_meta.json
+          } | jq -R -s '
+                split("\n")
+                | map(select(length > 0) | split("\t") | {(.[0]): (.[1] // "")})
+                | add // {}
+                | . + {"_generated": true}
+              ' > gh-pages-json/readme_meta.json
 
-          # Contributors & Tags
-          CONTRIBUTORS=$(grep -m1 '^**Contributors:**' README.md | sed 's/\*\*Contributors:\*\* //' | sed 's/[[:space:]]*$//' | sed 's/, */","/g' | sed 's/^/["/' | sed 's/$/"]/')
-          TAGS=$(grep -m1 '^**Tags:**' README.md | sed 's/\*\*Tags:\*\* //' | sed 's/[[:space:]]*$//' | sed 's/, */","/g' | sed 's/^/["/' | sed 's/$/"]/')
-          echo "CONTRIBUTORS=$CONTRIBUTORS" >> $GITHUB_ENV
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
+          # Contributors & Tags — ebenfalls über jq, damit die Werte kodiert
+          # werden. Die Zuweisung an $GITHUB_ENV nutzt zusätzlich die
+          # Delimiter-Form: ein Zeilenumbruch im Wert könnte sonst weitere
+          # Umgebungsvariablen für alle folgenden Schritte setzen.
+          CONTRIBUTORS=$(grep -m1 -E '^\*\*Contributors:\*\*' README.md \
+            | sed -E 's/^\*\*Contributors:\*\*[[:space:]]*//' \
+            | jq -R -c 'split(",") | map(gsub("^[[:space:]]+|[[:space:]]+$";"")) | map(select(length > 0))')
+          TAGS=$(grep -m1 -E '^\*\*Tags:\*\*' README.md \
+            | sed -E 's/^\*\*Tags:\*\*[[:space:]]*//' \
+            | jq -R -c 'split(",") | map(gsub("^[[:space:]]+|[[:space:]]+$";"")) | map(select(length > 0))')
+          {
+            echo "CONTRIBUTORS<<CC_MANIFEST_EOF"
+            echo "$CONTRIBUTORS"
+            echo "CC_MANIFEST_EOF"
+            echo "TAGS<<CC_MANIFEST_EOF"
+            echo "$TAGS"
+            echo "CC_MANIFEST_EOF"
+          } >> "$GITHUB_ENV"
 
           # Copy README.md to gh-pages for reference
           cp README.md gh-pages-deploy/
@@ -128,6 +178,14 @@ jobs:
           rm -rf "$STAGING_DIR"
 
       # 7.1. Generate SHA256 checksum for security verification
+      #
+      # Artefakt und Prüfsumme entstehen bewusst im selben Job: Die Prüfsumme
+      # sichert die Strecke Build → Nutzer ab (das ZIP liegt auf github.com,
+      # das Manifest mit der Prüfsumme auf github.io — zwei Hosts), nicht die
+      # Integrität des Builds gegen sich selbst. Wer diesen Job manipulieren
+      # kann, kann beides ändern; dagegen hilft nur eine unabhängige
+      # Attestierung, kein zweiter Schritt im selben Job. Zugriff auf den Job
+      # setzt Maintainer-Rechte am Repo voraus.
       - name: Generate SHA256 checksum
         run: |
           SHA256_HASH=$(sha256sum "${{ env.ZIP_FILE }}" | awk '{print $1}')
@@ -224,10 +282,19 @@ jobs:
           with open(f"gh-pages-json/plugin_{os.environ.get('PLUGIN_SLUG')}.json", "w", encoding="utf-8") as f:
               json.dump(plugin, f, indent=2, ensure_ascii=False)
 
-      # 10. Generate PHPDoc API documentation (gepinnt auf v3.9.1)
+      # 10. Generate PHPDoc API documentation (gepinnt auf v3.9.1 + Prüfsumme)
+      #
+      # Ein Release-Tag auf GitHub lässt sich umhängen und ein Release-Asset
+      # ersetzen; der phar wird hier ausgeführt. Deshalb Version UND SHA-256
+      # gepinnt (Wert = der von der GitHub-API gemeldete Asset-Digest für
+      # v3.9.1). Beim Anheben der Version die Prüfsumme miterneuern —
+      # Verfahren in DEVELOPMENT.md, Abschnitt 7.
       - name: Generate PHPDoc API documentation
         run: |
-          wget -q https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.9.1/phpDocumentor.phar -O phpDocumentor.phar
+          PHPDOC_VERSION=v3.9.1
+          PHPDOC_SHA256=ef5509af790c8e56d11fff8162f12c7c19473b9af6e79b0fb9a62aff26da2ea5
+          wget -q "https://github.com/phpDocumentor/phpDocumentor/releases/download/${PHPDOC_VERSION}/phpDocumentor.phar" -O phpDocumentor.phar
+          echo "$PHPDOC_SHA256  phpDocumentor.phar" | sha256sum -c -
           chmod +x phpDocumentor.phar
           ./phpDocumentor.phar run --config=phpdoc.xml
           echo "PHPDoc documentation generated in docs/"
@@ -246,6 +313,13 @@ jobs:
           fi
 
       # 12. Deploy to GitHub Pages
+      #
+      # keep_files: false ist Absicht — der gh-pages-Branch ist reines
+      # Build-Ergebnis und wird bei jedem Release vollständig ersetzt. Damit
+      # bleiben keine Doku-Dateien aus früheren Versionen liegen, und das
+      # Update-Manifest beschreibt immer genau den aktuellen Stand. Der Preis:
+      # ein Re-Run für einen älteren Tag würde das Manifest auf diese ältere
+      # Version zurücksetzen (Re-Sync deshalb nur für den neuesten Tag).
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:

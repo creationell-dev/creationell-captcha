@@ -208,6 +208,11 @@ class Command {
     /**
      * Enables a CreaCaptcha module.
      *
+     * Exit-Code 1, wenn der Schalter nicht gesetzt werden konnte — etwa weil
+     * das zugehörige Formular-Plugin nicht aktiv ist und die Einstellung
+     * deshalb gar nicht existiert (früher: Erfolgsmeldung mit Exit 0, ohne dass
+     * sich etwas änderte).
+     *
      * ## OPTIONS
      *
      * <feature>
@@ -226,6 +231,9 @@ class Command {
 
     /**
      * Disables a CreaCaptcha module.
+     *
+     * Exit-Code 1, wenn der Schalter nicht gesetzt werden konnte — siehe
+     * `enable`.
      *
      * ## OPTIONS
      *
@@ -246,6 +254,15 @@ class Command {
     /**
      * Repairs a CreaCaptcha installation: secrets, event-log table, missing
      * default keys, version option.
+     *
+     * Grenze des Werkzeugs (CLI-10): Repariert wird, was FEHLT — ein Secret,
+     * die Event-Log-Tabelle, ein Einstellungsschlüssel, die Versions-Option.
+     * Der INHALT vorhandener Einstellungswerte wird nicht gegen die
+     * Feldspezifikation geprüft; ein an den Plugin-Schreibwegen vorbei
+     * gesetzter Wert (`wp option patch`, direkter DB-Zugriff) überlebt
+     * `repair` und wird erst beim nächsten regulären Speichern normalisiert
+     * (Einstellungsseite speichern oder `wp creacaptcha settings set <key>
+     * <wert>`).
      *
      * ## OPTIONS
      *
@@ -287,7 +304,7 @@ class Command {
         $defaults = creationell_captcha_get_default_settings();
         $missing  = array_diff_key( $defaults, $stored );
         if ( ! empty( $missing ) ) {
-            update_option( 'creationell_captcha_settings', creationell_captcha_sanitize_settings( $stored + $defaults ) );
+            creationell_captcha_store_settings( creationell_captcha_sanitize_settings( $stored + $defaults ) );
             $done[] = sprintf( '%d fehlende(r) Einstellungsschlüssel ergänzt.', count( $missing ) );
         }
 
@@ -298,7 +315,11 @@ class Command {
         }
 
         if ( empty( $done ) ) {
-            WP_CLI::success( 'Nichts zu reparieren — alles in Ordnung.' );
+            // CLI-10: „Nichts zu reparieren" hieß bisher implizit „alles in
+            // Ordnung". Repariert wird aber nur, was fehlt — der Inhalt
+            // vorhandener Werte wird nicht geprüft. Die Meldung sagt jetzt,
+            // was sie belegt.
+            WP_CLI::success( 'Nichts zu reparieren: Secrets, Event-Log-Tabelle, Einstellungsschlüssel und Versions-Option sind vollständig. Der Inhalt der gespeicherten Einstellungswerte wird dabei nicht geprüft.' );
             return;
         }
 
@@ -351,13 +372,64 @@ class Command {
             );
         }
 
-        $settings                = creationell_captcha_get_settings();
-        $settings[ $map[ $feature ] ] = $on;
-        update_option( 'creationell_captcha_settings', creationell_captcha_sanitize_settings( $settings ) );
+        $key = $map[ $feature ];
 
-        if ( 'event-log' === $feature && $on ) {
-            creationell_captcha_analytics()->ensure_table();
+        // CLI-3: Die Feldspezifikation enthält die protect_*-Schalter der
+        // Formular-Plugins nur, solange das jeweilige Plugin aktiv ist
+        // (class_exists-Gates in creationell_captcha_settings_fields()). Fehlt
+        // der Schlüssel dort, überspringt ihn der Sanitizer-Feld-Loop; danach
+        // stellt entweder die Preserve-Schleife den Altwert aus der Option
+        // wieder her oder der Schlüssel fehlt im Ergebnis ganz und
+        // creationell_captcha_get_settings() liefert wieder den Default. In
+        // beiden Fällen war der Schreibvorgang ein No-Op, während die CLI
+        // Erfolg meldete. Vorher benennen statt hinterher raten.
+        $fields = creationell_captcha_settings_fields();
+        if ( ! isset( $fields[ $key ] ) ) {
+            WP_CLI::error(
+                sprintf(
+                    'Feature „%s" (Schlüssel „%s") ist derzeit nicht setzbar: die Einstellungsspezifikation kennt den Schlüssel nicht. Bei den Formular-Plugin-Schaltern ist die Ursache in aller Regel, dass das zugehörige Plugin nicht aktiv ist. Der gespeicherte Wert bleibt unverändert (%s).',
+                    $feature,
+                    $key,
+                    ! empty( creationell_captcha_get_settings()[ $key ] ) ? 'an' : 'aus'
+                )
+            );
         }
+
+        $settings         = creationell_captcha_get_settings();
+        $settings[ $key ] = $on;
+        creationell_captcha_store_settings(
+            creationell_captcha_sanitize_settings( $settings, \CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC )
+        );
+
+        // CLI-3: Rückprüfung am frisch gelesenen Stand. Der Vorab-Check oben
+        // deckt die bekannte Ursache ab; diese Prüfung ist ein Netz für jede
+        // andere — sie fragt nicht, WARUM ein Wert verworfen worden sein
+        // könnte, sondern nur, ob er nach dem Schreiben dasteht. Auf dem
+        // heutigen Stand löst sie kein bekannter Pfad aus; genau deshalb steht
+        // sie hier: der Befund ist, dass dieses Kommando Erfolg meldete, ohne
+        // je nachgesehen zu haben.
+        $actual = ! empty( creationell_captcha_get_settings( true )[ $key ] );
+        if ( $actual !== $on ) {
+            WP_CLI::error(
+                sprintf(
+                    'Feature „%s" konnte nicht %s werden — der Wert wurde beim Speichern verworfen und steht weiterhin auf „%s".',
+                    $feature,
+                    $on ? 'aktiviert' : 'deaktiviert',
+                    $actual ? 'an' : 'aus'
+                )
+            );
+        }
+
+        // Nachlese N2 hat die Kompensation für den Schreibvorgang OHNE
+        // Wertänderung hier eingeführt (WordPress feuert
+        // update_option_{$option} nur bei echter Änderung, und seit E3b hängt
+        // die Tabellenanlage ausschliesslich an diesem Hook — `wp creacaptcha
+        // enable event-log` als Reparaturversuch bei bereits eingeschaltetem
+        // Log lief also ins Leere). Nachlese N6 hat sie eine Ebene tiefer
+        // gelegt: creationell_captcha_store_settings() oben ruft
+        // creationell_captcha_sync_event_log_table() für JEDEN
+        // Plugin-Schreibweg nach, nicht nur für diesen einen. Ein zweiter
+        // Aufruf an dieser Stelle wäre nur noch Wiederholung.
 
         WP_CLI::success(
             sprintf( 'Feature „%s" ist jetzt %s.', $feature, $on ? 'aktiviert' : 'deaktiviert' )

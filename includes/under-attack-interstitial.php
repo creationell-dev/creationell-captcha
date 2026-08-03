@@ -53,7 +53,8 @@ if ( ! defined( 'ABSPATH' ) ) {
         .crea-ua-logo { display: block; max-height: 128px; max-width: 100%; width: auto; margin: 0 auto 1.5rem; }
     </style>
     <?php if ( '' !== $user_css ) : ?>
-    <style><?php echo $user_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $user_css is sanitised by wp_strip_all_tags() in creationell_captcha_sanitize_settings(). ?></style>
+    <?php // AF-2: Ausgabe-Härtung statt Vertrauen auf den Schreibpfad — mindestens drei Schreibwege erreichen den Sanitizer nie (W2). ?>
+    <style><?php echo creationell_captcha_safe_inline_css( $user_css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- creationell_captcha_safe_inline_css() entfernt jede Sequenz, die den <style>-Block beenden könnte. ?></style>
     <?php endif; ?>
     <script src="<?php echo esc_url( $widget_src ); ?>"></script>
     <?php if ( '' !== $worker_inline ) : ?>

@@ -14,12 +14,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Probes whether GD can actually render text with the vendored TTF font.
+ *
+ * `is_file()` alone is not enough (ZP-2): a corrupted font or one swapped for
+ * an unrelated/unreadable file still passes that check, but every
+ * `imagettftext()` call against it then silently returns `false` and draws
+ * nothing — the renderer would produce a blank white PNG with no error and
+ * no log line. This probe draws into a throwaway 1-character canvas and
+ * reports the real `imagettftext()` verdict, so both the renderer and
+ * `wp creacaptcha doctor` (Check „Code-Challenge-Schriftart") can detect the
+ * defect before a visitor ever requests `/code-image`.
+ *
+ * A corrupted TTF fails identically for every glyph (the failure is a
+ * freetype parse error on the file, not a missing character), so probing
+ * with a single throwaway character reflects the file's real state.
+ */
+function creationell_captcha_code_challenge_font_usable(): bool {
+    if ( ! function_exists( 'imagettftext' ) ) {
+        return false;
+    }
+
+    $font_path = CREATIONELL_CAPTCHA_PLUGIN_PATH . 'assets/fonts/captcha.ttf';
+    if ( ! is_file( $font_path ) ) {
+        return false;
+    }
+
+    $probe = imagecreatetruecolor( 10, 10 );
+    $ink   = imagecolorallocate( $probe, 0, 0, 0 );
+    // @ — imagettftext() emits an E_WARNING on a broken font on top of its
+    // false return value; the return value alone is the signal we need.
+    $ok = false !== @imagettftext( $probe, 10, 0, 0, 8, $ink, $font_path, 'A' );
+    imagedestroy( $probe );
+
+    return $ok;
+}
+
+/**
  * Renders a PNG of the given code and returns the raw bytes. Caller is
  * responsible for emitting headers (`Content-Type: image/png`,
  * `Cache-Control: no-store`) and the body.
  *
  * Falls back to GD's built-in bitmap font 5 if the vendored TTF is missing
- * (logs a one-line warning so the operator sees the degradation).
+ * OR present but unusable (ZP-2: corrupted/swapped file — `is_file()` alone
+ * cannot see that) — either way logs a one-line warning so the operator sees
+ * the degradation instead of silently shipping a blank image.
  *
  * @param string $code The code to render (4–8 chars expected; longer is
  *                     trimmed implicitly by the width budget).
@@ -61,7 +99,7 @@ function creationell_captcha_render_code_image( string $code ): string {
     $code_len  = strlen( $code );
     $char_w    = $width / max( 1, $code_len );
 
-    if ( is_file( $font_path ) && function_exists( 'imagettftext' ) ) {
+    if ( creationell_captcha_code_challenge_font_usable() ) {
         // TTF path — pretty.
         for ( $i = 0; $i < $code_len; $i++ ) {
             $angle = random_int( -15, 15 );
@@ -70,8 +108,15 @@ function creationell_captcha_render_code_image( string $code ): string {
             imagettftext( $im, 24, $angle, $x, $y, $text, $font_path, $code[ $i ] );
         }
     } else {
-        // Bitmap fallback — ugly but functional.
-        creationell_captcha_log( 'code-challenge: TTF font missing, falling back to bitmap font.' );
+        // Bitmap fallback — ugly but functional. Covers BOTH failure modes:
+        // the font file is missing, and (ZP-2) present but unreadable/
+        // corrupted, in which case imagettftext() would otherwise silently
+        // draw nothing for every character and ship a blank white PNG.
+        creationell_captcha_log(
+            is_file( $font_path )
+                ? 'code-challenge: TTF font present but unusable (imagettftext() failed), falling back to bitmap font.'
+                : 'code-challenge: TTF font missing, falling back to bitmap font.'
+        );
         $font_no = 5;
         for ( $i = 0; $i < $code_len; $i++ ) {
             $x = (int) ( $i * $char_w + 14 );

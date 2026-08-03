@@ -3,15 +3,15 @@
 Plugin Name: CreaCaptcha
 Plugin URI: https://github.com/creationell-dev/creationell-captcha
 Description: Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.
-Version: 1.0.2
+Version: 1.1.0
 Author: creationell® – die Werbeagentur
 Author URI: https://www.creationell.de/
 Contributors: creationell-dev
 Tags: captcha, spam, anti-spam, anti-bot, proof of work
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: creationell-captcha
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'CREATIONELL_CAPTCHA_VERSION', '1.0.2' );
+define( 'CREATIONELL_CAPTCHA_VERSION', '1.1.0' );
 define( 'CREATIONELL_CAPTCHA_FILE', __FILE__ );
 define( 'CREATIONELL_CAPTCHA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'CREATIONELL_CAPTCHA_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
@@ -91,6 +91,7 @@ require_once $creationell_captcha_lib;
 
 $creationell_captcha_includes = [
     'includes/helpers.php',
+    'includes/rest-context.php',
     'includes/class-plugin-updater.php',
     'includes/class-engine.php',
     'includes/class-interceptor.php',
@@ -104,6 +105,7 @@ $creationell_captcha_includes = [
     'includes/settings-manager.php',
     'includes/admin-tabs.php',
     'includes/admin-page.php',
+    'includes/hardening-migration.php',
     'includes/assets.php',
     'includes/tools-page.php',
     'includes/tools-actions.php',

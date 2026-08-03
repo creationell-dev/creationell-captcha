@@ -321,7 +321,7 @@ function creationell_captcha_settings_fields(): array {
             'label'    => __( 'Watch-Liste (IPs/CIDRs)', 'creationell-captcha' ),
             'type'     => 'textarea',
             'section'  => 'creationell_captcha_code_challenge',
-            'help'     => __( 'Eine IP-Adresse oder ein CIDR-Bereich je Zeile, z. B. 203.0.113.4 oder 2a06:98c0::/29. Diese IPs werden NICHT blockiert — sie bekommen zusätzlich zur PoW eine Bild-Code-Eingabe. Für komplette Sperrung: IP-Blockliste unter Firewall.', 'creationell-captcha' ),
+            'help'     => __( 'Eine IP-Adresse oder ein CIDR-Bereich je Zeile, z. B. 203.0.113.4 oder 2a06:98c0::/29. Diese IPs werden NICHT blockiert — sie bekommen zusätzlich zur PoW eine Bild-Code-Eingabe. Für komplette Sperrung: IP-Blockliste unter Firewall. Hinweis zur Schreibweise: Ein CIDR-Bereich in IPv4-mapped Notation („::ffff:203.0.113.0/120") trifft seit Version 1.1.0 keine Adresse mehr — die Adresse des Besuchers wird vorher auf die gewöhnliche IPv4-Schreibweise vereinheitlicht. Bereiche also gewöhnlich schreiben („203.0.113.0/24"). Einzelne Adressen in mapped Schreibweise wirken weiterhin. Bestehende Einträge in mapped Notation meldet CreaCaptcha als Hinweis im Backend.', 'creationell-captcha' ),
             'requires' => 'code_challenge_enabled',
         ],
         'code_challenge_length'               => [
@@ -363,6 +363,7 @@ function creationell_captcha_settings_fields(): array {
             'label'   => __( 'Login-Formular schützen', 'creationell-captcha' ),
             'type'    => 'checkbox',
             'section' => 'creationell_captcha_core_forms',
+            'help'    => __( 'Schützt /wp-login.php sowie theme-/widget-basierte Login-Formulare, die über die WordPress-Funktion wp_login_form() eingebunden sind. Deckt NICHT das WooCommerce-„Mein Konto"-Login ab (eigenes Formular mit anderen Feldnamen) — dafür separat unter „WooCommerce schützen" → „My-Account-Login schützen" aktivieren.', 'creationell-captcha' ),
         ],
         'protect_registration'   => [
             'label'   => __( 'Registrierung schützen', 'creationell-captcha' ),
@@ -392,21 +393,21 @@ function creationell_captcha_settings_fields(): array {
             'label'    => __( 'Geschützte Pfade', 'creationell-captcha' ),
             'type'     => 'textarea',
             'section'  => 'creationell_captcha_interceptor',
-            'help'     => __( 'Ein URL-Pfad-Muster je Zeile, z. B. /kontakt-senden oder /custom/*. Der Stern „*" ist ein Platzhalter. POST-Anfragen auf passende Pfade müssen eine gelöste Sicherheitsabfrage mitführen. Bei Installationen in einem Unterverzeichnis das Verzeichnis im Muster mitangeben. Beginnt eine Zeile mit „!", ist sie ein Ausschluss-Muster (Allow-Liste-Ausnahme).', 'creationell-captcha' ),
+            'help'     => __( 'Ein URL-Pfad-Muster je Zeile, z. B. /kontakt-senden oder /custom/*. Der Stern „*" ist ein Platzhalter. POST-Anfragen auf passende Pfade müssen eine gelöste Sicherheitsabfrage mitführen. Bei Installationen in einem Unterverzeichnis das Verzeichnis im Muster mitangeben. Beginnt eine Zeile mit „!", ist sie ein Ausschluss-Muster (Allow-Liste-Ausnahme). Achtung: Ein Ausschluss-Treffer hebt die GESAMTE Liste auf, nicht nur die eine Zeile — und das unabhängig von der Reihenfolge. Ein zu weit gefasstes Muster (etwa „!*", oder „!/kontakt*" neben „/kontakt-senden") schaltet den Schutz für alle Pfade dieser Liste ab; die Seite meldet dabei keinen Fehler. „wp creacaptcha doctor" warnt, wenn ein Ausschluss-Muster die eigene Liste aufhebt.', 'creationell-captcha' ),
             'requires' => 'interceptor_enabled',
         ],
         'interceptor_actions'        => [
             'label'    => __( 'Geschützte Aktionen', 'creationell-captcha' ),
             'type'     => 'textarea',
             'section'  => 'creationell_captcha_interceptor',
-            'help'     => __( 'Ein Wildcard-Muster je Zeile für WordPress-Action-Namen (z. B. my_form_submit, my_form_*). Anfragen mit passendem $_POST[action] oder $_GET[action] müssen eine gelöste Sicherheitsabfrage mitführen — auch in wp-admin/admin-post.php oder admin-ajax.php. Erlaubte Zeichen: a–z, 0–9, „_", „-", „*". Beginnt eine Zeile mit „!", ist sie ein Ausschluss-Muster. Angemeldete Nutzer mit Rechten ab edit_posts (Autoren/Editoren/Admins) sind weiterhin ausgenommen — der Schutz wirkt nur gegen anonyme bzw. Subscriber-Anfragen.', 'creationell-captcha' ),
+            'help'     => __( 'Ein Wildcard-Muster je Zeile für WordPress-Action-Namen (z. B. my_form_submit, my_form_*). Anfragen mit passendem $_POST[action] oder $_GET[action] müssen eine gelöste Sicherheitsabfrage mitführen — auch in wp-admin/admin-post.php oder admin-ajax.php. Erlaubte Zeichen: a–z, 0–9, „_", „-", „*". Beginnt eine Zeile mit „!", ist sie ein Ausschluss-Muster — ein Treffer darauf hebt die GESAMTE Liste auf, nicht nur die eine Zeile, und das unabhängig von der Reihenfolge. Ein zu weit gefasstes Muster wie „!*" schaltet den Action-Schutz also komplett ab; „wp creacaptcha doctor" warnt in diesem Fall. Angemeldete Nutzer mit Rechten ab edit_posts (Autoren/Editoren/Admins) sind weiterhin ausgenommen — der Schutz wirkt nur gegen anonyme bzw. Subscriber-Anfragen.', 'creationell-captcha' ),
             'requires' => 'interceptor_enabled',
         ],
         'interceptor_inject_paths'   => [
             'label'    => __( 'Inject-Pfade', 'creationell-captcha' ),
             'type'     => 'textarea',
             'section'  => 'creationell_captcha_interceptor',
-            'help'     => __( 'Ein URL-Pfad-Muster je Zeile. Auf passenden Seiten wird die Sicherheitsabfrage automatisch vor jedem „</form>" injiziert — nützlich für Theme- oder Drittanbieter-Formulare, die sich nicht direkt modifizieren lassen. „*" als Platzhalter; Zeilen mit „!" als Ausschluss.', 'creationell-captcha' ),
+            'help'     => __( 'Ein URL-Pfad-Muster je Zeile. Auf passenden Seiten wird die Sicherheitsabfrage automatisch vor jedem „</form>" injiziert — nützlich für Theme- oder Drittanbieter-Formulare, die sich nicht direkt modifizieren lassen. „*" als Platzhalter; Zeilen mit „!" als Ausschluss. Wichtig: Diese Liste steuert NUR die Anzeige. Serverseitig geprüft wird ein Absenden erst, wenn derselbe Pfad zusätzlich unter „Geschützte Pfade" steht (oder die verarbeitende Aktion unter „Geschützte Aktionen"). Fehlt dieses Gegenstück, sieht das Formular geschützt aus, ohne es zu sein — ein Bot, der die Sicherheitsabfrage einfach weglässt, kommt durch. „wp creacaptcha doctor" listet Inject-Pfade ohne Gegenstück auf.', 'creationell-captcha' ),
             'requires' => 'interceptor_enabled',
         ],
         'interceptor_skip_logged_in' => [
@@ -450,19 +451,23 @@ function creationell_captcha_settings_fields(): array {
             'label'   => __( 'WooCommerce schützen', 'creationell-captcha' ),
             'type'    => 'checkbox',
             'section' => 'creationell_captcha_form_plugins',
-            'help'    => __( 'Schützt Checkout, My-Account-Login, Registrierung und Lost-Password. Produkt-Bewertungen sind durch „Kommentare schützen" abgedeckt.', 'creationell-captcha' ),
+            'help'    => __( 'Schützt Checkout, My-Account-Login, Registrierung und Lost-Password. Produkt-Bewertungen sind durch „Kommentare schützen" abgedeckt. Alle vier Widgets werden über die jeweiligen WooCommerce-Template-Hooks eingefügt — ein Theme, das eines dieser Templates kopiert und den zugehörigen Hook-Aufruf weglässt, verliert dort das Widget; die serverseitige Prüfung bleibt trotzdem aktiv und weist die Anfrage dann ab (fail-closed, kein Sicherheitsproblem, aber das Formular wirkt „kaputt").', 'creationell-captcha' ),
         ];
         $fields['protect_wc_checkout'] = [
             'label'    => __( 'Checkout schützen', 'creationell-captcha' ),
             'type'     => 'checkbox',
             'section'  => 'creationell_captcha_form_plugins',
             'requires' => 'protect_woocommerce',
+            'help'     => creationell_captcha_wc_uses_block_checkout()
+                ? __( 'Achtung: Die aktive Checkout-Seite nutzt den WooCommerce-Block-Checkout (Block „wp:woocommerce/checkout"). Dieser Schalter hat dort KEINE Wirkung — kein Widget, keine Prüfung, da die Block-Checkout-Store-API einen anderen Code-Pfad nutzt als der hier geschützte klassische Checkout. Nur ein Checkout über den [woocommerce_checkout]-Shortcode wird erfasst. Siehe „wp creacaptcha doctor".', 'creationell-captcha' )
+                : __( 'Schützt den klassischen Checkout ([woocommerce_checkout]-Shortcode bzw. process_checkout()). Ein WooCommerce-Block-Checkout (Block „wp:woocommerce/checkout") läuft über die Store-API und wird von dieser Option NICHT erfasst — „wp creacaptcha doctor" meldet, falls die aktive Checkout-Seite ein Block-Checkout ist.', 'creationell-captcha' ),
         ];
         $fields['protect_wc_login'] = [
             'label'    => __( 'My-Account-Login schützen', 'creationell-captcha' ),
             'type'     => 'checkbox',
             'section'  => 'creationell_captcha_form_plugins',
             'requires' => 'protect_woocommerce',
+            'help'     => __( 'Das WooCommerce-„Mein Konto"-Login-Formular postet andere Feldnamen als /wp-login.php und wird deshalb NICHT von „Login-Formular schützen" (Kernformulare) mitgeschützt — diese Option ist der alleinige Schalter dafür.', 'creationell-captcha' ),
         ];
         $fields['protect_wc_registration'] = [
             'label'    => __( 'My-Account-Registrierung schützen', 'creationell-captcha' ),
@@ -475,7 +480,7 @@ function creationell_captcha_settings_fields(): array {
             'type'     => 'checkbox',
             'section'  => 'creationell_captcha_form_plugins',
             'requires' => 'protect_woocommerce',
-            'help'     => __( 'Zeigt das Widget auf der Woo-Lost-Password-Seite. Die serverseitige Verifikation läuft über „Passwort-Reset schützen" (WP-Kernformular); aktivieren Sie diese Option, falls noch nicht geschehen.', 'creationell-captcha' ),
+            'help'     => __( 'Zeigt NUR das Widget auf der Woo-Lost-Password-Seite — dieser Schalter prüft nichts selbst. Die serverseitige Verifikation läuft ausschließlich über „Passwort-Reset schützen" (WP-Kernformular, unten). Beide Schalter sind unabhängig: nur dieser an = Widget ohne Prüfung (Reset geht immer durch); nur „Passwort-Reset schützen" an = jede Reset-Anfrage über diese Seite scheitert (kein Widget vorhanden). Für ein funktionierendes, tatsächlich geschütztes Formular beide aktivieren — „wp creacaptcha doctor" meldet einen erkannten Split.', 'creationell-captcha' ),
         ];
     }
 
@@ -501,20 +506,20 @@ function creationell_captcha_settings_fields(): array {
             'cf-connecting-ip' => 'CF-Connecting-IP',
             'true-client-ip'   => 'True-Client-IP',
         ],
-        'help'    => __( 'Welcher Header die echte Client-IP trägt. „X-Forwarded-For" ist Standard bei nginx, Apache mod_remoteip und den meisten CDNs. „CF-Connecting-IP" verwendet Cloudflare nativ. „X-Real-IP" / „True-Client-IP" sind seltener, kommen aber bei Akamai bzw. einigen nginx-Setups vor. Nur wirksam, wenn der Proxy-Modus aktiv ist.', 'creationell-captcha' ),
+        'help'    => __( 'Welcher Header die echte Client-IP trägt. „X-Forwarded-For" ist Standard bei nginx, Apache mod_remoteip und den meisten CDNs. „CF-Connecting-IP" verwendet Cloudflare nativ. „X-Real-IP" / „True-Client-IP" sind seltener, kommen aber bei Akamai bzw. einigen nginx-Setups vor. Nur wirksam, wenn der Proxy-Modus aktiv ist. Wichtig: Liefert der Proxy Einträge, die keine IP-Adresse sind („unknown", obfuskierte Kennungen, „ip:port"), fällt die Erkennung auf die Adresse des Proxys zurück — dann zählt die ganze Website als ein einziger Client, mit einem gemeinsamen Rate-Limit-Zähler, und IP-Sperren treffen den einzelnen Besucher nicht mehr. Wenn Sperren oder Limits unerwartet alle treffen, ist das der erste Ort zum Nachsehen.', 'creationell-captcha' ),
         'requires' => 'firewall_behind_proxy',
     ];
     $fields['firewall_ip_block'] = [
         'label'   => __( 'IP-Blockliste', 'creationell-captcha' ),
         'type'    => 'textarea',
         'section' => 'creationell_captcha_firewall',
-        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich je Zeile, z. B. 203.0.113.4, 203.0.113.0/24 oder 2a06:98c0::/29. Anfragen von diesen Adressen werden mit HTTP 403 abgewiesen — bevor sie WordPress laden. Maximal 50 Einträge.', 'creationell-captcha' ),
+        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich je Zeile, z. B. 203.0.113.4, 203.0.113.0/24 oder 2a06:98c0::/29. Anfragen von diesen Adressen werden mit HTTP 403 abgewiesen — bevor sie WordPress laden. Maximal 50 Einträge. Hinweis zur Schreibweise: Ein CIDR-Bereich in IPv4-mapped Notation („::ffff:203.0.113.0/120") trifft seit Version 1.1.0 keine Adresse mehr — die Adresse des Besuchers wird vorher auf die gewöhnliche IPv4-Schreibweise vereinheitlicht. Bereiche also gewöhnlich schreiben („203.0.113.0/24"). Einzelne Adressen in mapped Schreibweise wirken weiterhin. Bestehende Einträge in mapped Notation meldet CreaCaptcha als Hinweis im Backend.', 'creationell-captcha' ),
     ];
     $fields['firewall_ip_allow'] = [
         'label'   => __( 'IP-Erlaubnisliste (global)', 'creationell-captcha' ),
         'type'    => 'textarea',
         'section' => 'creationell_captcha_bypass',
-        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich (z. B. 203.0.113.0/24, 2a06:98c0::/29) je Zeile. Diese IPs werden von der Firewall, vom Rate-Limiter, vom Captcha und vom Under-Attack-Modus durchgewinkt.', 'creationell-captcha' ),
+        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich (z. B. 203.0.113.0/24, 2a06:98c0::/29) je Zeile. Diese IPs werden von der Firewall, vom Rate-Limiter, vom Captcha und vom Under-Attack-Modus durchgewinkt. Hinweis zur Schreibweise: Ein CIDR-Bereich in IPv4-mapped Notation („::ffff:203.0.113.0/120") trifft seit Version 1.1.0 keine Adresse mehr — die Adresse des Besuchers wird vorher auf die gewöhnliche IPv4-Schreibweise vereinheitlicht. Bereiche also gewöhnlich schreiben („203.0.113.0/24"). Einzelne Adressen in mapped Schreibweise wirken weiterhin. Bestehende Einträge in mapped Notation meldet CreaCaptcha als Hinweis im Backend.', 'creationell-captcha' ),
     ];
     $fields['bypass_ua_allow'] = [
         'label'   => __( 'User-Agent-Bypass', 'creationell-captcha' ),
@@ -538,7 +543,7 @@ function creationell_captcha_settings_fields(): array {
         'label'   => __( 'Vertrauenswürdige Proxies', 'creationell-captcha' ),
         'type'    => 'textarea',
         'section' => 'creationell_captcha_proxy',
-        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich (z. B. 203.0.113.0/24, 2a06:98c0::/29) je Zeile. Nur Anfragen, die von einer dieser IPs kommen, dürfen den weitergeleiteten Header setzen.', 'creationell-captcha' ),
+        'help'    => __( 'Eine IP-Adresse oder ein CIDR-Bereich (z. B. 203.0.113.0/24, 2a06:98c0::/29) je Zeile. Nur Anfragen, die von einer dieser IPs kommen, dürfen den weitergeleiteten Header setzen. Hinweis zur Schreibweise: Ein CIDR-Bereich in IPv4-mapped Notation („::ffff:203.0.113.0/120") trifft seit Version 1.1.0 keine Adresse mehr — die Adresse des Besuchers wird vorher auf die gewöhnliche IPv4-Schreibweise vereinheitlicht. Bereiche also gewöhnlich schreiben („203.0.113.0/24"). Einzelne Adressen in mapped Schreibweise wirken weiterhin. Bestehende Einträge in mapped Notation meldet CreaCaptcha als Hinweis im Backend.', 'creationell-captcha' ),
         'requires' => 'firewall_behind_proxy',
     ];
     $fields['firewall_trust_private_ranges'] = [
@@ -680,7 +685,7 @@ function creationell_captcha_settings_fields(): array {
         'section' => 'creationell_captcha_analytics',
         'min'     => 1,
         'max'     => 365,
-        'help'    => __( 'Ältere Einträge im Event-Log werden automatisch entfernt. Nur wirksam, wenn der Event-Log aktiv ist.', 'creationell-captcha' ),
+        'help'    => __( 'Ältere Einträge im Event-Log werden täglich automatisch entfernt — auch dann, wenn der Event-Log inzwischen ausgeschaltet ist (sonst blieben genau die bereits gespeicherten Daten für immer stehen). Ausnahme: Ist in der wp-config.php CREATIONELL_CAPTCHA_DISABLE gesetzt, löscht der Durchlauf nichts; „wp creacaptcha log prune" räumt dann einmalig auf.', 'creationell-captcha' ),
     ];
     $fields['log_verified'] = [
         'label'    => __( 'Erfolgreiche Verifikationen loggen', 'creationell-captcha' ),
@@ -742,7 +747,7 @@ function creationell_captcha_settings_fields(): array {
         'label'    => __( 'IP-Adressen anonymisieren', 'creationell-captcha' ),
         'type'     => 'checkbox',
         'section'  => 'creationell_captcha_analytics',
-        'help'     => __( 'Setzt bei IPv4-Adressen das letzte Oktett auf 0 (es bleiben die ersten drei erhalten) und nullt bei IPv6-Adressen die letzten 80 Bit (die ersten 48 bleiben erhalten), bevor sie in den Event-Log geschrieben werden. DSGVO-konform.', 'creationell-captcha' ),
+        'help'     => __( 'Setzt bei IPv4-Adressen das letzte Oktett auf 0 (es bleiben die ersten drei erhalten) und nullt bei IPv6-Adressen die letzten 80 Bit (die ersten 48 bleiben erhalten), bevor sie in den Event-Log geschrieben werden. Die Kürzung betrifft ausschließlich die Spalte „IP". Unverändert gespeichert werden weiterhin User-Agent, Referrer, die Benutzer-ID einer angemeldeten Sitzung, der aufgerufene Pfad (ohne Query-String) sowie — falls eingeschaltet — der Request-Body-Fingerabdruck. Eine Zeile kann damit trotz gekürzter IP einer Person zuzuordnen sein; der Detail-Log ist insgesamt optional und wird nach der eingestellten Aufbewahrungsdauer gelöscht.', 'creationell-captcha' ),
         'requires' => 'analytics_event_log',
     ];
 
@@ -775,10 +780,23 @@ function creationell_captcha_register_settings(): void {
         'creationell_captcha_settings',
         [
             'type'              => 'array',
-            'sanitize_callback' => 'creationell_captcha_sanitize_settings',
+            'sanitize_callback' => 'creationell_captcha_sanitize_settings_option',
             'default'           => creationell_captcha_get_default_settings(),
         ]
     );
+
+    // AF-9: admin-ajax.php feuert admin_init vor dem priv/nopriv-Dispatch —
+    // register_settings() lief damit bei jedem, auch anonymen, AJAX-Request
+    // vollständig durch. Der register_setting()-Aufruf oben bleibt bewusst
+    // ungegatet: er hängt den sanitize_option-Filter an, der auch fremde
+    // update_option()-Aufrufe im Admin-Kontext noch sanitisiert (W2 der
+    // Befunddatei) — ihn im AJAX-Kontext wegzunehmen wäre ein Rückschritt.
+    // Der reine UI-Aufbau darunter (zwölf Sections + ~75 add_settings_field())
+    // hat dagegen in einem AJAX-Request keinen Abnehmer: do_settings_sections()
+    // läuft ausschließlich beim Rendern der Plugin-Seite.
+    if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+        return;
+    }
 
     $sections = creationell_captcha_admin_sections();
 
@@ -814,12 +832,279 @@ function creationell_captcha_register_settings(): void {
 add_action( 'admin_init', 'creationell_captcha_register_settings' );
 
 /**
- * Sanitises the settings array before it is stored.
+ * Sanitiser context: the settings form (`options.php`).
  *
- * @param mixed $input Raw input from the settings form.
+ * Ein `disabled`-Input sendet beim Absenden keinen Wert — deshalb (und NUR
+ * deshalb) schreibt der Sanitizer in diesem Kontext gegatete Felder aus dem
+ * gespeicherten Zustand zurück.
+ */
+const CREATIONELL_CAPTCHA_SANITIZE_FORM = 'form';
+
+/**
+ * Sanitiser context: programmatischer Schreibvorgang (Import, Werksreset,
+ * „Standardwerte laden", WP-CLI).
+ *
+ * Hier ist der übergebene Wert eine vollständige, bewusste Angabe; eine
+ * Rückschreibung aus dem Altzustand würde sie still überstimmen (AF-1/AF-3).
+ */
+const CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC = 'programmatic';
+
+/**
+ * Sanitiser context: Werksreset (`creationell_captcha_reset_settings()`).
+ *
+ * Wie PROGRAMMATIC — plus die eine Zusage, die den Werksreset von jedem
+ * anderen Schreibvorgang unterscheidet: KEIN gespeicherter Schlüssel wird
+ * übernommen, auch keiner ausserhalb der aktuellen Feldspezifikation.
+ *
+ * Warum das ein eigener Wert sein muss (Nachlese N6, Befund 5): Die
+ * Übernahme-Schleife am Ende von `creationell_captcha_sanitize_settings()`
+ * hält gespeicherte Schlüssel fest, die `creationell_captcha_settings_fields()`
+ * gerade nicht liefert — die Schalter der Formular-Plugins hängen an
+ * `class_exists()`, sind bei deaktiviertem Plugin also nicht in der
+ * Spezifikation. Für jeden regulären Schreibvorgang ist das richtig
+ * (sonst löschte ein Speichern der Einstellungsseite den Schalter eines
+ * gerade deaktivierten Plugins). Für den dokumentierten „vollen Werksreset"
+ * ist es falsch: `wp creacaptcha settings reset --yes` meldete
+ * „Auf Werkseinstellungen zurückgesetzt", während ein `protect_wpforms => false`
+ * aus der Zeit vor der Deaktivierung — oder ein beliebiger Fremdschlüssel aus
+ * `wp option patch`/DB-Restore — die Option unverändert überlebte.
+ *
+ * Der Wert ersetzt PROGRAMMATIC ausschliesslich beim Reset. Import,
+ * „Standardwerte laden", WP-CLI-Schreibvorgänge und die Listen-Befehle
+ * bleiben auf PROGRAMMATIC: sie übergeben zwar ebenfalls einen vollständigen
+ * Wertesatz, sind aber kein Werksreset und dürfen den Schalter eines gerade
+ * inaktiven Formular-Plugins nicht wegräumen.
+ *
+ * @since 1.1.0
+ */
+const CREATIONELL_CAPTCHA_SANITIZE_RESET = 'reset';
+
+/**
+ * Liest — und setzt optional — den angehefteten Sanitizer-Kontext.
+ *
+ * Der Kontext wird bewusst EXPLIZIT gesetzt und nicht aus `is_admin()`,
+ * `admin_init` oder ähnlichen Umgebungsindizien erraten: genau dieses Raten ist
+ * die Wurzel der Kartenwidersprüche W1/W2 der Befunddatei (ein Menüpunkt, zwei
+ * Semantiken, je nachdem ob `admin_init` gefeuert hat).
+ *
+ * @param string|false|null $set FALSE liest nur; ein String oder NULL setzt.
+ * @return string|null Aktuell angehefteter Kontext oder NULL.
+ */
+function creationell_captcha_sanitize_context( string|false|null $set = false ): ?string {
+    static $pinned = null;
+
+    if ( false !== $set ) {
+        $pinned = $set;
+    }
+
+    return $pinned;
+}
+
+/**
+ * Führt $callback aus, während der Sanitizer-Kontext auf $context festgelegt ist.
+ *
+ * Nötig, weil `register_setting()` den Sanitizer zusätzlich als
+ * `sanitize_option_creationell_captcha_settings`-Filter anhängt: jeder
+ * `update_option()`-Aufruf im Admin-Kontext läuft durch ihn hindurch, auch
+ * Import und Reset über `admin-post.php`. Ohne diese Klammer bekämen genau
+ * jene Pfade Formular-Semantik.
+ *
+ * @param string   $context  Einer der CREATIONELL_CAPTCHA_SANITIZE_*-Werte.
+ * @param callable $callback Auszuführender Schreibvorgang.
+ * @return mixed Rückgabewert von $callback.
+ */
+function creationell_captcha_with_sanitize_context( string $context, callable $callback ): mixed {
+    $previous = creationell_captcha_sanitize_context();
+    creationell_captcha_sanitize_context( $context );
+
+    try {
+        return $callback();
+    } finally {
+        // finally: eine Ausnahme im Schreibvorgang darf den Kontext nicht für
+        // den Rest des Requests angeheftet lassen.
+        creationell_captcha_sanitize_context( $previous );
+    }
+}
+
+/**
+ * Einstiegspunkt des `sanitize_option_creationell_captcha_settings`-Filters.
+ *
+ * @param mixed $input Rohwert aus dem Schreibvorgang.
  * @return array<string, mixed>
  */
-function creationell_captcha_sanitize_settings( mixed $input ): array {
+function creationell_captcha_sanitize_settings_option( mixed $input ): array {
+    // Programmatische Schreiber heften ihren Kontext über
+    // creationell_captcha_with_sanitize_context() an. Bleibt nichts angeheftet,
+    // stammt der Schreibvorgang aus dem Einstellungsformular — dem einzigen
+    // nutzerseitigen Pfad, der diesen Filter ungepinnt erreicht (options.php)
+    // und für den die requires-Rückschreibung gedacht ist.
+    return creationell_captcha_sanitize_settings(
+        $input,
+        creationell_captcha_sanitize_context() ?? CREATIONELL_CAPTCHA_SANITIZE_FORM
+    );
+}
+
+/**
+ * Kürzt einen Einstellungswert auf höchstens $max_chars Zeichen und garantiert
+ * gültiges UTF-8.
+ *
+ * Bewusst zeichen- statt byteorientiert: `substr()` schnitt bisher mitten in
+ * eine Mehrbyte-Sequenz (AF-7). Ungültiges UTF-8 wird entfernt, bevor der Wert
+ * in den serialisierten Options-Blob wandert — nicht danach in der DB repariert.
+ *
+ * @param string $value     Bereits vorsanitisierter Wert.
+ * @param int    $max_chars Obergrenze in Zeichen (nicht Bytes).
+ * @return string
+ */
+function creationell_captcha_truncate_setting_text( string $value, int $max_chars ): string {
+    if ( '' === $value ) {
+        return '';
+    }
+
+    // preg_match() mit /u meldet ungültiges UTF-8 im Subject mit FALSE (nicht 0).
+    if ( 1 !== preg_match( '//u', $value ) ) {
+        if ( function_exists( 'mb_convert_encoding' ) ) {
+            $value = (string) mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
+        } elseif ( function_exists( 'iconv' ) ) {
+            $value = (string) iconv( 'UTF-8', 'UTF-8//IGNORE', $value );
+        } else {
+            // Weder mbstring noch iconv: nur ASCII behalten, statt eine
+            // kaputte Sequenz zu persistieren.
+            $value = (string) preg_replace( '/[\x80-\xFF]/', '', $value );
+        }
+
+        // Letzte Sicherung — lieber leer als ungültig in der Option.
+        if ( 1 !== preg_match( '//u', $value ) ) {
+            return '';
+        }
+    }
+
+    if ( function_exists( 'mb_substr' ) ) {
+        return mb_substr( $value, 0, $max_chars, 'UTF-8' );
+    }
+
+    return creationell_captcha_truncate_chars( $value, $max_chars );
+}
+
+/**
+ * Kürzt gültiges UTF-8 ohne mbstring auf $max_chars ZEICHEN.
+ *
+ * Drei Stufen, weil jede einzelne ausfallen kann — und der Ausfall darf den
+ * Wert nicht kosten:
+ *
+ * 1. `preg_match( '/^.{0,N}/us' )` — der schnelle Weg. `s` lässt „.“ auch
+ *    Zeilenumbrüche treffen (relevant für `textblock`).
+ * 2. `iconv_substr()` — greift, wenn Stufe 1 an einem PCRE-Limit scheitert
+ *    (Backtrack-Limit, JIT-Stack). iconv ist keine PCRE-Bibliothek und
+ *    deshalb von diesen Limits nicht betroffen.
+ * 3. Ein Byte-Lauf über die UTF-8-Startbytes — braucht überhaupt keine
+ *    Erweiterung und keine PCRE.
+ *
+ * WARUM ES DIESE FUNKTION GIBT (Nachlese N6, Befund 7; Fehlerklasse 4)
+ * -------------------------------------------------------------------
+ * Nach Stufe 1 stand hier bis zur Nachlese `return '';`. Das war als
+ * „lieber ein leeres Feld, das der Betreiber sieht" begründet — nur sieht er
+ * es nicht: an dieser Stelle wird keine `add_settings_error()` erzeugt, das
+ * leere Feld ist also genau so still wie die kaputte Sequenz, gegen die die
+ * Begründung argumentierte. Und der Sanitizer läuft bei JEDEM Schreibvorgang,
+ * auch bei einem, der dieses Feld gar nicht anfasst (Werksreset,
+ * „Standardwerte laden", `settings set` eines anderen Schlüssels, jedes
+ * Speichern der Einstellungsseite): ein gespeicherter CSS- oder
+ * Übersetzungsblock wäre damit still und vollständig weg gewesen. Der
+ * Vorgängerstand vor W2-7 lieferte an dieser Stelle wenigstens den Anfang des
+ * Wertes (`substr()`, byteweise und deshalb möglicherweise mitten in einer
+ * Mehrbyte-Sequenz). Beide Stufen unten liefern denselben Anfang, nur an einer
+ * ZEICHEN-Grenze — der Datenverlust entfällt, ohne den AF-7-Fehler
+ * zurückzuholen.
+ *
+ * Vorbedingung: $value ist gültiges UTF-8. Der Aufrufer stellt das her; Stufe 3
+ * verlässt sich darauf, weil sie Startbytes zählt und Fortsetzungsbytes
+ * (0x80–0xBF) in gültigem UTF-8 nie an einer Zeichengrenze stehen.
+ *
+ * @since 1.1.0
+ *
+ * @param string $value     Gültiges UTF-8.
+ * @param int    $max_chars Obergrenze in Zeichen.
+ * @return string
+ */
+function creationell_captcha_truncate_chars( string $value, int $max_chars ): string {
+    if ( 1 === preg_match( '/^.{0,' . (int) $max_chars . '}/us', $value, $matches ) ) {
+        return $matches[0];
+    }
+
+    if ( function_exists( 'iconv_substr' ) ) {
+        $cut = iconv_substr( $value, 0, $max_chars, 'UTF-8' );
+        if ( is_string( $cut ) ) {
+            return $cut;
+        }
+    }
+
+    return creationell_captcha_truncate_chars_by_bytes( $value, $max_chars );
+}
+
+/**
+ * Dritte und letzte Kürzungsstufe: zählt UTF-8-Startbytes.
+ *
+ * Braucht weder mbstring noch iconv noch PCRE — deshalb steht sie am Ende der
+ * Kette in `creationell_captcha_truncate_chars()`. Eigene Funktion, weil sie
+ * sonst auf jedem Rechner mit iconv unerreichbar und damit ungetestet wäre.
+ *
+ * Startbytes: `0xxxxxxx` = 1 Byte, `110xxxxx` = 2, `1110xxxx` = 3,
+ * `11110xxx` = 4. Fortsetzungsbytes (`10xxxxxx`, 0x80–0xBF) stehen in gültigem
+ * UTF-8 nie an einer Zeichengrenze; ungültige Eingaben schliesst der Aufrufer
+ * aus (`creationell_captcha_truncate_setting_text()` prüft und repariert vorher).
+ *
+ * @since 1.1.0
+ *
+ * @param string $value     Gültiges UTF-8.
+ * @param int    $max_chars Obergrenze in Zeichen.
+ * @return string
+ */
+function creationell_captcha_truncate_chars_by_bytes( string $value, int $max_chars ): string {
+    $length = strlen( $value );
+    $offset = 0;
+    $chars  = 0;
+
+    while ( $offset < $length && $chars < $max_chars ) {
+        $lead = ord( $value[ $offset ] );
+        if ( $lead < 0x80 ) {
+            $offset += 1;
+        } elseif ( $lead < 0xE0 ) {
+            $offset += 2;
+        } elseif ( $lead < 0xF0 ) {
+            $offset += 3;
+        } else {
+            $offset += 4;
+        }
+        ++$chars;
+    }
+
+    return substr( $value, 0, min( $offset, $length ) );
+}
+
+/**
+ * Sanitises the settings array before it is stored.
+ *
+ * @param mixed  $input   Raw input from the settings form.
+ * @param string $context Schreibkontext, einer der
+ *                        CREATIONELL_CAPTCHA_SANITIZE_*-Werte. Default ist
+ *                        „programmatisch": alle direkten Aufrufer (Import,
+ *                        WP-CLI) übergeben einen vollständigen Wertesatz.
+ *                        Ausgewertet werden ausschließlich die zwei bekannten
+ *                        programmatischen Werte …_PROGRAMMATIC und …_RESET;
+ *                        jeder andere Wert — auch ein unerwarteter, etwa der
+ *                        Optionsname aus einer Legacy-`sanitize_option`-
+ *                        Registrierung — erhält die verlustfreie
+ *                        Formular-Semantik. …_RESET unterscheidet sich von
+ *                        …_PROGRAMMATIC an genau einer Stelle: er übernimmt
+ *                        auch keine gespeicherten Schlüssel ausserhalb der
+ *                        aktuellen Feldspezifikation (voller Werksreset).
+ * @return array<string, mixed>
+ */
+function creationell_captcha_sanitize_settings(
+    mixed $input,
+    string $context = CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC
+): array {
     $defaults = creationell_captcha_get_default_settings();
 
     if ( ! is_array( $input ) ) {
@@ -858,14 +1143,23 @@ function creationell_captcha_sanitize_settings( mixed $input ): array {
                 break;
 
             case 'text':
-                $raw           = isset( $input[ $key ] ) ? (string) $input[ $key ] : '';
-                $clean[ $key ] = substr( sanitize_text_field( $raw ), 0, 255 );
+                $raw = isset( $input[ $key ] ) ? (string) $input[ $key ] : '';
+                // AF-7: substr() kürzte byteweise und konnte ein Mehrbyte-Zeichen
+                // an Byte 255 spalten. Das Ergebnis landet im serialisierten
+                // Options-Blob; strip_invalid_text_for_column korrumpiert ihn
+                // dann beim Schreiben, unserialize() scheitert beim Lesen — ein
+                // stiller Voll-Reset auf Defaults. Deshalb zeichenweise kürzen.
+                $clean[ $key ] = creationell_captcha_truncate_setting_text( sanitize_text_field( $raw ), 255 );
                 break;
 
             case 'textblock':
-                $raw           = isset( $input[ $key ] ) ? (string) $input[ $key ] : '';
-                $trimmed       = trim( $raw );
-                $clean[ $key ] = ( strlen( $trimmed ) > 5120 ) ? substr( $trimmed, 0, 5120 ) : $trimmed;
+                $raw = isset( $input[ $key ] ) ? (string) $input[ $key ] : '';
+                // AF-7: wie bei `text`, hier zusätzlich ohne vorgeschaltete
+                // UTF-8-Prüfung — `textblock` läuft nicht durch
+                // sanitize_text_field(), ungültige Sequenzen kämen also roh in
+                // die Option. creationell_captcha_truncate_setting_text()
+                // validiert und kürzt in einem Schritt.
+                $clean[ $key ] = creationell_captcha_truncate_setting_text( trim( $raw ), 5120 );
                 break;
 
             case 'textarea':
@@ -1113,54 +1407,102 @@ function creationell_captcha_sanitize_settings( mixed $input ): array {
         );
     }
 
-    // Create the event-log table when the detailed log is switched on.
-    if ( ! empty( $clean['analytics_event_log'] ) ) {
-        ( new \Creationell\Captcha\Analytics() )->ensure_table();
-    }
+    // E3b: Hier stand bis Modul 27 die Anlage der Ereignis-Tabelle. Sie hängt
+    // jetzt am Schreibvorgang statt am Sanitizer — siehe
+    // creationell_captcha_sync_event_log_table() weiter unten. Der Sanitizer
+    // ist damit seiteneffektfrei und für lesende Aufrufer (Vorschau,
+    // Validierung, Diff) benutzbar.
 
-    // Disabled fields don't submit values; without this restore, saving the
-    // form silently resets every `requires`-gated field whose prerequisite
-    // (chain) was off at render time.
-    $stored      = get_option( 'creationell_captcha_settings', [] );
-    $fields_spec = creationell_captcha_settings_fields();
+    $stored = get_option( 'creationell_captcha_settings', [] );
 
-    $was_enabled_at_render = static function ( string $k ) use ( &$was_enabled_at_render, $fields_spec, $stored ): bool {
-        if ( ! is_array( $stored ) ) {
-            return true;
-        }
-        if ( isset( $fields_spec[ $k ]['requires'] ) ) {
-            $req = $fields_spec[ $k ]['requires'];
-            if ( empty( $stored[ $req ] ?? null ) ) {
-                return false;
+    // AF-1/AF-3/W1: Die Rückschreibung gegateter Felder ist eine reine
+    // FORMULAR-Semantik. Im Formular sendet ein `disabled`-Input keinen Wert —
+    // ohne diese Wiederherstellung würde jedes Speichern die gegateten Felder
+    // still auf Default zurücksetzen. Import, Werksreset, „Standardwerte laden"
+    // und WP-CLI übergeben dagegen einen vollständigen, bewusst gewählten
+    // Wertesatz; dort drehte dieselbe Rückschreibung z. B. einen importierten
+    // restriktiveren Trust-Wert still auf den permissiveren Altzustand zurück
+    // und ließ den Backend-Werksreset die gegateten Listen nicht leeren.
+    // Der Kontext kommt explizit vom Aufrufer (siehe
+    // creationell_captcha_with_sanitize_context()) — nicht aus is_admin(),
+    // admin_init oder anderen Umgebungsindizien.
+    //
+    // Bewusst NEGATIV formuliert („alles außer programmatisch"): Diese Funktion
+    // ist öffentlich, präfixiert und war bis Modul 27 selbst der
+    // `sanitize_callback` von register_setting(). sanitize_option() ruft
+    // apply_filters( "sanitize_option_{$option}", $value, $option, $original_value )
+    // — das ZWEITE Argument ist der Optionsname. WordPress' eigenes
+    // register_setting() hängt den Callback zwar mit accepted_args = 1 an
+    // (wp-includes/option.php), aber jeder Fremdcode, der den dokumentierten
+    // Sanitizer selbst an diesen Filter hängt, schreibt naheliegenderweise die
+    // volle Filtersignatur:
+    //     add_filter( 'sanitize_option_creationell_captcha_settings',
+    //                 'creationell_captcha_sanitize_settings', 10, 3 );
+    // Dann kommt hier $context === 'creationell_captcha_settings' an. Bei
+    // positiver Prüfung („=== FORM") fiele das auf die verlustbehaftete
+    // programmatische Semantik zurück und jedes Speichern des Formulars setzte
+    // die gegateten Felder (firewall_trust_private_ranges,
+    // firewall_trusted_proxies, code_challenge_watchlist, die sechs Log-Gates)
+    // still auf Default — ohne jede Meldung.
+    // Deshalb: nur die zwei BEKANNTEN programmatischen Werte schalten die
+    // Rückschreibung ab; jeder unbekannte Kontext bekommt die konservative,
+    // verlustfreie Formular-Semantik — dieselbe Wahl, die
+    // creationell_captcha_sanitize_settings_option() für den Filterweg trifft.
+    // Die Liste ist bewusst eine AUFZÄHLUNG und keine Ausschlussregel: ein
+    // neuer Kontextwert muss hier eingetragen werden, um die Rückschreibung
+    // abzuschalten, und fällt sonst auf die verlustfreie Seite.
+    if ( ! in_array(
+        $context,
+        [ CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC, CREATIONELL_CAPTCHA_SANITIZE_RESET ],
+        true
+    ) ) {
+        $fields_spec = creationell_captcha_settings_fields();
+
+        $was_enabled_at_render = static function ( string $k ) use ( &$was_enabled_at_render, $fields_spec, $stored ): bool {
+            if ( ! is_array( $stored ) ) {
+                return true;
             }
-            return $was_enabled_at_render( $req );
-        }
-        if ( isset( $fields_spec[ $k ]['requires_select'] ) && is_array( $fields_spec[ $k ]['requires_select'] ) ) {
-            foreach ( $fields_spec[ $k ]['requires_select'] as $other_key => $required_value ) {
-                if ( ( $stored[ $other_key ] ?? null ) !== $required_value ) {
+            if ( isset( $fields_spec[ $k ]['requires'] ) ) {
+                $req = $fields_spec[ $k ]['requires'];
+                if ( empty( $stored[ $req ] ?? null ) ) {
                     return false;
                 }
+                return $was_enabled_at_render( $req );
+            }
+            if ( isset( $fields_spec[ $k ]['requires_select'] ) && is_array( $fields_spec[ $k ]['requires_select'] ) ) {
+                foreach ( $fields_spec[ $k ]['requires_select'] as $other_key => $required_value ) {
+                    if ( ( $stored[ $other_key ] ?? null ) !== $required_value ) {
+                        return false;
+                    }
+                }
+                return true;
             }
             return true;
-        }
-        return true;
-    };
+        };
 
-    foreach ( $fields_spec as $key => $field ) {
-        if ( ! isset( $field['requires'] ) && ! isset( $field['requires_select'] ) ) {
-            continue;
-        }
-        if ( $was_enabled_at_render( $key ) ) {
-            continue;
-        }
-        if ( is_array( $stored ) && array_key_exists( $key, $stored ) ) {
-            $clean[ $key ] = $stored[ $key ];
+        foreach ( $fields_spec as $key => $field ) {
+            if ( ! isset( $field['requires'] ) && ! isset( $field['requires_select'] ) ) {
+                continue;
+            }
+            if ( $was_enabled_at_render( $key ) ) {
+                continue;
+            }
+            if ( is_array( $stored ) && array_key_exists( $key, $stored ) ) {
+                $clean[ $key ] = $stored[ $key ];
+            }
         }
     }
 
     // Preserve stored keys whose field is not in the current specification —
     // e.g. a per-plugin toggle while that plugin is temporarily inactive.
-    if ( is_array( $stored ) ) {
+    //
+    // Nachlese N6 (Befund 5): Beim Werksreset gilt das NICHT. Dort ist das
+    // Wegräumen genau der Zweck, und E3a hat den Sanitizer erst in den
+    // CLI-Reset gebracht — vorher schrieb er die Defaults roh in die Option
+    // und löschte solche Schlüssel. Ohne diese Ausnahme hätte der Fix aus E3a
+    // dem Kommando `wp creacaptcha settings reset --yes` still die Hälfte
+    // seiner Zusage genommen, während die Erfolgsmeldung unverändert blieb.
+    if ( is_array( $stored ) && CREATIONELL_CAPTCHA_SANITIZE_RESET !== $context ) {
         foreach ( $stored as $stored_key => $stored_value ) {
             if ( ! array_key_exists( $stored_key, $clean ) ) {
                 $clean[ $stored_key ] = $stored_value;
@@ -1169,6 +1511,99 @@ function creationell_captcha_sanitize_settings( mixed $input ): array {
     }
 
     return $clean;
+}
+
+/**
+ * Legt die Ereignis-Log-Tabelle an, sobald das Detail-Log eingeschaltet
+ * GESPEICHERT wurde.
+ *
+ * E3b — warum das hier hängt und nicht mehr im Sanitizer: Der Sanitizer ist
+ * über `register_setting()` zugleich der `sanitize_option`-Filter der Option
+ * und eine öffentliche, dokumentierte Funktion. Ein `ensure_table()` in ihm
+ * bedeutete DDL für jeden Aufrufer, der nur prüfen, vergleichen oder eine
+ * Vorschau bauen will — `wp creacaptcha doctor` verzichtet deshalb bereits
+ * ausdrücklich auf den Sanitizer-Vergleich (Check 9). Die Tabellenanlage
+ * gehört an das Ergebnis des Schreibvorgangs; das ist dieselbe Bauform, die
+ * creationell_captcha_sync_cloudflare_cron() für den Cron-Slot benutzt.
+ *
+ * Reichweite gegenüber vorher:
+ *
+ * - wp-admin (Formular, Import, Werksreset, „Standardwerte laden"): unverändert
+ *   — die Tabelle entsteht weiterhin beim Speichern.
+ * - WP-CLI und jeder andere Kontext ohne `admin_init`: NEU abgedeckt. Dort hing
+ *   der `sanitize_option`-Filter gar nicht; `wp option update
+ *   creationell_captcha_settings` konnte das Log einschalten, ohne dass je eine
+ *   Tabelle entstand (die Selbstheilungs-Lücke aus DS-4).
+ * - Ein Speichern, das den Optionswert unverändert lässt: WordPress schreibt
+ *   dann nichts und feuert keinen der beiden Hooks. Diese Lücke deckt seit der
+ *   Nachlese N6 `creationell_captcha_store_settings()` ab — jeder
+ *   Plugin-eigene Schreibweg auf die Option ruft die Synchronisierung danach
+ *   selbst noch einmal auf. Nicht abgedeckt bleibt ein Schreibvorgang an
+ *   diesen Wegen vorbei (`wp option update`, DB-Restore) ohne Wertänderung;
+ *   dafür bleibt `wp creacaptcha repair` der Weg, auf den Doctor-Check 3 und
+ *   der Log-Hinweis in Analytics::log_row() verweisen.
+ *
+ * DS-2-Grenze: Auslöser ist ein bereits erfolgter Schreibvorgang auf die
+ * Plugin-Option. Anders als beim `admin_init`-Aufhänger der Migration in
+ * upgrade.php gibt es hier keinen anonym erreichbaren Pfad — wer die Option
+ * schreiben kann, hat die Site ohnehin in der Hand.
+ */
+function creationell_captcha_sync_event_log_table(): void {
+    // Bewusst direkt aus der Option gelesen statt über
+    // creationell_captcha_get_settings(): der Memoize-Cache wird von einem
+    // zweiten Callback am selben Hook geleert, und diese Funktion soll nicht
+    // von der Reihenfolge zweier Hook-Registrierungen abhängen. Fehlt der
+    // Schlüssel, ist das Log aus (Default false).
+    $stored = get_option( 'creationell_captcha_settings', [] );
+    if ( ! is_array( $stored ) || empty( $stored['analytics_event_log'] ) ) {
+        return;
+    }
+
+    // ensure_table() ist idempotent und deckt über dbDelta zugleich die
+    // Schema-Nachzüge bestehender Tabellen ab — genau wie zuvor im Sanitizer,
+    // der ebenfalls bei jedem Speichern lief.
+    creationell_captcha_analytics()->ensure_table();
+}
+add_action( 'update_option_creationell_captcha_settings', 'creationell_captcha_sync_event_log_table' );
+add_action( 'add_option_creationell_captcha_settings', 'creationell_captcha_sync_event_log_table' );
+
+/**
+ * Der eine Schreibweg des Plugins auf `creationell_captcha_settings`.
+ *
+ * Warum es ihn gibt (Nachlese N6, Befund 4): `update_option()` feuert
+ * `update_option_{$option}` NUR, wenn sich der gespeicherte Wert wirklich
+ * ändert (wp-includes/option.php vergleicht alt/neu und bricht sonst ohne
+ * DB-Schreibvorgang und ohne Hook ab). Seit E3b hängt die Anlage der
+ * Ereignis-Tabelle ausschliesslich an diesen Hooks — ein Schreibvorgang ohne
+ * Wertänderung ist damit ein Erfolg ohne Wirkung:
+ *
+ *     wp creacaptcha settings set analytics_event_log 1   # steht schon auf 1
+ *     wp creacaptcha blocklist add 203.0.113.9            # steht schon drin
+ *
+ * meldeten Erfolg, während eine von Hand gelöschte Tabelle (DB-Restore,
+ * Migration) weg blieb und jedes Ereignis still verworfen wurde. Strang N2
+ * hatte das für `Command::enable()` einzeln kompensiert; der zweite und dritte
+ * CLI-Weg auf denselben Schlüssel hatten die Kompensation nicht. Statt sie an
+ * jeder Stelle zu wiederholen, steht sie jetzt EINMAL hier, und alle
+ * Plugin-eigenen Schreibwege gehen hindurch.
+ *
+ * Nachgerufen wird nur, wenn `update_option()` FALSE liefert — also genau
+ * dann, wenn der Hook nicht gefeuert hat. `ensure_table()` ist zwar
+ * idempotent, aber nicht kostenlos (dbDelta liest das Schema), und ein
+ * zweiter Durchlauf bei jedem echten Speichervorgang wäre reine Wiederholung.
+ * Der FALSE-Zweig deckt beide Ursachen ab: unveränderter Wert und
+ * fehlgeschlagener Schreibvorgang.
+ *
+ * @since 1.1.0
+ *
+ * @param array<string, mixed> $clean Bereits sanitisierter Wertesatz.
+ */
+function creationell_captcha_store_settings( array $clean ): void {
+    if ( update_option( 'creationell_captcha_settings', $clean ) ) {
+        return;
+    }
+
+    creationell_captcha_sync_event_log_table();
 }
 
 /**
@@ -1321,12 +1756,26 @@ function creationell_captcha_render_field( array $args ): void {
     // for a per-option flag (e.g. argon2id when ext-sodium is missing).
     $requires       = isset( $args['requires'] ) ? (string) $args['requires'] : '';
     $field_disabled = '';
+    // AF-8: Merkt sich zusätzlich, WELCHE Voraussetzung sperrt — der Hinweis
+    // unter dem Feld benennt sie unten namentlich.
+    $gate_hint = '';
     if ( '' !== $requires && empty( $settings[ $requires ] ) ) {
         $field_disabled = ' disabled';
+        $gate_hint      = sprintf(
+            /* translators: %s: label of the prerequisite setting. */
+            __( 'Gesperrt, solange „%s" nicht aktiv ist. Ein gesperrtes Feld sendet beim Speichern keinen Wert — zuerst die Voraussetzung aktivieren und speichern, danach ist dieses Feld bearbeitbar.', 'creationell-captcha' ),
+            creationell_captcha_field_label( $requires )
+        );
     } elseif ( isset( $args['requires_select'] ) && is_array( $args['requires_select'] ) ) {
         foreach ( $args['requires_select'] as $other_key => $required_value ) {
             if ( ( $settings[ $other_key ] ?? null ) !== $required_value ) {
                 $field_disabled = ' disabled';
+                $gate_hint      = sprintf(
+                    /* translators: 1: label of the prerequisite setting, 2: value that setting must have. */
+                    __( 'Gesperrt, solange „%1$s" nicht auf „%2$s" steht. Ein gesperrtes Feld sendet beim Speichern keinen Wert — zuerst die Voraussetzung setzen und speichern, danach ist dieses Feld bearbeitbar.', 'creationell-captcha' ),
+                    creationell_captcha_field_label( (string) $other_key ),
+                    creationell_captcha_field_option_label( (string) $other_key, (string) $required_value )
+                );
                 break;
             }
         }
@@ -1428,4 +1877,56 @@ function creationell_captcha_render_field( array $args ): void {
     if ( ! empty( $args['help'] ) ) {
         echo '<p class="description">' . esc_html( (string) $args['help'] ) . '</p>';
     }
+
+    // AF-8: Gate aktivieren und abhängiges Feld konfigurieren sind zwangsläufig
+    // zwei Speichervorgänge (ein `disabled`-Input sendet nichts, admin.js hebt
+    // die Sperre nicht auf). Es geht dabei kein eingegebener Wert verloren —
+    // aber ohne Hinweis wirkt der Ablauf wie ein Fehler. Also erklären.
+    if ( '' !== $gate_hint ) {
+        echo '<p class="description creationell-captcha-gate-hint"><em>' . esc_html( $gate_hint ) . '</em></p>';
+    }
+}
+
+/**
+ * Liefert das Label eines Einstellungsfeldes (Fallback: der Schlüssel selbst).
+ *
+ * @param string $key Feldschlüssel.
+ * @return string
+ */
+function creationell_captcha_field_label( string $key ): string {
+    $spec = creationell_captcha_field_spec();
+
+    return (string) ( $spec[ $key ]['label'] ?? $key );
+}
+
+/**
+ * Request-lokal gehaltene Feldspezifikation für die beiden Label-Helfer.
+ *
+ * W2-8: Beide hielten je einen wortgleichen `static $spec`-Block und damit zwei
+ * unabhängige Kopien der ~75-Felder-Spezifikation im Speicher. Eine gemeinsame
+ * Zugriffsfunktion genügt — und sie macht zugleich sichtbar, dass beide
+ * denselben Stand meinen.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function creationell_captcha_field_spec(): array {
+    static $spec = null;
+    if ( null === $spec ) {
+        $spec = creationell_captcha_settings_fields();
+    }
+
+    return $spec;
+}
+
+/**
+ * Liefert das Options-Label eines `select`-Feldes (Fallback: der Rohwert).
+ *
+ * @param string $key   Feldschlüssel.
+ * @param string $value Optionswert.
+ * @return string
+ */
+function creationell_captcha_field_option_label( string $key, string $value ): string {
+    $spec = creationell_captcha_field_spec();
+
+    return (string) ( $spec[ $key ]['options'][ $value ] ?? $value );
 }

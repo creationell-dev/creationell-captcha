@@ -141,6 +141,60 @@ function creationell_captcha_code_token_verify( string $token, bool $consume = f
 }
 
 /**
+ * Transient name of the per-token failed-attempt counter (CM-3).
+ *
+ * @param string $token The 32-hex-char ID from `code_token_issue`.
+ */
+function creationell_captcha_code_fail_key( string $token ): string {
+    return 'creationell_captcha_ccfail_' . $token;
+}
+
+/**
+ * Records one wrong image-code submission for a token and invalidates the
+ * token once its attempt budget is spent.
+ *
+ * Before this existed, a wrong code was completely free: `/code-verify`
+ * returned 401 *before* the consume, nothing was counted, and the REST route
+ * is not covered by the default rate-limit scopes (`core`/`forms`). A client
+ * could therefore walk a token through the entire code space. The counter
+ * lives exactly as long as the token it belongs to, so it cannot be reset by
+ * waiting — only by fetching a fresh challenge, which also means a fresh PoW.
+ *
+ * @param string $token The 32-hex-char ID from `code_token_issue`.
+ */
+function creationell_captcha_code_token_fail( string $token ): void {
+    if ( strlen( $token ) !== 32 || ! ctype_xdigit( $token ) ) {
+        return;
+    }
+
+    /**
+     * Filters how many wrong image-code submissions a single code token
+     * survives. Once the budget is spent the token is deleted and the user
+     * has to request a new challenge.
+     *
+     * @since 1.1.0
+     * @param int $max Maximum wrong attempts per token. Default 5.
+     */
+    $max = (int) apply_filters( 'creationell_captcha_code_max_attempts', 5 );
+    $max = max( 1, $max );
+
+    $key   = creationell_captcha_code_fail_key( $token );
+    $fails = (int) get_transient( $key ) + 1;
+
+    if ( $fails >= $max ) {
+        // Budget spent — burn the token itself. Every further attempt now hits
+        // the generic "unknown token" path (410) instead of another free guess.
+        delete_transient( 'creationell_captcha_cc_' . $token );
+        delete_transient( $key );
+        return;
+    }
+
+    $s      = creationell_captcha_get_settings();
+    $expiry = max( 60, min( 900, (int) ( $s['code_challenge_expiry'] ?? 300 ) ) );
+    set_transient( $key, $fails, $expiry );
+}
+
+/**
  * Handles GET /code-image?t=<token>. Looks up the code from the token
  * (server-side transient), renders the PNG, returns 410 on token failure.
  *
@@ -183,23 +237,27 @@ function creationell_captcha_rest_code_image( WP_REST_Request $request ): WP_RES
  *   - Code-Challenge mode: { "code": "<user-input>", "payload": "<base64>" }
  *       The widget rendered a code-image because the /challenge response
  *       embedded data.ccode. Token lookup → case-insensitive match →
- *       single-use consume → fresh signed payload.
+ *       single-use consume → "code stage passed" marker for this challenge.
  *
  *   - Plain server-verify mode: { "payload": "<base64>" } (no code)
  *       ALTCHA's widget posts here unconditionally whenever verifyUrl is
  *       set (see widget.js logic: `verifyUrl ? _e() : verified()`).
- *       Structural verify on the incoming payload + single-use replay
- *       guard on its signature + fresh signed payload back. The replay
- *       guard matters: without it a single solved PoW could be amplified
- *       into N fresh payloads, undercutting Engine::verify()'s per-form
- *       single-use protection.
+ *       Structural verify only — nothing is consumed, because there is
+ *       nothing to protect: the endpoint hands back exactly what it was
+ *       given.
+ *
+ * Neither mode mints a payload any more (CM-5, Wurzel 3.1). The old handler
+ * ended in `Engine::issue_signed_payload()`, which made the SERVER solve a
+ * fresh PoW (`solveChallenge()`) and returned a ready-to-use payload — one
+ * client-side solve was enough to drive an endless loop of server-side key
+ * derivations. The response now echoes the SUBMITTED payload back verbatim,
+ * so a caller never gains anything it did not already have.
  *
  * @param WP_REST_Request $request The REST request with JSON body
  *                                 `{payload: string, code?: string}`.
  * @return WP_REST_Response 200 on success ({payload, verified: true});
  *                          400 on malformed body; 401 on wrong code;
- *                          410 on missing/expired/replayed payload or token;
- *                          500 on internal error.
+ *                          410 on missing/expired/unsigned payload or token.
  */
 function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_REST_Response {
     $body = json_decode( (string) $request->get_body(), true );
@@ -215,6 +273,8 @@ function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_RE
     $payload_b64 = $body['payload'];
     $has_code    = isset( $body['code'] );
 
+    // verify_structural() now enforces the challenge signature and the
+    // derive-key caps (CM-2/CM-6) before the vendor library derives anything.
     $engine = creationell_captcha_engine();
     if ( ! $engine->verify_structural( $payload_b64 ) ) {
         return new WP_REST_Response( [ 'error' => 'token_expired' ], 410 );
@@ -236,22 +296,8 @@ function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_RE
                 ? $data['challenge']['parameters']['data']['ccode']
                 : '';
 
-        $expected_code = creationell_captcha_code_token_verify( $token, false );
-        if ( null === $expected_code ) {
-            return new WP_REST_Response( [ 'error' => 'token_expired' ], 410 );
-        }
-
-        if ( ! hash_equals( strtoupper( $expected_code ), strtoupper( $user_code ) ) ) {
-            return new WP_REST_Response( [ 'error' => 'invalid_code' ], 401 );
-        }
-
-        // Success — consume the transient so the same code cannot be reused.
-        creationell_captcha_code_token_verify( $token, true );
-    } else {
-        // Plain mode — guard against replaying the same solved PoW to
-        // generate N fresh payloads. Mirror the transient layout that
-        // Engine::verify() uses for the eventual form-submit so a payload
-        // burned here is also burned for the form path (and vice versa).
+        // Re-read the signature from the payload. verify_structural() already
+        // rejected empty ones; this is the value the marker below is bound to.
         $signature = isset( $data['challenge']['signature'] )
             && is_string( $data['challenge']['signature'] )
                 ? $data['challenge']['signature']
@@ -260,23 +306,70 @@ function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_RE
             return new WP_REST_Response( [ 'error' => 'token_expired' ], 410 );
         }
 
-        $transient_key = 'creationell_captcha_used_' . hash( 'sha256', $signature );
-        if ( false !== get_transient( $transient_key ) ) {
+        $expected_code = creationell_captcha_code_token_verify( $token, false );
+        if ( null === $expected_code ) {
             return new WP_REST_Response( [ 'error' => 'token_expired' ], 410 );
         }
 
-        $expiry = (int) ( creationell_captcha_get_settings()['challenge_expiry'] ?? 300 );
-        set_transient( $transient_key, 1, $expiry );
+        if ( ! hash_equals( strtoupper( $expected_code ), strtoupper( $user_code ) ) ) {
+            // CM-3: a wrong code is no longer free — count it against the
+            // token's attempt budget, which burns the token when spent.
+            creationell_captcha_code_token_fail( $token );
+            return new WP_REST_Response( [ 'error' => 'invalid_code' ], 401 );
+        }
+
+        // Correct code. Consume the token (single use) and drop its failure
+        // counter, then record that THIS challenge passed the image-code
+        // stage. The marker hangs off hash('sha256', challenge.signature),
+        // and the signature covers parameters.data.ccode — so the marker
+        // cannot be moved to another challenge (CM-8), and a payload whose
+        // caller simply omitted the JSON key `code` never gets one (CM-1).
+        // Engine::verify() demands the marker for every payload that carries
+        // parameters.data.ccode and deletes it when it burns the payload.
+        creationell_captcha_code_token_verify( $token, true );
+        delete_transient( creationell_captcha_code_fail_key( $token ) );
+
+        // Cross-Strang-Nachtrag (Bündel 3/I1, hier in der
+        // Verfügbarkeits-Richtung statt der Sicherheits-Richtung): die
+        // Marker-TTL muss an das SIGNIERTE `expiresAt` dieser Challenge
+        // gebunden sein, nicht an die `challenge_expiry`-Einstellung zum
+        // Verify-Zeitpunkt. `create_challenge()` (class-engine.php) setzt
+        // `expiresAt` immer aus dem zum Ausstellungszeitpunkt gültigen Wert;
+        // senkt ein Admin `challenge_expiry` danach (z. B. weil derselbe
+        // Hilfetext kurze Werte empfiehlt), würde die ALTE Formel die TTL aus
+        // dem NEUEN, kürzeren Wert berechnen — kürzer als die Challenge
+        // tatsächlich noch gültig ist. Ein Nutzer, der den Bildcode korrekt
+        // löst, aber fürs restliche Formular noch etwas braucht, würde beim
+        // Submit trotz richtiger Lösung abgewiesen, weil der Marker vorher
+        // verfallen ist.
+        //
+        // `expiresAt` steht in den signierten Challenge-Parametern — die
+        // Signatur ist an dieser Stelle bereits geprüft (verify_structural()
+        // oben), ein Angreifer kann den Wert also nicht verändern, ohne die
+        // Payload unbrauchbar zu machen. Kein zusätzlicher „+1 s"-Ausgleich
+        // nötig (anders als beim Sweep in Bündel 3): `verify_structural()`
+        // ruft dieselbe Bibliotheksprüfung auf, die eine bereits abgelaufene
+        // Challenge (`time() > expiresAt`) schon vorher mit 410 abweist — bei
+        // Erreichen dieser Zeile ist `expiresAt - time()` also nie negativ.
+        $expires_at = isset( $data['challenge']['parameters']['expiresAt'] )
+            && is_int( $data['challenge']['parameters']['expiresAt'] )
+                ? $data['challenge']['parameters']['expiresAt']
+                : null;
+
+        $marker_ttl = null !== $expires_at
+            ? max( 60, $expires_at - time() )
+            : max( 60, (int) ( creationell_captcha_get_settings()['challenge_expiry'] ?? 300 ) );
+        set_transient( \Creationell\Captcha\Engine::code_pass_key( $signature ), 1, $marker_ttl );
     }
 
-    $fresh = $engine->issue_signed_payload();
-    if ( '' === $fresh ) {
-        return new WP_REST_Response( [ 'error' => 'internal_error' ], 500 );
-    }
-
+    // Plain mode consumes nothing at all — neither the token nor a replay
+    // marker. The old replay consume here only existed because a fresh payload
+    // was minted; without minting it had no purpose, and burning the payload
+    // here would break the form submit that follows. The single-use guarantee
+    // lives entirely in Engine::verify().
     $response = new WP_REST_Response(
         [
-            'payload'  => $fresh,
+            'payload'  => $payload_b64,
             'verified' => true,
         ],
         200
@@ -292,6 +385,17 @@ function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_RE
  */
 function creationell_captcha_register_code_challenge_routes(): void {
     if ( creationell_captcha_is_disabled() ) {
+        return;
+    }
+
+    // Wurzel 3.1: both routes exist for one feature only, yet they used to be
+    // registered on every install — including the default one, where the image
+    // code was never switched on. That is how `/code-verify` (the CM-5
+    // amplifier) ended up publicly reachable everywhere. The global kill switch
+    // above is explicitly NOT a feature gate; its insufficiency was the root
+    // cause, which is why the CI guard demands a settings-based check here.
+    $settings = creationell_captcha_get_settings();
+    if ( empty( $settings['code_challenge_enabled'] ) ) {
         return;
     }
 

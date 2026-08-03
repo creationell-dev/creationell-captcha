@@ -62,6 +62,46 @@ function creationell_captcha_register_assets(): void {
 add_action( 'init', 'creationell_captcha_register_assets' );
 
 /**
+ * Macht eine gespeicherte CSS-Zeichenkette sicher für die Ausgabe in einem
+ * `<style>`-Element.
+ *
+ * Gemeinsame Ausgabe-Härtung für beide Stellen, an denen Nutzer-CSS in einen
+ * `<style>`-Block geschrieben wird: das Widget (`widget_custom_css`) und die
+ * Under-Attack-Interstitial-Seite (`underattack_custom_css`).
+ *
+ * Warum an der AUSGABE und nicht (nur) im Schreibpfad: Der Sanitizer räumt
+ * `widget_custom_css`/`underattack_custom_css` zwar per wp_strip_all_tags() auf,
+ * aber mindestens drei Schreibwege erreichen ihn nie — `wp option patch`, fremde
+ * `update_option()`-Aufrufe außerhalb des Admin-Kontexts und die eigenen
+ * CLI-Befehle `reset`/`load-defaults` (W2 der Befunddatei). Was in der Option
+ * steht, ist also nicht garantiert sanitisiert; die Ausgabe muss unabhängig
+ * davon sicher sein.
+ *
+ * @param string $css Rohes CSS aus den Einstellungen.
+ * @return string CSS, das den umgebenden `<style>`-Block nicht verlassen kann.
+ */
+function creationell_captcha_safe_inline_css( string $css ): string {
+    // NUL-Bytes zuerst entfernen: HTML-Parser ersetzen U+0000 durch U+FFFD,
+    // eine eingestreute 0x00 darf die Erkennung unten also nicht aushebeln.
+    $css = str_replace( "\0", '', $css );
+
+    // Ein `<style>`-Element ist RAWTEXT: Es endet ausschließlich an „</" gefolgt
+    // vom Tag-Namen. Entfernt wird deshalb jedes „<", das unmittelbar ein Tag
+    // eröffnen könnte — „</", „<x", „<!" und „<?". Damit ist der Ausbruch
+    // unmöglich, unabhängig vom Inhalt der Option, und im Quelltext bleibt auch
+    // keine irreführende Tag-Attrappe stehen.
+    //
+    // Bewusst NICHT entfernt: „>" (CSS-Kindkombinator `.a > .b`) und ein „<",
+    // auf das Leerraum, eine Ziffer oder „=" folgt — das ist die Range-Syntax
+    // moderner Media-Queries (`@media (width < 600px)`, `(400px <= width)`).
+    // Einzige verbleibende Einbuße: ein „<" direkt vor einem Bezeichner ohne
+    // Leerzeichen (`(width <calc(1px))`) verliert das Zeichen.
+    $css = (string) preg_replace( '#<(?=[!/?a-zA-Z])#', '', $css );
+
+    return $css;
+}
+
+/**
  * Builds the ALTCHA widget markup as a plain string. Enqueues the widget
  * script as a side effect.
  *
@@ -242,10 +282,13 @@ function creationell_captcha_build_widget_markup(): string {
     }
     $user_css = trim( (string) ( $settings['widget_custom_css'] ?? '' ) );
     if ( '' !== $user_css ) {
-        $inline_css .= $user_css;
+        // AF-2: Härtung an der Ausgabestelle — der Wert in der Option ist nicht
+        // garantiert durch den Sanitizer gelaufen (siehe
+        // creationell_captcha_safe_inline_css()).
+        $inline_css .= creationell_captcha_safe_inline_css( $user_css );
     }
     if ( '' !== $inline_css ) {
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $primary is hex-validated by sanitize_settings (case 'color'), $user_css is wp_strip_all_tags()'d there too.
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $primary is hex-validated by sanitize_settings (case 'color'), $user_css passed through creationell_captcha_safe_inline_css() above.
         $html = '<style>' . $inline_css . '</style>' . $html;
     }
 
