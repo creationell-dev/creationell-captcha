@@ -215,6 +215,20 @@ ua-blocklist and paths command namespaces.</p>
 <dd>Prints the current list entries.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise">normalise()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
+<dd>Validates and normalises one entry; returns null when invalid.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_reject_reason">reject_reason()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>A human-readable reason why normalise() refused this value.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_remove">remove()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -229,25 +243,28 @@ ua-blocklist and paths command namespaces.</p>
 <dd>The current list value.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_is_ip_or_cidr">is_ip_or_cidr()</a>
+    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_prefix_zero_reject_reason">prefix_zero_reject_reason()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: string    </span>
 </dt>
-<dd>Whether the value is a valid IP address or CIDR range.</dd>
+<dd>Listenabhängige Begründung für die Ablehnung einer Präfixlänge-0-CIDR
+(`0.0.0.0/0`, `::/0`) — B-M22.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise">normalise()</a>
+    <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_report_collateral_drops">report_collateral_drops()</a>
     <span>
-                                &nbsp;: string|null    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>Validates and normalises one entry; returns null when invalid.</dd>
+<dd>Warns about entries that were already stored before this command ran and
+are gone afterwards without having been removed on purpose.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-CLI-List-Command.html#method_save">save()</a>
     <span>
-                                &nbsp;: void    </span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
 </dt>
-<dd>Writes the list back through the settings sanitiser.</dd>
+<dd>Writes the list back through the settings sanitiser and returns the list
+as it is stored afterwards.</dd>
 
     </dl>
 
@@ -417,7 +434,7 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
     </aside>
 
@@ -430,7 +447,12 @@ ua-blocklist and paths command namespaces.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Nach dem Schreiben wird die Liste erneut gelesen und mit der Absicht
+verglichen. Exit-Code 1, wenn mindestens ein Eingabewert abgelehnt wurde
+(ungültig oder Liste voll) oder wenn ein Eintrag beim Speichern verworfen
+wurde; Exit-Code 0 nur, wenn jeder angenommene Eintrag danach wirklich in
+der Liste steht.</p>
+<h2>OPTIONS</h2>
 <p><entry>...
 : One or more entries to add.</p>
 <h2>EXAMPLES</h2>
@@ -480,7 +502,7 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">173</span>
+    <span class="phpdocumentor-element-found-in__line">259</span>
 
     </aside>
 
@@ -543,7 +565,7 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">221</span>
 
     </aside>
 
@@ -614,6 +636,116 @@ ua-blocklist and paths command namespaces.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_normalise">
+        normalise()
+        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">351</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Validates and normalises one entry; returns null when invalid.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">normalise</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$raw</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Öffentlich, weil dies die Validierungs-Nahtstelle der CLI ist und der
+Ebene-2-Test genau sie prüfen muss (CLI-1). Kein Aufrufer außerhalb
+dieser Klasse und der Tests benutzt sie.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$raw</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw entry value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_reject_reason">
+        reject_reason()
+        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_reject_reason" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">386</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">A human-readable reason why normalise() refused this value.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">reject_reason</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$raw</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Die Begründungen benennen jeweils die Regel, an der die Prüfung
+scheitert — „ist kein gültiger Eintrag&quot; sagte dem Aufrufer nichts.
+Öffentlich aus demselben Grund wie normalise().</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$raw</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw entry value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_remove">
         remove()
         <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_remove" class="headerlink"><i class="fas fa-link"></i></a>
@@ -622,7 +754,7 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">164</span>
 
     </aside>
 
@@ -635,7 +767,10 @@ ua-blocklist and paths command namespaces.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Exit-Code 1, wenn ein zu entfernender Eintrag nach dem Schreiben noch in
+der Liste steht. Ein Eintrag, der gar nicht in der Liste war, ist kein
+Fehler (unverändertes Verhalten).</p>
+<h2>OPTIONS</h2>
 <p><entry>...
 : One or more entries to remove.</p>
 <h2>EXAMPLES</h2>
@@ -685,7 +820,7 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">284</span>
 
     </aside>
 
@@ -693,13 +828,26 @@ ua-blocklist and paths command namespaces.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">current</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">current</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$force_refresh</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$force_refresh</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Read the option again instead of using the
+request-lokalen Settings-Cache.</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
         
@@ -716,48 +864,43 @@ ua-blocklist and paths command namespaces.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_is_ip_or_cidr">
-        is_ip_or_cidr()
-        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_is_ip_or_cidr" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_prefix_zero_reject_reason">
+        prefix_zero_reject_reason()
+        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_prefix_zero_reject_reason" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">231</span>
+    <span class="phpdocumentor-element-found-in__line">444</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Whether the value is a valid IP address or CIDR range.</p>
+        <p class="phpdocumentor-summary">Listenabhängige Begründung für die Ablehnung einer Präfixlänge-0-CIDR
+(`0.0.0.0/0`, `::/0`) — B-M22.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">is_ip_or_cidr</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">prefix_zero_reject_reason</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$value</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Candidate value.</p>
+        <section class="phpdocumentor-description"><p><code class="prettyprint">creationell_captcha_is_valid_ip_or_cidr()</code> (die Wurzelfunktion, die
+<code class="prettyprint">normalise()</code> für den Typ 'ip' aufruft) lehnt Präfixlänge 0 für jede
+'ip'-Liste einheitlich ab; nur der ERKLÄRENDE TEXT muss zur jeweiligen
+Liste passen, sonst behauptet die Meldung eine Wirkung, die für diese
+Liste gar nicht zutrifft.</p>
 </section>
 
-            </dd>
-            </dl>
-
+    
     
 
         
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
+        <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
 </article>
@@ -767,36 +910,60 @@ ua-blocklist and paths command namespaces.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_normalise">
-        normalise()
-        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_report_collateral_drops">
+        report_collateral_drops()
+        <a href="classes/Creationell-Captcha-CLI-List-Command.html#method_report_collateral_drops" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">327</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Validates and normalises one entry; returns null when invalid.</p>
+        <p class="phpdocumentor-summary">Warns about entries that were already stored before this command ran and
+are gone afterwards without having been removed on purpose.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">normalise</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$raw</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+                    <span class="phpdocumentor-signature__name">report_collateral_drops</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$before</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$stored</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$intended</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <section class="phpdocumentor-description"><p>Das passiert, wenn ein Altbestand die heutige Validierung nicht mehr
+besteht (etwa ein vor Modul 27 gespeichertes <code class="prettyprint">0.0.0.0/0</code>): der Sanitizer
+verwirft ihn beim nächsten Schreibvorgang. Der Schreibvorgang selbst ist
+erfolgreich — deshalb Warnung, kein Fehler.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$raw</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$before</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Raw entry value.</p>
+                    <section class="phpdocumentor-description"><p>Stand vor dem Schreiben.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$stored</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Stand nach dem Schreiben.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$intended</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Absichtlich entfernte Einträge.</p>
 </section>
 
             </dd>
@@ -806,11 +973,7 @@ ua-blocklist and paths command namespaces.</p>
 
         
     
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string|null</span>
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -826,20 +989,27 @@ ua-blocklist and paths command namespaces.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-list-command.php"><a href="files/includes-cli-class-cli-list-command.html"><abbr title="includes/cli/class-cli-list-command.php">class-cli-list-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Writes the list back through the settings sanitiser.</p>
+        <p class="phpdocumentor-summary">Writes the list back through the settings sanitiser and returns the list
+as it is stored afterwards.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">save</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$list</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">save</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$list</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <section class="phpdocumentor-description"><p>Der Rückgabewert ist der frisch gelesene Stand, nicht die Eingabe: nur so
+kann der Aufrufer melden, was wirklich passiert ist (CLI-2). Der Kontext
+wird ausdrücklich mitgegeben, damit ein späterer Wechsel des Default-Werts
+von creationell_captcha_sanitize_settings() die CLI nicht still auf die
+Formular-Semantik (requires-Rückschreibung) umstellt.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -857,7 +1027,15 @@ ua-blocklist and paths command namespaces.</p>
 
         
     
-    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Der nach dem Schreiben gespeicherte Stand.</p>
+</section>
+
+            </section>
+
 </article>
             </section>
 
@@ -986,10 +1164,12 @@ ua-blocklist and paths command namespaces.</p>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_add">add()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_clear">clear()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_list_entries">list_entries()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise">normalise()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_reject_reason">reject_reason()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_remove">remove()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_current">current()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_is_ip_or_cidr">is_ip_or_cidr()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_normalise">normalise()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_prefix_zero_reject_reason">prefix_zero_reject_reason()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_report_collateral_drops">report_collateral_drops()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-List-Command.html#method_save">save()</a></li>
                                     </ul>
             </li>

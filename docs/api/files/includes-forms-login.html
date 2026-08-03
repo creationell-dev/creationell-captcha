@@ -151,6 +151,22 @@
 <dd>Renders the widget inside the login form.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_login_form_middle">creationell_captcha_login_form_middle()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Renders the widget inside `wp_login_form()`-based forms.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_login_is_interactive">creationell_captcha_login_is_interactive()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the current request is an interactive, browser-submitted login
+attempt — as opposed to XML-RPC, REST/Application-Passwords, AJAX or a
+programmatic `wp_signon()` call made by other code.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_login_verify">creationell_captcha_login_verify()</a>
     <span>
                                 &nbsp;: <abbr title="\WP_User">WP_User</abbr>|<abbr title="\WP_Error">WP_Error</abbr>|null    </span>
@@ -225,6 +241,98 @@
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_login_form_middle">
+        creationell_captcha_login_form_middle()
+        <a href="namespaces/default.html#function_creationell_captcha_login_form_middle" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/login.php"><a href="files/includes-forms-login.html"><abbr title="includes/forms/login.php">login.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Renders the widget inside `wp_login_form()`-based forms.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_login_form_middle</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$content</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">wp_login_form()</code> — used by themes, widgets and shortcodes to embed a
+login form outside wp-login.php — never fires the <code class="prettyprint">login_form</code> action
+above; it runs the <code class="prettyprint">login_form_top</code>/<code class="prettyprint">login_form_middle</code>/<code class="prettyprint">login_form_bottom</code>
+filters instead. Without this, such a form posted the same <code class="prettyprint">log</code>/<code class="prettyprint">pwd</code>/
+<code class="prettyprint">wp-submit</code> fields as wp-login.php's own form but never got a widget to
+solve, so <code class="prettyprint">creationell_captcha_login_verify()</code> below rejected even correct
+credentials (IN-6).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$content</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Existing middle-of-form markup.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_login_is_interactive">
+        creationell_captcha_login_is_interactive()
+        <a href="namespaces/default.html#function_creationell_captcha_login_is_interactive" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/login.php"><a href="files/includes-forms-login.html"><abbr title="includes/forms/login.php">login.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">73</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the current request is an interactive, browser-submitted login
+attempt — as opposed to XML-RPC, REST/Application-Passwords, AJAX or a
+programmatic `wp_signon()` call made by other code.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_login_is_interactive</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Deliberately does NOT use <code class="prettyprint">isset( $_POST['wp-submit'] )</code> as the signal
+(IN-1): wp-login.php's own login handler calls <code class="prettyprint">wp_signon()</code>
+unconditionally, regardless of whether &quot;wp-submit&quot; was posted, so an
+attacker posting directly to wp-login.php could simply omit it and skip
+the captcha entirely. The <code class="prettyprint">log</code>/<code class="prettyprint">pwd</code> field pair is what both
+wp-login.php's own form and <code class="prettyprint">wp_login_form()</code>-based theme forms actually
+send. WooCommerce's My-Account login form uses different field names
+(<code class="prettyprint">username</code>/<code class="prettyprint">password</code>) and is intentionally NOT matched here — it has
+its own toggle/verification pair (<code class="prettyprint">protect_wc_login</code>, see IN-7).</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_login_verify">
         creationell_captcha_login_verify()
         <a href="namespaces/default.html#function_creationell_captcha_login_verify" class="headerlink"><i class="fas fa-link"></i></a>
@@ -233,7 +341,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/login.php"><a href="files/includes-forms-login.html"><abbr title="includes/forms/login.php">login.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
     </aside>
 
@@ -400,6 +508,8 @@
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_login_enabled">creationell_captcha_login_enabled()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_login_form_middle">creationell_captcha_login_form_middle()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_login_is_interactive">creationell_captcha_login_is_interactive()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_login_render">creationell_captcha_login_render()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_login_verify">creationell_captcha_login_verify()</a></li>
                                             </ul>

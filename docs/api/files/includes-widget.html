@@ -144,6 +144,14 @@
 <dd>Registers the widget script and — for Argon2id — its worker registration.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_safe_inline_css">creationell_captcha_safe_inline_css()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Macht eine gespeicherte CSS-Zeichenkette sicher für die Ausgabe in einem
+`&lt;style&gt;`-Element.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_build_widget_markup">creationell_captcha_build_widget_markup()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -231,6 +239,64 @@ script as a side effect.</dd>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_safe_inline_css">
+        creationell_captcha_safe_inline_css()
+        <a href="namespaces/default.html#function_creationell_captcha_safe_inline_css" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">83</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Macht eine gespeicherte CSS-Zeichenkette sicher für die Ausgabe in einem
+`&lt;style&gt;`-Element.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_safe_inline_css</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$css</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Gemeinsame Ausgabe-Härtung für beide Stellen, an denen Nutzer-CSS in einen
+<code class="prettyprint">&lt;style&gt;</code>-Block geschrieben wird: das Widget (<code class="prettyprint">widget_custom_css</code>) und die
+Under-Attack-Interstitial-Seite (<code class="prettyprint">underattack_custom_css</code>).</p>
+<p>Warum an der AUSGABE und nicht (nur) im Schreibpfad: Der Sanitizer räumt
+<code class="prettyprint">widget_custom_css</code>/<code class="prettyprint">underattack_custom_css</code> zwar per wp_strip_all_tags() auf,
+aber mindestens drei Schreibwege erreichen ihn nie — <code class="prettyprint">wp option patch</code>, fremde
+<code class="prettyprint">update_option()</code>-Aufrufe außerhalb des Admin-Kontexts und die eigenen
+CLI-Befehle <code class="prettyprint">reset</code>/<code class="prettyprint">load-defaults</code> (W2 der Befunddatei). Was in der Option
+steht, ist also nicht garantiert sanitisiert; die Ausgabe muss unabhängig
+davon sicher sein.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$css</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Rohes CSS aus den Einstellungen.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>CSS, das den umgebenden <code class="prettyprint">&lt;style&gt;</code>-Block nicht verlassen kann.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_build_widget_markup">
         creationell_captcha_build_widget_markup()
         <a href="namespaces/default.html#function_creationell_captcha_build_widget_markup" class="headerlink"><i class="fas fa-link"></i></a>
@@ -239,7 +305,7 @@ script as a side effect.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
     </aside>
 
@@ -278,7 +344,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">258</span>
+    <span class="phpdocumentor-element-found-in__line">301</span>
 
     </aside>
 
@@ -304,7 +370,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">313</span>
 
     </aside>
 
@@ -349,7 +415,7 @@ integrations, which read the payload from their plugin's submission data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">336</span>
 
     </aside>
 
@@ -382,7 +448,7 @@ nonce applies here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">306</span>
+    <span class="phpdocumentor-element-found-in__line">349</span>
 
     </aside>
 
@@ -411,7 +477,7 @@ the <form> element so the hidden <code class="prettyprint">altcha</code> field i
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">321</span>
+    <span class="phpdocumentor-element-found-in__line">364</span>
 
     </aside>
 
@@ -451,7 +517,7 @@ auto-inject buffer).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">376</span>
 
     </aside>
 
@@ -598,6 +664,7 @@ submitted with the form.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_get_widget_markup">creationell_captcha_get_widget_markup()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_assets">creationell_captcha_register_assets()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_widget">creationell_captcha_render_widget()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_safe_inline_css">creationell_captcha_safe_inline_css()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_verify_payload">creationell_captcha_verify_payload()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_verify_request">creationell_captcha_verify_request()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_widget">creationell_captcha_widget()</a></li>

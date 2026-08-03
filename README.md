@@ -3,15 +3,15 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
 **Tags:** captcha, spam, anti-spam, anti-bot, proof of work  
 **Requires at least:** 6.9  
-**Tested up to:** 7.0  
+**Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.0.2  
+**Stable tag:** 1.1.0  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.0.2'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.0'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -639,7 +639,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 | Hook | Wann |
 |------|------|
 | `creationell_captcha_loaded` | Nach dem Plugin-Bootstrap, alle Module geladen |
-| `creationell_captcha_deactivated` | Beim Deaktivieren des Plugins |
+| `creationell_captcha_deactivated` | Beim Deaktivieren des Plugins (`bool $network_deactivating` — ob netzwerkweit deaktiviert wurde) |
 | `creationell_captcha_event` | Bei jedem Aggregat-Event-Bump (`$type`, `$context`) |
 | `creationell_captcha_firewall_blocked` | Firewall hat eine IP/UA geblockt |
 | `creationell_captcha_ratelimit_exceeded` | Rate-Limit für eine IP überschritten |
@@ -663,6 +663,17 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 | `creationell_captcha_wc_lost_password_autoinject` | WooCommerce-Lost-Password-Autoinject toggeln |
 | `creationell_captcha_request_body_sensitive_patterns` | Sensitive Feldnamen-Patterns für die Body-Fingerprint-Maskierung erweitern |
 | `creationell_captcha_doctor_checks` | Eigene Doctor-Checks zur WP-CLI-Diagnose ergänzen |
+| `creationell_captcha_max_derive_cost` | Obergrenze der akzeptierten PBKDF2-Iterationen (`cost`) einer eingehenden Payload (Default 20000) |
+| `creationell_captcha_max_derive_time_cost` | Obergrenze der akzeptierten Argon2id-Zeitkosten (`cost`/opslimit, Default 5) |
+| `creationell_captcha_max_derive_memory_cost` | Obergrenze der akzeptierten Argon2id-Speicherkosten in KiB (Default 262144) |
+| `creationell_captcha_max_solution_counter` | Obergrenze des akzeptierten Lösungs-Counters einer Payload (Default 1000) |
+| `creationell_captcha_max_derive_key_length` | Obergrenze der akzeptierten Schlüssellänge (`keyLength`) in Bytes (Default 64) |
+| `creationell_captcha_code_max_attempts` | Fehlversuche je Bild-Code-Token, bevor das Token verbrannt wird (Default 5) |
+| `creationell_captcha_export_max_rows` | Obergrenze der Zeilen je CSV-Export des Event-Logs (`int $max_rows`, `array $filter`; Default 50000) |
+| `creationell_captcha_widget_locale_map` | WP-Locale-zu-ALTCHA-Locale-Zuordnung erweitern/überschreiben (`array<string,string> $map`) |
+| `creationell_captcha_widget_locale` | Aufgelöste Widget-Sprache im letzten Schritt überschreiben (`string\|null $resolved`, `string $wp_locale`; `null` erzwingt die Auto-Erkennung des Widgets) |
+| `creationell_captcha_underattack_pass_binding` | Besucher-Fingerprint für die Bindung des Under-Attack-Pass-Cookies ersetzen (`string $binding`; `''` schaltet die Bindung ganz ab) |
+| `creationell_captcha_email_buffer_max_bytes` | Obergrenze der Antwortgröße, die der E-Mail-Obfuskator im Ganzseiten-Puffer-Modus verarbeitet (`int $max_bytes`, `int $actual`; Default 2 MiB, `<= 0` hebt die Grenze auf) |
 
 ### REST-Endpoints
 
@@ -767,6 +778,294 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.1.0
+
+Sicherheits- und Härtungsrelease. Ein mehrtägiges, angriffsorientiertes Audit
+über die gesamte Codebasis und ein anschließendes Schluss-Review haben rund
+90 Befunde ergeben; alle sind in dieser Version behoben. Der Schwerpunkt liegt
+auf den Stellen, an denen eine Anfrage identifiziert wird — Pfad, IP-Adresse,
+Anfragekontext —, auf der Captcha-Engine, dem Under-Attack-Modus, der
+Update-Kette und den Verwaltungswerkzeugen.
+
+Das Update braucht keine Datenbank-Migration. Gespeicherte Einstellungen,
+Listen und Statistiken bleiben unverändert erhalten, und kein Wert wird
+automatisch umgeschrieben. Trotzdem wirken sich mehrere Änderungen auf eine
+laufende Installation aus — bitte zuerst den folgenden Abschnitt lesen.
+
+Was sich für eine laufende Installation ändert:
+
+- Alle bestehenden Zugangs-Cookies des Under-Attack-Modus werden einmalig
+  ungültig. Wer beim Update gerade einen gültigen Zugang hat, sieht die
+  Zwischenseite genau einmal erneut. Das Cookie ist ab dieser Version an
+  Netzbereich und Browserkennung des Besuchers gebunden statt frei
+  übertragbar; wechselt ein Besucher während der Zugangsdauer das Netz
+  (Mobilfunk-Handover, WLAN/LTE, Dual-Stack), löst er einmal neu. Wer das
+  nicht möchte, schaltet die Bindung über den neuen Filter
+  `creationell_captcha_underattack_pass_binding` ab.
+- IP-Adressen werden vor jedem Listenvergleich auf eine einheitliche
+  Schreibweise gebracht. Auf Servern, die IPv4-Adressen in der
+  IPv6-Mischschreibweise melden (z. B. nginx mit `ipv6only=off`), fangen
+  Blockliste, Erlaubnisliste, vertrauenswürdige Proxies und der Proxy-Modus
+  damit überhaupt erst an zu wirken. Bitte Block- und Erlaubnisliste nach dem
+  Update einmal ansehen — eine Regel, die dort bisher wirkungslos war, greift
+  jetzt.
+- Ein CIDR-Bereich, der in der IPv4-Mischschreibweise notiert ist
+  (`::ffff:203.0.113.0/120`), trifft keine Adresse mehr; einzelne Adressen in
+  dieser Schreibweise wirken weiterhin. Bereiche bitte gewöhnlich schreiben
+  (`203.0.113.0/24`). Bestehende Einträge dieser Art werden im Backend als
+  Hinweis gemeldet.
+- Auf Installationen, deren Rate-Limiter oder Under-Attack-Modus von den
+  beiden vorstehenden Punkten betroffen ist, werden laufende
+  Rate-Limit-Fenster einmalig zurückgesetzt: nach dem Update startet jeder
+  betroffene Client mit einem leeren Zähler.
+- Eine Freigabe für alle Adressen (`0.0.0.0/0`, `::/0`) lässt sich in der
+  IP-Erlaubnisliste, in der Liste vertrauenswürdiger Proxies und in der
+  Watchliste nicht mehr neu speichern — im Backend wie über WP-CLI. Bereits
+  gespeicherte Einträge bleiben unangetastet und wirksam, werden aber
+  gemeldet. Die IP-Blockliste ist davon nicht betroffen: „alles sperren,
+  Ausnahmen erlauben" bleibt möglich.
+- Ein `*` in der User-Agent-Erlaubnisliste wirkt nicht mehr, ebenso wenig ein
+  Bypass-Cookie-Eintrag ohne Wert. Wer damit bisher (versehentlich) alles
+  durchgewunken hat, bekommt wieder den vollen Schutz.
+- Der Proxy-Header für die Client-IP wird strikt als eine der vier
+  angebotenen Auswahlmöglichkeiten behandelt. Ein davon abweichender Wert,
+  der direkt in die Datenbank geschrieben wurde, fällt jetzt sauber auf
+  X-Forwarded-For zurück, statt den Proxy-Modus still unwirksam zu machen.
+  Auf einer solchen Installation liefert die Erkennung ab jetzt die echte
+  Client-Adresse statt der Proxy-Adresse — wer Block- oder Erlaubnisliste auf
+  die Proxy-Adresse eingestellt hatte, sollte diese Listen prüfen.
+- Neu ist ein ausblendbarer Hinweis im Backend, der gespeicherte
+  Konfigurationen meldet, die den Schutz ganz oder teilweise aufheben
+  (Totalfreigaben, wirkungslos gewordene Bereichsschreibweisen, Muster, die
+  auf jede Browserkennung passen). Der Hinweis meldet nur, er ändert nichts.
+  Kommt später eine weitere Fundklasse dazu, erscheint ein zuvor
+  weggeklickter Hinweis erneut. Ohne solche Altlasten sieht eine Installation
+  nichts davon.
+- Statistik und Ereignis-Log zeigen Einträge anders an: Der Pfad wird jetzt so
+  protokolliert, wie WordPress die Anfrage tatsächlich geroutet hat, die
+  IP-Darstellung wechselt auf den betroffenen Servern (siehe oben) am
+  Update-Datum die Schreibweise, und die Spalte „Verifizierungsdaten" bleibt
+  bei Firewall-, Rate-Limit-, Under-Attack- und Challenge-Ereignissen künftig
+  leer. Bestandszeilen bleiben unverändert; Auswertungen, die nach IP
+  gruppieren, zeigen am Update-Datum einen Bruch.
+- Der CSV-Export prüft jetzt vor dem ersten Byte, ob er liefern kann, und
+  lehnt sonst mit einem Hinweis ab: fehlende Tabelle, leere Treffermenge oder
+  mehr als 50.000 Zeilen. Der letzte Fall ist der einzige, der einen bisher
+  funktionierenden Ablauf blockiert — Abhilfe: Zeitraum eingrenzen oder den
+  neuen Filter `creationell_captcha_export_max_rows` hochsetzen. Außerdem
+  liefert der Export jetzt genau den Bestand, der beim Klick vorlag, und bei
+  parallelem Schreibbetrieb keine doppelten Zeilen mehr.
+- Die Aufbewahrungsfrist des Ereignis-Logs wird jetzt von einem eigenen
+  täglichen Cron-Termin durchgesetzt (`creationell_captcha_prune_events`) —
+  auch dann, wenn das Ereignis-Log abgeschaltet ist. Wer den Log abgeschaltet
+  hat und die alten Zeilen als Archiv behalten wollte, sichert sie vor dem
+  Update. Umgekehrt läuft die Aufbewahrungsfrist bei gesetztem
+  `CREATIONELL_CAPTCHA_DISABLE` gar nicht mehr; wer den Schalter dauerhaft
+  gesetzt hat und sich auf das automatische Aufräumen verlassen hat, muss das
+  jetzt selbst erledigen.
+- Die Ereignis-Tabelle wird an einer anderen Stelle angelegt als bisher,
+  nämlich beim Schreiben der Einstellungs-Option statt in deren Prüfung. Neu
+  abgedeckt sind damit WP-CLI und `wp option update`. Nicht mehr abgedeckt
+  ist ein Speichern, das keinen Wert ändert — dafür ist
+  `wp creacaptcha repair` der benannte Weg.
+- Nach einem Plugin-Update über WP-CLI läuft die Schema-Prüfung nicht mehr
+  beim nächsten beliebigen Seitenaufruf, sondern erst beim nächsten Besuch im
+  Backend durch einen Benutzer mit der Berechtigung `manage_options`. Für das
+  Update über das Backend ändert sich nichts.
+- Der eingebaute Updater bricht ab, statt ungeprüft zu installieren: ohne
+  gültige Prüfsumme, bei einer Paket-URL ohne HTTPS, bei einem unbrauchbaren
+  oder gerade nicht erreichbaren Update-Manifest. Ist die Manifest-Quelle
+  nicht erreichbar, lässt sich das Plugin so lange nicht per Ein-Klick-Update
+  aktualisieren; der manuelle ZIP-Upload über „Plugin hochladen" bleibt
+  jederzeit möglich.
+- Einstellungs-Import, Werksreset und Schreibvorgänge über WP-CLI setzen
+  jetzt durch, was sie angeben. Bisher wurden Werte für gerade
+  ausgeschaltete Funktionsbereiche still auf den Altzustand zurückgedreht,
+  und der Werksreset ließ die betroffenen Listen stehen. Ungültige
+  Listeneinträge, die an den regulären Schreibwegen vorbei in die Datenbank
+  gelangt sind, überleben „Standardwerte laden" nicht mehr.
+- WP-CLI meldet Fehler jetzt auch als Fehler. Aufrufe, die bisher einen
+  abgelehnten Wert mit Erfolg quittierten, enden mit Exit-Code 1; leere
+  JSON-Ausgaben liefern `[]` statt Klartext; Steuerzeichen in Log-Ausgaben
+  werden maskiert; `settings export --file=` schreibt die Datei mit den
+  Rechten 0600. Kein bisher korrekter Aufruf wird dadurch zum Fehler — aber
+  eigene Skripte, die auf Exit-Codes oder auf die bisherige Textausgabe
+  aufsetzen, sollten einmal geprüft werden.
+- `wp creacaptcha doctor` hat zwölf zusätzliche Prüfzeilen bekommen und
+  meldet in mehreren bestehenden Prüfungen jetzt das, was sie tatsächlich
+  prüfen. Dadurch kann sich der Exit-Code in beide Richtungen ändern: ein
+  bisheriger Dauer-Alarm kann enden, und an anderer Stelle kann erstmals eine
+  Warnung oder ein Fehler erscheinen. Monitoring, das den Exit-Code
+  auswertet, bitte einmal nachziehen.
+- An der WordPress-Anmeldung wird die Sicherheitsabfrage jetzt bei jedem
+  interaktiven Anmeldeversuch verlangt, auch bei einem fehlgeschlagenen.
+  Anmeldeformulare, die ein Theme oder Plugin über `wp_login_form()`
+  erzeugt, bekommen jetzt selbst ein Widget eingesetzt und scheitern nicht
+  mehr an der Prüfung. Die Anmeldung über das WooCommerce-Kundenkonto läuft
+  unverändert über den eigenen Schalter dafür.
+- Beim Pfad- und Action-Schutz greifen Pfadmuster jetzt auf dem
+  URL-dekodierten Pfad, ein Action-Name wird in POST- und GET-Daten
+  gleichermaßen erkannt, und ein ausschließlich per Filter ergänztes
+  Action-Muster wirkt jetzt auch im Backend-Kontext. Wer diesen Filter
+  benutzt, bekommt dort erstmals den Schutz, den er erwartet hat — dort
+  können also Abweisungen auftreten, wo bisher stillschweigend nichts
+  geprüft wurde.
+- Bei aktivierter E-Mail-Obfuskation werden Adressen innerhalb von
+  `<textarea>` und `<template>` nicht mehr verschleiert: Der Inhalt dieser
+  Elemente ist Eingabe- bzw. Vorlagentext, und die Verschleierung hat ihn
+  verfälscht. Umgekehrt verarbeitet die Obfuskation jetzt wieder Seiten, bei
+  denen sie an einem ungewöhnlich notierten Attribut abgebrochen ist — auf
+  solchen Seiten werden ab jetzt auch die Adressen hinter dieser Stelle
+  verschleiert.
+- Im Ganzseiten-Puffer-Modus der E-Mail-Obfuskation werden Antworten, die
+  kein HTML sind, und Antworten über 2 MiB unverändert durchgereicht. Die
+  Größengrenze lässt sich über den neuen Filter
+  `creationell_captcha_email_buffer_max_bytes` anheben oder aufheben.
+- Bei aktiver Bild-Code-Challenge gibt die Prüfroute den eingereichten
+  Nachweis unverändert zurück, statt einen neuen auszustellen; Fehlversuche
+  auf denselben Bildcode sind auf fünf begrenzt (Filter
+  `creationell_captcha_code_max_attempts`), danach ist der Code verbraucht.
+  Ist die Bild-Code-Challenge ausgeschaltet, sind ihre beiden
+  REST-Endpunkte gar nicht mehr registriert.
+- Im Under-Attack-Modus landet ein Besucher nach bestandener Prüfung wieder
+  auf der Seite, die er angefordert hat, statt im Backend. Schlägt die
+  Ausstellung des Zugangs fehl, rechnet der Besucher nicht mehr umsonst.
+- Deaktivieren und Deinstallieren räumen mehr auf als bisher: zusätzliche
+  Cron-Termine, abgelaufene Einmal-Verbrauchsmarken und — bei
+  netzwerkweiter Aktivierung — die Daten jeder Site des Netzwerks statt nur
+  der gerade aktuellen. Auf sehr großen Netzwerken dauern beide Vorgänge
+  entsprechend länger. Die Deinstallation entfernt zusätzlich eine
+  Benutzer-Einstellung je Administrator, der den Härtungshinweis
+  weggeklickt hatte.
+- Eigenes Custom-CSS wird an der Ausgabestelle zusätzlich gehärtet
+  (tag-eröffnende Zeichen werden entfernt), und die Längenbegrenzung von
+  Text- und Textblockfeldern zählt jetzt Zeichen statt Bytes — Umlaute und
+  Emoji werden dadurch nicht mehr mitten im Zeichen abgeschnitten.
+
+Sicherheit und Härtung:
+
+- Die Erkennung des angefragten Pfads wurde auf eine gemeinsame Wurzel
+  umgestellt. Pfad-Schutz, Widget-Injektion, Rate-Limiter, REST-Erkennung,
+  Firewall-Kontext und Ereignis-Log beantworten die Frage „welchen Pfad hat
+  diese Anfrage" jetzt identisch; zuvor konnten sie sich unterscheiden, und
+  der Pfad-Schutz ließ sich dadurch umgehen.
+- Ebenso vereinheitlicht ist die Erkennung von REST-Anfragen: Eine Anfrage
+  gilt nur noch dann als REST-Anfrage, wenn WordPress sie tatsächlich an die
+  REST-API übergibt. Die Ausnahmen, die für echte REST-Anfragen gelten,
+  greifen damit nicht mehr für Anfragen, die nur so aussehen.
+- Die Sicherheitsabfrage an der WordPress-Anmeldung konnte unter bestimmten
+  Umständen umgangen werden. Die Prüfung greift jetzt auf allen interaktiven
+  Anmeldewegen.
+- Die Kundenregistrierung über WooCommerce konnte in bestimmten
+  Konstellationen ohne Sicherheitsabfrage erfolgen. Der Prüfpfad erkennt den
+  Kontext jetzt zuverlässig und lässt programmatische Registrierungen
+  unberührt.
+- Die Captcha-Engine verlangt eine gültige Signatur, bevor sie überhaupt
+  etwas ableitet, und lehnt ab, wenn kein Server-Geheimnis vorhanden ist. Die
+  Rechenparameter eines eingereichten Nachweises unterliegen jetzt
+  serverseitigen Obergrenzen (je Parameter per Filter anpassbar), damit ein
+  Nachweis keine unbegrenzte Rechenzeit auf dem Server auslösen kann.
+- Der Einmal-Verbrauch eines gelösten Nachweises ist jetzt atomar und
+  datenbankgestützt statt zweistufig und cache-abhängig; parallele Einreichungen
+  desselben Nachweises können sich nicht mehr überholen. Die Lebensdauer der
+  Verbrauchsmarke hängt an der signierten Challenge statt an der aktuellen
+  Einstellung.
+- Die Bild-Code-Challenge stellt über ihre Prüfroute keine neuen Nachweise
+  mehr aus, bindet den bestandenen Bildcode an genau die Challenge, zu der er
+  gehört, und begrenzt die Fehlversuche je Code.
+- Im Under-Attack-Modus ist das Zugangs-Cookie an den Besucher gebunden statt
+  frei übertragbar, und das Ticket, mit dem die Zwischenseite ihre eigene
+  Abfrage ausstellt, ist einmalig, kurzlebig und ausschließlich für diesen
+  Zweck gültig — an einem geschützten Formular wird es nicht mehr akzeptiert.
+  Die Zwischenseite sendet ihr Formular außerdem wieder zuverlässig an die
+  eigene Website.
+- Die Auswertung der Proxy-Header wurde korrigiert; eine gespeicherte
+  Cloudflare-Adressliste wird beim Lesen validiert und bei unplausiblem
+  Inhalt zugunsten des mitgelieferten Standes verworfen. Beides verhindert,
+  dass die Client-Adresse aller Besucher auf eine einzige Adresse
+  zusammenfällt oder von außen bestimmbar wird.
+- Die Prüfung gespeicherter Einstellungen unterscheidet jetzt, ob sie aus dem
+  Backend-Formular oder aus einem programmatischen Schreibvorgang kommt.
+  Damit können Import und Kommandozeile keine Werte mehr still verlieren,
+  ohne dass die Prüfung ihre Schutzwirkung an anderer Stelle einbüßt.
+- Der Updater akzeptiert nur noch geprüfte Bytes: Prüfsummenpflicht, nur
+  HTTPS-Paket-URLs, Manifest-Prüfung gegen ein festes Schema, Größengrenze
+  und ein kurzer Negativ-Cache bei nicht erreichbarem Manifest. Ein fremdes
+  Plugin mit ähnlichem Paketnamen wird nicht mehr fälschlich blockiert, und
+  zwei Konstellationen, die im Update-Dialog zu einem PHP-Fehler geführt
+  haben, sind behoben.
+- Die Release- und CI-Pipeline wurde gehärtet: Die Testsuiten laufen jetzt
+  vollständig statt sich still zu überspringen, mehrere Prüfschritte melden
+  Fehler statt sie zu verschlucken, externe Build-Bestandteile sind an
+  Prüfsummen und Herkunft gebunden, und das Doku-Stylesheet kommt aus dem
+  Repository statt von einem CDN.
+- Bei den Daten: Die Aufbewahrungsfrist wird jetzt tatsächlich durchgesetzt,
+  die Schema-Prüfung ist an eine Berechtigung gebunden, das Ereignis-Log
+  speichert in mehreren Ereignistypen keine Verifizierungsdaten mehr, und die
+  Deinstallation räumt netzwerkweit auf.
+- Der Markup-Scanner der E-Mail-Obfuskation wurde ersetzt. Er unterscheidet
+  Text, Tag, Kommentar und Rohtext-Bereiche jetzt nach denselben Regeln wie
+  ein HTML-Parser; mehrere Konstellationen, in denen die Verschleierung
+  Skript-Inhalte verändert oder ab einer bestimmten Stelle ganz ausgesetzt
+  hat, sind damit erledigt.
+
+Verbesserungen und Korrekturen:
+
+- Diagnose: `wp creacaptcha doctor` hat zwölf neue Prüfungen — Abdeckung der
+  Anmeldeformulare, WooCommerce-Checkout-Typ und Lost-Password-Kopplung,
+  Ausschlussmuster und Inject-Pfade des Pfad-Schutzes, Schriftart der
+  Bild-Code-Challenge, IP-Schreibweise des Servers und der Listen,
+  Under-Attack-Erfolgsquote, Proxy-Header-Auswahl, Zusammenspiel der
+  Zwischenseite mit einem Full-Page-Cache und gefährliche
+  Bestandskonfiguration. Sieben bestehende Prüfungen haben etwas anderes
+  geprüft, als sie ausgegeben haben; das ist korrigiert, ebenso die
+  Zuordnung von Warnung und Fehler.
+- Kommandozeile: aussagekräftige Ablehnungsgründe und korrekte Exit-Codes bei
+  allen Listen-Befehlen, `log list --fields=` prüft gegen die tatsächliche
+  Spaltenliste (auch bei leerem Ergebnis), `log list --number=` meldet die
+  Deckelung, `settings import` benennt die Herkunft der Datei,
+  `settings load-defaults` meldet verworfene Listeneinträge,
+  `settings export` warnt bei sensiblen Inhalten und bei einem Zielpfad
+  innerhalb der WordPress-Installation, `test-bypass --cookie=` verarbeitet
+  mehrere Cookies und prozentkodierte Werte wie eine echte Anfrage.
+- Statistik: Der CSV-Export ist gegen einen Wechsel des Datenbestands während
+  des Schreibens abgesichert, der Schutz vor Formel-Injektion in
+  Tabellenkalkulationen wurde erweitert, und der protokollierte Pfad
+  entspricht jetzt dem tatsächlich gerouteten.
+- Einstellungen: Warnungen der Eingabeprüfung werden im Backend jetzt
+  angezeigt, gesperrte Felder tragen einen Erklärtext, vor dem Import steht
+  ein Warnhinweis, und mehrere Hilfetexte benennen die tatsächlichen Fallen
+  der jeweiligen Einstellung. Die pauschale Zusage „DSGVO-konform" am
+  Schalter für die IP-Anonymisierung ist entfallen — sie sagte mehr, als der
+  Schalter leistet.
+- Dokumentation: Die Hook-Übersicht in dieser Datei war unvollständig; sie
+  ist jetzt vollständig abgeglichen. Der Hook `creationell_captcha_deactivated`
+  bekommt einen Parameter (`bool $network_deactivating`) — bestehende
+  Handler sind davon nicht betroffen.
+
+Neue Filter:
+
+- `creationell_captcha_max_derive_cost` — Obergrenze der akzeptierten
+  PBKDF2-Iterationen einer eingehenden Payload
+- `creationell_captcha_max_derive_time_cost` — Obergrenze der akzeptierten
+  Argon2id-Zeitkosten
+- `creationell_captcha_max_derive_memory_cost` — Obergrenze der akzeptierten
+  Argon2id-Speicherkosten
+- `creationell_captcha_max_derive_key_length` — Obergrenze der akzeptierten
+  Schlüssellänge
+- `creationell_captcha_max_solution_counter` — Obergrenze des akzeptierten
+  Lösungs-Counters
+- `creationell_captcha_code_max_attempts` — Fehlversuche je Bild-Code, bevor
+  der Code verbraucht wird
+- `creationell_captcha_underattack_pass_binding` — Besucher-Fingerprint für
+  die Bindung des Under-Attack-Zugangs-Cookies (leerer Rückgabewert schaltet
+  die Bindung ab)
+- `creationell_captcha_export_max_rows` — Obergrenze der Zeilen je
+  CSV-Export des Ereignis-Logs
+- `creationell_captcha_email_buffer_max_bytes` — Obergrenze der
+  Antwortgröße, die der E-Mail-Obfuskator im Ganzseiten-Puffer-Modus
+  verarbeitet
 
 ### 1.0.2
 

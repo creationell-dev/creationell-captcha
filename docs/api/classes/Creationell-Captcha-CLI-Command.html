@@ -248,7 +248,7 @@ default keys, version option.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-command.php"><a href="files/includes-cli-class-cli-command.html"><abbr title="includes/cli/class-cli-command.php">class-cli-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">242</span>
+    <span class="phpdocumentor-element-found-in__line">250</span>
 
     </aside>
 
@@ -261,7 +261,9 @@ default keys, version option.</dd>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Exit-Code 1, wenn der Schalter nicht gesetzt werden konnte — siehe
+<code class="prettyprint">enable</code>.</p>
+<h2>OPTIONS</h2>
 <feature>
 : Feature to disable: interceptor, firewall, ratelimit, underattack, event-log, email-obfuscation, code-challenge, comments, login, registration, password-reset, cf7, forminator, wpforms, woocommerce, wc-checkout, wc-login, wc-registration, wc-lost-password.
 <h2>EXAMPLES</h2>
@@ -311,7 +313,7 @@ default keys, version option.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-command.php"><a href="files/includes-cli-class-cli-command.html"><abbr title="includes/cli/class-cli-command.php">class-cli-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
     </aside>
 
@@ -324,7 +326,11 @@ default keys, version option.</dd>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Exit-Code 1, wenn der Schalter nicht gesetzt werden konnte — etwa weil
+das zugehörige Formular-Plugin nicht aktiv ist und die Einstellung
+deshalb gar nicht existiert (früher: Erfolgsmeldung mit Exit 0, ohne dass
+sich etwas änderte).</p>
+<h2>OPTIONS</h2>
 <feature>
 : Feature to enable: interceptor, firewall, ratelimit, underattack, event-log, email-obfuscation, code-challenge, comments, login, registration, password-reset, cf7, forminator, wpforms, woocommerce, wc-checkout, wc-login, wc-registration, wc-lost-password.
 <h2>EXAMPLES</h2>
@@ -437,7 +443,7 @@ default keys, version option.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-command.php"><a href="files/includes-cli-class-cli-command.html"><abbr title="includes/cli/class-cli-command.php">class-cli-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">279</span>
 
     </aside>
 
@@ -451,7 +457,14 @@ default keys, version option.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Grenze des Werkzeugs (CLI-10): Repariert wird, was FEHLT — ein Secret,
+die Event-Log-Tabelle, ein Einstellungsschlüssel, die Versions-Option.
+Der INHALT vorhandener Einstellungswerte wird nicht gegen die
+Feldspezifikation geprüft; ein an den Plugin-Schreibwegen vorbei
+gesetzter Wert (<code class="prettyprint">wp option patch</code>, direkter DB-Zugriff) überlebt
+<code class="prettyprint">repair</code> und wird erst beim nächsten regulären Speichern normalisiert
+(Einstellungsseite speichern oder <code class="prettyprint">wp creacaptcha settings set &lt;key&gt; &lt;wert&gt;</code>).</p>
+<h2>OPTIONS</h2>
 <p>[--yes]
 : Skip the confirmation prompt.</p>
 <h2>EXAMPLES</h2>
@@ -629,7 +642,7 @@ default keys, version option.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-command.php"><a href="files/includes-cli-class-cli-command.html"><abbr title="includes/cli/class-cli-command.php">class-cli-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">316</span>
+    <span class="phpdocumentor-element-found-in__line">337</span>
 
     </aside>
 
@@ -668,7 +681,7 @@ default keys, version option.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-command.php"><a href="files/includes-cli-class-cli-command.html"><abbr title="includes/cli/class-cli-command.php">class-cli-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">346</span>
+    <span class="phpdocumentor-element-found-in__line">367</span>
 
     </aside>
 

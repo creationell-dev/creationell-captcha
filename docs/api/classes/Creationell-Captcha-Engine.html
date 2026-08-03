@@ -129,7 +129,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">30</span>
 
     </aside>
 
@@ -159,6 +159,43 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_HOOK">CLEANUP_HOOK</a>
+    <span>
+        &nbsp;= &#039;creationell_captcha_cleanup_replay_markers&#039;                            </span>
+</dt>
+<dd>Cron hook that sweeps expired replay markers out of the options table.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#constant_REPLAY_PREFIX">REPLAY_PREFIX</a>
+    <span>
+        &nbsp;= &#039;creationell_captcha_used_&#039;                            </span>
+</dt>
+<dd>Option-name prefix of the single-use replay markers claimed by verify().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#constant_UA_GATE_PARAM">UA_GATE_PARAM</a>
+    <span>
+        &nbsp;= &#039;uagate&#039;                            </span>
+</dt>
+<dd>Key inside `challenge.parameters.data` that marks a challenge as
+&quot;issued for the under-attack gate only&quot;.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_INTERVAL">CLEANUP_INTERVAL</a>
+    <span>
+        &nbsp;= 900                            </span>
+</dt>
+<dd>Seconds between two replay-marker sweeps while markers still exist.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CODE_PASS_PREFIX">CODE_PASS_PREFIX</a>
+    <span>
+        &nbsp;= &#039;creationell_captcha_ccpass_&#039;                            </span>
+</dt>
+<dd>Transient-name prefix of the &quot;image-code stage passed&quot; markers that the
+`/code-verify` handler writes (see includes/code-challenge.php).</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_PRESETS">PRESETS</a>
     <span>
@@ -177,22 +214,27 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_cleanup_replay_markers">cleanup_replay_markers()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Deletes replay markers whose lifetime has run out and re-arms itself
+while markers are still around. Registered on self::CLEANUP_HOOK at the
+bottom of this file.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_code_pass_key">code_pass_key()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Transient key of the &quot;image-code stage passed&quot; marker for a challenge.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Engine.html#method_create_challenge">create_challenge()</a>
     <span>
                                 &nbsp;: array&lt;string, mixed&gt;    </span>
 </dt>
 <dd>Builds a fresh challenge as a JSON-serialisable array.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Creationell-Captcha-Engine.html#method_issue_signed_payload">issue_signed_payload()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-<dd>Issues a fresh, server-solved ALTCHA payload — base64 string that
-`Engine::verify()` will accept exactly once. Used by the code-challenge
-verify endpoint (Modul 15) to substitute the user&#039;s original PoW
-payload (which carried a data.ccode marker and would be rejected by
-verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Engine.html#method_verify">verify()</a>
@@ -206,10 +248,9 @@ verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</dd>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Verifies a base64 ALTCHA payload structurally — same checks as
-`verify()` minus the single-use replay guard. Used by the code-
-challenge verify endpoint (Modul 15), which must not consume the
-incoming payload because the user may retry on wrong code.</dd>
+<dd>Verifies a base64 ALTCHA payload structurally — same signature
+requirement and same derive-key caps as `verify()`, but without the
+single-use replay claim and without the code-stage rule.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#method_algorithm">algorithm()</a>
@@ -241,11 +282,57 @@ selected but ext-sodium is unavailable.</dd>
 <dd>Builds the underlying ALTCHA object with both HMAC secrets.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_claim_replay_marker">claim_replay_marker()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Claims the single-use replay marker for a challenge signature. Returns
+true for exactly one caller, false for every other.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#method_difficulty_key">difficulty_key()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Normalises the configured difficulty.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_params_within_caps">params_within_caps()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Server-side ceiling for the derive-key work an INCOMING payload may ask
+for (CM-6, Wurzel 3.1).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_prepare_payload">prepare_payload()</a>
+    <span>
+                                &nbsp;: array{params: array<string,mixed>, signature: string, counter: int, derived_key: string}|null    </span>
+</dt>
+<dd>Decodes a base64 ALTCHA payload and enforces everything that has to hold
+BEFORE the vendor library is allowed to derive a single key.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_replay_marker_lifetime">replay_marker_lifetime()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>How long the single-use marker of a just-verified payload has to stay
+around — namely for exactly as long as that payload can still be redeemed.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_run_verify_solution">run_verify_solution()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Hands a prepared payload to the vendor library.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Engine.html#method_schedule_replay_cleanup">schedule_replay_cleanup()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Makes sure the replay markers written above get swept again.</dd>
 
     </dl>
 
@@ -258,6 +345,176 @@ selected but ext-sodium is unavailable.</dd>
             <a href="classes/Creationell-Captcha-Engine.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CLEANUP_HOOK">
+        CLEANUP_HOOK
+        <a href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_HOOK" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Cron hook that sweeps expired replay markers out of the options table.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CLEANUP_HOOK</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;creationell_captcha_cleanup_replay_markers&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_REPLAY_PREFIX">
+        REPLAY_PREFIX
+        <a href="classes/Creationell-Captcha-Engine.html#constant_REPLAY_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Option-name prefix of the single-use replay markers claimed by verify().</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">REPLAY_PREFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;creationell_captcha_used_&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Deliberately plain options, not transients — see claim_replay_marker()
+for why the transient pair could not be made atomic.</p>
+<p>Public because two routines outside the engine have to find these rows
+as well (E4a): the deactivation sweep in includes/lifecycle.php and the
+unconditional removal in uninstall.php. Both used to carry their own copy
+of the literal; a rename here would have left their rows behind.</p>
+</section>
+
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_UA_GATE_PARAM">
+        UA_GATE_PARAM
+        <a href="classes/Creationell-Captcha-Engine.html#constant_UA_GATE_PARAM" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Key inside `challenge.parameters.data` that marks a challenge as
+&quot;issued for the under-attack gate only&quot;.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">UA_GATE_PARAM</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;uagate&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Written by the <code class="prettyprint">/challenge</code> handler (includes/rest.php) whenever a valid
+<code class="prettyprint">ctx</code> token suppressed the image-code stage, read by verify() below.
+Deliberately a shared constant and not the same string typed twice: a
+typo on either side would turn the rule into a silent no-op that nothing
+on the interstitial path would notice.</p>
+</section>
+
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_CLEANUP_INTERVAL">
+        CLEANUP_INTERVAL
+        <a href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_INTERVAL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">71</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Seconds between two replay-marker sweeps while markers still exist.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CLEANUP_INTERVAL</span>
+    = <span class="phpdocumentor-signature__default-value">900</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_CODE_PASS_PREFIX">
+        CODE_PASS_PREFIX
+        <a href="classes/Creationell-Captcha-Engine.html#constant_CODE_PASS_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Transient-name prefix of the &quot;image-code stage passed&quot; markers that the
+`/code-verify` handler writes (see includes/code-challenge.php).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CODE_PASS_PREFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;creationell_captcha_ccpass_&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
                     <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_PRESETS">
         PRESETS
@@ -268,7 +525,7 @@ selected but ext-sodium is unavailable.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
     </aside>
 
@@ -285,6 +542,8 @@ selected but ext-sodium is unavailable.</dd>
 
         <section class="phpdocumentor-description"><p>Erstkalibrierung (Spec §7) — bei Bedarf nach dem DDEV-Solve-Zeit-Test
 an dieser einen Stelle nachjustieren.</p>
+<p>These values are also the reference point for the incoming-payload caps
+in params_within_caps(): the plugin never issues anything above them.</p>
 </section>
 
     
@@ -306,6 +565,111 @@ an dieser einen Stelle nachjustieren.</p>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_cleanup_replay_markers">
+        cleanup_replay_markers()
+        <a href="classes/Creationell-Captcha-Engine.html#method_cleanup_replay_markers" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">645</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Deletes replay markers whose lifetime has run out and re-arms itself
+while markers are still around. Registered on self::CLEANUP_HOOK at the
+bottom of this file.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">cleanup_replay_markers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_code_pass_key">
+        code_pass_key()
+        <a href="classes/Creationell-Captcha-Engine.html#method_code_pass_key" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">144</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Transient key of the &quot;image-code stage passed&quot; marker for a challenge.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">code_pass_key</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$signature</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>The marker is keyed by the challenge SIGNATURE, and that signature
+covers <code class="prettyprint">parameters.data.ccode</code> (the ALTCHA library signs the canonical
+JSON of the whole parameter set). Two consequences, and they are the
+reason this binding exists:</p>
+<ul>
+<li>a code token cannot be re-paired with a different challenge (CM-8) —
+changing <code class="prettyprint">data.ccode</code> invalidates the signature, and the signature is
+mandatory since prepare_payload();</li>
+<li>a payload that never passed the image-code stage has no marker at all
+(CM-1) — omitting the JSON key <code class="prettyprint">code</code> on <code class="prettyprint">/code-verify</code> no longer
+produces anything the form path accepts.</li>
+</ul>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$signature</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The <code class="prettyprint">challenge.signature</code> of the payload.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Transient name (never empty).</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_create_challenge">
@@ -316,7 +680,7 @@ an dieser einen Stelle nachjustieren.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
     </aside>
 
@@ -347,51 +711,6 @@ an dieser einen Stelle nachjustieren.</p>
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_issue_signed_payload">
-        issue_signed_payload()
-        <a href="classes/Creationell-Captcha-Engine.html#method_issue_signed_payload" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">220</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Issues a fresh, server-solved ALTCHA payload — base64 string that
-`Engine::verify()` will accept exactly once. Used by the code-challenge
-verify endpoint (Modul 15) to substitute the user&#039;s original PoW
-payload (which carried a data.ccode marker and would be rejected by
-verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">issue_signed_payload</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <section class="phpdocumentor-description"><p>Returns the empty string on internal error (no payload issued).</p>
-</section>
-
-    
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_verify">
         verify()
         <a href="classes/Creationell-Captcha-Engine.html#method_verify" class="headerlink"><i class="fas fa-link"></i></a>
@@ -400,7 +719,7 @@ verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">88</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
     </aside>
 
@@ -408,7 +727,7 @@ verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">verify</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$payload_b64</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">verify</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$payload_b64</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$under_attack_gate</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -422,6 +741,23 @@ verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</p>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The base64 payload from the <code class="prettyprint">altcha</code> form field.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$under_attack_gate</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the CALLER is the under-attack
+interstitial gate. Only that one call
+site (UnderAttack::run()) passes true;
+it LIFTS the uagate rule rather than
+requiring the marker — the gate accepts
+an ordinary challenge just as well, and
+deliberately so (see below). Default
+false — every form path keeps rejecting
+a marked challenge.</p>
 </section>
 
             </dd>
@@ -451,14 +787,13 @@ verify()&#039;s bypass guard) with a clean payload that has no data.ccode.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">261</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Verifies a base64 ALTCHA payload structurally — same checks as
-`verify()` minus the single-use replay guard. Used by the code-
-challenge verify endpoint (Modul 15), which must not consume the
-incoming payload because the user may retry on wrong code.</p>
+        <p class="phpdocumentor-summary">Verifies a base64 ALTCHA payload structurally — same signature
+requirement and same derive-key caps as `verify()`, but without the
+single-use replay claim and without the code-stage rule.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -467,8 +802,10 @@ incoming payload because the user may retry on wrong code.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>NOTE: also skips the <code class="prettyprint">parameters.data.ccode</code> reject filter — the
-code-verify handler explicitly EXPECTS that field to be present.</p>
+        <section class="phpdocumentor-description"><p>Used by the code-challenge verify endpoint (Modul 15), which must not
+consume the incoming payload: the user may retry after a wrong code,
+and the one and only single-use consumption happens in <code class="prettyprint">verify()</code> when
+the form is finally submitted.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -508,7 +845,7 @@ code-verify handler explicitly EXPECTS that field to be present.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">256</span>
+    <span class="phpdocumentor-element-found-in__line">675</span>
 
     </aside>
 
@@ -547,7 +884,7 @@ code-verify handler explicitly EXPECTS that field to be present.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">698</span>
 
     </aside>
 
@@ -596,7 +933,7 @@ code-verify handler explicitly EXPECTS that field to be present.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">264</span>
+    <span class="phpdocumentor-element-found-in__line">683</span>
 
     </aside>
 
@@ -636,7 +973,7 @@ selected but ext-sodium is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">297</span>
+    <span class="phpdocumentor-element-found-in__line">716</span>
 
     </aside>
 
@@ -667,6 +1004,67 @@ selected but ext-sodium is unavailable.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_claim_replay_marker">
+        claim_replay_marker()
+        <a href="classes/Creationell-Captcha-Engine.html#method_claim_replay_marker" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">570</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Claims the single-use replay marker for a challenge signature. Returns
+true for exactly one caller, false for every other.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">claim_replay_marker</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$signature</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$expiry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$signature</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The <code class="prettyprint">challenge.signature</code> of the verified payload.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$expiry</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Seconds the marker has to stay around.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_difficulty_key">
         difficulty_key()
         <a href="classes/Creationell-Captcha-Engine.html#method_difficulty_key" class="headerlink"><i class="fas fa-link"></i></a>
@@ -675,7 +1073,7 @@ selected but ext-sodium is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">288</span>
+    <span class="phpdocumentor-element-found-in__line">707</span>
 
     </aside>
 
@@ -711,6 +1109,346 @@ selected but ext-sodium is unavailable.</p>
         <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_params_within_caps">
+        params_within_caps()
+        <a href="classes/Creationell-Captcha-Engine.html#method_params_within_caps" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">363</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Server-side ceiling for the derive-key work an INCOMING payload may ask
+for (CM-6, Wurzel 3.1).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">params_within_caps</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params_raw</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$counter</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p><code class="prettyprint">Pbkdf2::deriveKey()</code> clamps <code class="prettyprint">cost</code> only downwards (<code class="prettyprint">max(1, $cost)</code>) and
+<code class="prettyprint">Argon2id::deriveKey()</code> does the same with <code class="prettyprint">memoryCost</code> — an anonymous
+POST could therefore request <code class="prettyprint">cost: 200000000</code> or <code class="prettyprint">memoryCost: 2000000</code>
+and bind a PHP worker inside a native C call that <code class="prettyprint">max_execution_time</code>
+cannot interrupt. The caps are derived from what the plugin itself ever
+issues (self::PRESETS) plus headroom, so no legitimate payload can hit
+them; every value is filterable for installs with custom presets.</p>
+<p>Parameter extraction mirrors <code class="prettyprint">ChallengeParameters::fromArray()</code>
+one-to-one (same <code class="prettyprint">is_int()</code> checks, same defaults) — otherwise a value
+this method waves through could reach the library as something else.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$params_raw</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw <code class="prettyprint">challenge.parameters</code> from the payload.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$counter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Counter of the submitted solution.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Short label for the debug log.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_prepare_payload">
+        prepare_payload()
+        <a href="classes/Creationell-Captcha-Engine.html#method_prepare_payload" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">279</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Decodes a base64 ALTCHA payload and enforces everything that has to hold
+BEFORE the vendor library is allowed to derive a single key.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">prepare_payload</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$payload_b64</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{params: array<string,mixed>, signature: string, counter: int, derived_key: string}|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$payload_b64</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Base64 payload from the client.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Short label for the debug log.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{params: array<string,mixed>, signature: string, counter: int, derived_key: string}|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Prepared payload parts, or null when the payload must be rejected.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_replay_marker_lifetime">
+        replay_marker_lifetime()
+        <a href="classes/Creationell-Captcha-Engine.html#method_replay_marker_lifetime" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">533</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">How long the single-use marker of a just-verified payload has to stay
+around — namely for exactly as long as that payload can still be redeemed.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">replay_marker_lifetime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Until 1.1.0 this was the CURRENT <code class="prettyprint">challenge_expiry</code> setting, which is not
+the same thing: the redeemable lifetime of a payload is fixed when the
+challenge is issued and travels with it as <code class="prettyprint">expiresAt</code>. Lowering the
+setting — the settings range is 60–3600 s and the help text explicitly
+recommends short values — therefore handed every challenge issued before
+the change a marker that dies BEFORE the challenge does. In that gap the
+same payload verifies again, as often as the client likes, until
+<code class="prettyprint">expiresAt</code> is finally reached. That is the CM-9 guarantee (&quot;one PoW =
+one submission&quot;) leaking out through a side door.</p>
+<p>Why reading <code class="prettyprint">expiresAt</code> out of the payload is safe (and not a new
+attacker-controlled criterion):</p>
+<ul>
+<li>the value is part of the SIGNED challenge parameters, and the caller
+reaches this method only after run_verify_solution() has checked that
+signature against this site's HMAC secret. A signature is mandatory
+since CM-2 (prepare_payload), and the empty-secret case fails closed
+there as well;</li>
+<li>the extraction mirrors <code class="prettyprint">ChallengeParameters::fromArray()</code> one-to-one
+(<code class="prettyprint">isset()</code> + <code class="prettyprint">is_int()</code>, see lib/altcha-org/altcha/src/ChallengeParameters.php),
+so this method reads exactly the value the signature was verified
+against. Anything the library would normalise differently — a string,
+a float, a missing key — changes the canonical JSON and thus kills the
+signature one step earlier;</li>
+<li>inflating the number is therefore not &quot;a longer marker&quot;, it is an
+unverifiable payload. And a longer marker would only ever REDUCE what
+an attacker can do.</li>
+</ul>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw, signature-checked <code class="prettyprint">challenge.parameters</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Seconds the marker has to stay around (at least 60).</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_run_verify_solution">
+        run_verify_solution()
+        <a href="classes/Creationell-Captcha-Engine.html#method_run_verify_solution" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">478</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Hands a prepared payload to the vendor library.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">run_verify_solution</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{params: array<string,mixed>, signature: string, counter: int, derived_key: string}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$prepared</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$prepared</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{params: array<string,mixed>, signature: string, counter: int, derived_key: string}</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Prepared payload parts.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Short label for the debug log.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_schedule_replay_cleanup">
+        schedule_replay_cleanup()
+        <a href="classes/Creationell-Captcha-Engine.html#method_schedule_replay_cleanup" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">621</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Makes sure the replay markers written above get swept again.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">schedule_replay_cleanup</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$expiry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Unlike transients, plain options never expire on their own — so the
+sweep is their ONLY cleanup path and must not be optional.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$expiry</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Lifetime of the marker that was just claimed.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
 </article>
             </section>
 
@@ -826,6 +1564,11 @@ selected but ext-sodium is unavailable.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_HOOK">CLEANUP_HOOK</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_REPLAY_PREFIX">REPLAY_PREFIX</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_UA_GATE_PARAM">UA_GATE_PARAM</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_INTERVAL">CLEANUP_INTERVAL</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_CODE_PASS_PREFIX">CODE_PASS_PREFIX</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Engine.html#constant_PRESETS">PRESETS</a></li>
                                             </ul>
                 </li>
@@ -834,15 +1577,22 @@ selected but ext-sodium is unavailable.</p>
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_cleanup_replay_markers">cleanup_replay_markers()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_code_pass_key">code_pass_key()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_create_challenge">create_challenge()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_issue_signed_payload">issue_signed_payload()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_verify">verify()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_verify_structural">verify_structural()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_algorithm">algorithm()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_algorithm_for_name">algorithm_for_name()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_algorithm_key">algorithm_key()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_altcha">altcha()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_claim_replay_marker">claim_replay_marker()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_difficulty_key">difficulty_key()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_params_within_caps">params_within_caps()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_prepare_payload">prepare_payload()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_replay_marker_lifetime">replay_marker_lifetime()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_run_verify_solution">run_verify_solution()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Engine.html#method_schedule_replay_cleanup">schedule_replay_cleanup()</a></li>
                                     </ul>
             </li>
                     </ul>

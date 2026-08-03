@@ -191,7 +191,7 @@ associative arrays get `ksort`-ed in place.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">17</span>
+    <span class="phpdocumentor-element-found-in__line">23</span>
 
     </aside>
 
@@ -202,7 +202,13 @@ associative arrays get `ksort`-ed in place.</dd>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_register_rest_routes</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>REST-GATE-OK: /challenge is deliberately public (permission_callback
+__return_true) — it is the shared entry point that issues a fresh,
+single-use PoW challenge for ALL captcha types, not a feature specific
+to one toggle. It remains subject to the global kill switch
+(creationell_captcha_is_disabled()) below.</p>
+</section>
+
     
     
 
@@ -217,7 +223,7 @@ associative arrays get `ksort`-ed in place.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
     </aside>
 
@@ -239,9 +245,13 @@ is gated by the `log_challenge` per-type toggle from Modul 11c.</p>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The REST request. Optional query parameter
-<code class="prettyprint">ctx</code> (HMAC token, used by the under-attack
-interstitial to suppress the code-challenge
-attachment).</p>
+<code class="prettyprint">ctx</code> (single-use, 120-second token the
+under-attack interstitial passes to suppress
+the code-challenge attachment). A challenge
+issued for an accepted <code class="prettyprint">ctx</code> is marked
+under-attack-only inside its signed
+parameters and is worthless at a protected
+form — see Engine::verify().</p>
 </section>
 
             </dd>
@@ -270,7 +280,7 @@ attachment).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">223</span>
 
     </aside>
 
@@ -318,7 +328,7 @@ mutate parameters.data.ccode.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">247</span>
 
     </aside>
 

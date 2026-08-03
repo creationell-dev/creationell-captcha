@@ -154,6 +154,20 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/Creationell-Captcha-RateLimiter.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Creationell-Captcha-RateLimiter.html#constant_CHALLENGE_ROUTE">CHALLENGE_ROUTE</a>
+    <span>
+        &nbsp;= &#039;/creationell-captcha/v1/challenge&#039;                            </span>
+</dt>
+<dd>The plugin&#039;s own challenge route — the only route exempt from counting.</dd>
+
+    </dl>
 
 
 
@@ -174,7 +188,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-RateLimiter.html#method_context">context()</a>
     <span>
-                                &nbsp;: array{ip: string, path: string, method: string, script: string, action: string, is_ajax: bool}    </span>
+                                &nbsp;: array{ip: string, path: string, path_raw: string, method: string, script: string, action: string, is_ajax: bool}    </span>
 </dt>
 <dd>Builds the request context array.</dd>
 
@@ -183,7 +197,9 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</dd>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Whether the request points at the plugin&#039;s own challenge endpoint.</dd>
+<dd>Whether the request is actually served by the plugin&#039;s own challenge
+endpoint — the one route that must stay reachable without being counted,
+because the widget fetches a challenge for every protected form.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-RateLimiter.html#method_should_count">should_count()</a>
@@ -197,6 +213,48 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</dd>
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/Creationell-Captcha-RateLimiter.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_CHALLENGE_ROUTE">
+        CHALLENGE_ROUTE
+        <a href="classes/Creationell-Captcha-RateLimiter.html#constant_CHALLENGE_ROUTE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-rate-limiter.php"><a href="files/includes-class-rate-limiter.html"><abbr title="includes/class-rate-limiter.php">class-rate-limiter.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">28</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The plugin&#039;s own challenge route — the only route exempt from counting.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CHALLENGE_ROUTE</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;/creationell-captcha/v1/challenge&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Compared for EQUALITY against the route the request actually addresses
+(CM-7); the previous <code class="prettyprint">str_contains()</code> matched any path or <code class="prettyprint">rest_route</code>
+value that merely contained this string.</p>
+</section>
+
+    
+    
+
+        
+    </article>
+            </section>
 
         
 
@@ -220,7 +278,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-rate-limiter.php"><a href="files/includes-class-rate-limiter.html"><abbr title="includes/class-rate-limiter.php">class-rate-limiter.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">26</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
     </aside>
 
@@ -256,7 +314,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-rate-limiter.php"><a href="files/includes-class-rate-limiter.html"><abbr title="includes/class-rate-limiter.php">class-rate-limiter.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
     </aside>
 
@@ -264,7 +322,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">context</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{ip: string, path: string, method: string, script: string, action: string, is_ajax: bool}</span></code>
+                    <span class="phpdocumentor-signature__name">context</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{ip: string, path: string, path_raw: string, method: string, script: string, action: string, is_ajax: bool}</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -287,7 +345,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{ip: string, path: string, method: string, script: string, action: string, is_ajax: bool}</span>
+        <span class="phpdocumentor-signature__response_type">array{ip: string, path: string, path_raw: string, method: string, script: string, action: string, is_ajax: bool}</span>
             </section>
 
 </article>
@@ -305,31 +363,34 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-rate-limiter.php"><a href="files/includes-class-rate-limiter.html"><abbr title="includes/class-rate-limiter.php">class-rate-limiter.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Whether the request points at the plugin&#039;s own challenge endpoint.</p>
+        <p class="phpdocumentor-summary">Whether the request is actually served by the plugin&#039;s own challenge
+endpoint — the one route that must stay reachable without being counted,
+because the widget fetches a challenge for every protected form.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">is_challenge_endpoint</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">is_challenge_endpoint</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$path</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
+        <section class="phpdocumentor-description"><p>BK-2 / CM-7: the previous implementation ran <code class="prettyprint">str_contains()</code> over the
+request path AND over the raw <code class="prettyprint">$_GET['rest_route']</code> value. Both are
+client-controlled, and neither says anything about what WordPress will
+actually serve: <code class="prettyprint">POST /wp-login.php?rest_route=creationell-captcha/v1/challenge</code>
+is an ordinary login POST — wp-login.php never calls parse_request(), so
+rest_api_loaded() never runs — yet it turned the rate limiter off and
+made the login brute-force limit unenforceable.</p>
+<p>The route now comes from creationell_captcha_current_rest_route(), which
+only reports a route when core would really dispatch one, and it is
+compared for equality instead of by substring.</p>
+</section>
 
+    
     
 
         
@@ -354,7 +415,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-rate-limiter.php"><a href="files/includes-class-rate-limiter.html"><abbr title="includes/class-rate-limiter.php">class-rate-limiter.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
     </aside>
 
@@ -362,7 +423,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">should_count</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{ip: string, path: string, method: string, script: string, action: string, is_ajax: bool}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$scope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">should_count</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{ip: string, path: string, path_raw: string, method: string, script: string, action: string, is_ajax: bool}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$scope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -372,7 +433,7 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array{ip: string, path: string, method: string, script: string, action: string, is_ajax: bool}</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{ip: string, path: string, path_raw: string, method: string, script: string, action: string, is_ajax: bool}</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Request context.</p>
@@ -507,9 +568,16 @@ priority 0. Terminates the request with 429 once the limit is exceeded.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/Creationell-Captcha-RateLimiter.html#toc-constants">Constants</a></li>
                                                                                 <li><a href="classes/Creationell-Captcha-RateLimiter.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Creationell-Captcha-RateLimiter.html#constant_CHALLENGE_ROUTE">CHALLENGE_ROUTE</a></li>
+                                            </ul>
+                </li>
             
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>

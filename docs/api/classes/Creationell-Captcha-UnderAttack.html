@@ -201,18 +201,42 @@ the request when an interstitial is served or a pass redirect is issued.</dd>
 Argon2id algorithm is not in use.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_commit_pass">commit_pass()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Sets a minted pass token as the visitor&#039;s cookie.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_has_valid_pass">has_valid_pass()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Whether the request carries a valid, unexpired pass token.</dd>
+<dd>Whether the request carries a valid, unexpired pass token that belongs
+to THIS visitor.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_issue_pass">issue_pass()</a>
+    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_mint_pass">mint_pass()</a>
+    <span>
+                                &nbsp;: array{token: string, expiry: int}|null    </span>
+</dt>
+<dd>Mints a fresh pass token WITHOUT setting anything.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_redeem">redeem()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Mints a fresh pass token and sets it as a cookie.</dd>
+<dd>Redeems a posted interstitial solution: mints the pass FIRST, spends the
+challenge SECOND, sets the cookie LAST.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_request_target">request_target()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>The URL the interstitial posts back to, and the one the visitor returns
+to after passing the gate.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_serve_interstitial">serve_interstitial()</a>
@@ -220,6 +244,15 @@ Argon2id algorithm is not in use.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Outputs the interstitial page with HTTP 503 and terminates.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-UnderAttack.html#method_verify_gate_payload">verify_gate_payload()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Verifies the payload the interstitial posted back — as the under-attack
+gate, which is the only caller allowed to redeem a challenge that was
+issued under ctx suppression (FU-1).</dd>
 
     </dl>
 
@@ -354,7 +387,7 @@ the request when an interstitial is served or a pass redirect is issued.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">206</span>
+    <span class="phpdocumentor-element-found-in__line">375</span>
 
     </aside>
 
@@ -386,6 +419,61 @@ Argon2id algorithm is not in use.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_commit_pass">
+        commit_pass()
+        <a href="classes/Creationell-Captcha-UnderAttack.html#method_commit_pass" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">257</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sets a minted pass token as the visitor&#039;s cookie.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">commit_pass</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{token: string, expiry: int}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pass</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$pass</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{token: string, expiry: int}</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Value from <code class="prettyprint">mint_pass()</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when the cookie was handed to PHP.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_has_valid_pass">
         has_valid_pass()
         <a href="classes/Creationell-Captcha-UnderAttack.html#method_has_valid_pass" class="headerlink"><i class="fas fa-link"></i></a>
@@ -394,11 +482,12 @@ Argon2id algorithm is not in use.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Whether the request carries a valid, unexpired pass token.</p>
+        <p class="phpdocumentor-summary">Whether the request carries a valid, unexpired pass token that belongs
+to THIS visitor.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -407,7 +496,17 @@ Argon2id algorithm is not in use.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <section class="phpdocumentor-description"><p>BK-3: the check used to be <code class="prettyprint">hash_hmac('sha256', $expiry, $secret)</code> — the
+MAC covered the expiry timestamp and nothing else. One solved
+interstitial therefore produced a transferable bearer token: copy the
+cookie value, hand it to any number of clients, and every one of them
+walked past the gate until <code class="prettyprint">underattack_pass_duration</code> (up to 86400 s)
+ran out. The verification now happens against a token whose MAC also
+covers a fingerprint of the visitor that the cookie does not carry —
+see <code class="prettyprint">creationell_captcha_underattack_pass_binding()</code> for the trade-off
+and the filter that switches it off.</p>
+</section>
+
     
     
 
@@ -425,29 +524,106 @@ Argon2id algorithm is not in use.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_issue_pass">
-        issue_pass()
-        <a href="classes/Creationell-Captcha-UnderAttack.html#method_issue_pass" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_mint_pass">
+        mint_pass()
+        <a href="classes/Creationell-Captcha-UnderAttack.html#method_mint_pass" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">214</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Mints a fresh pass token and sets it as a cookie.</p>
+        <p class="phpdocumentor-summary">Mints a fresh pass token WITHOUT setting anything.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">issue_pass</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">mint_pass</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{token: string, expiry: int}|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
+        <section class="phpdocumentor-description"><p>Both failure modes are permanent-until-fixed as often as they are
+transient, and both leave the site behind a 503 that nobody can pass
+(m4). <code class="prettyprint">has_valid_pass()</code> fails closed for the same missing key, so the
+gate is shut in both directions — which is the right direction, but the
+operator used to get no hint at all: no log line, no doctor check, just a
+site that stays down while visitors solve proof-of-work after
+proof-of-work. Hence the two log lines below.</p>
+</section>
+
     
     
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{token: string, expiry: int}|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Null when no pass could be
+minted.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_redeem">
+        redeem()
+        <a href="classes/Creationell-Captcha-UnderAttack.html#method_redeem" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">97</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Redeems a posted interstitial solution: mints the pass FIRST, spends the
+challenge SECOND, sets the cookie LAST.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">redeem</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$solution</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>The order is the finding (m5). Before 1.1.0 the gate verified first and
+issued afterwards — and verification claims the challenge's single-use
+replay marker (<code class="prettyprint">Engine::verify()</code>), so every failure of the issuing step
+burned a proof-of-work the visitor had just completed and sent him back
+to a fresh interstitial. Where the cause is per-request that costs one
+extra PoW; where it is permanent — output already sent before
+<code class="prettyprint">template_redirect</code>, or no derivable HMAC key (m4) — it is an endless
+loop of them, and nothing in the log said why.</p>
+<p>Minting has no side effect, so it can safely go first. Only the cookie is
+set after the challenge is spent, and by then the two reasons the issuing
+step can fail have already been ruled out.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$solution</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The raw payload from the interstitial form field.</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
         
@@ -456,10 +632,70 @@ Argon2id algorithm is not in use.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">bool</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>True when the cookie was set; false when headers were
-already sent and it could not be.</p>
+                <section class="phpdocumentor-description"><p>True when the visitor passed AND the pass cookie was set.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_request_target">
+        request_target()
+        <a href="classes/Creationell-Captcha-UnderAttack.html#method_request_target" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">136</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The URL the interstitial posts back to, and the one the visitor returns
+to after passing the gate.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">request_target</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>C1, sixth call site: both used to be the raw <code class="prettyprint">REQUEST_URI</code>. Two distinct
+consequences, neither of them cosmetic:</p>
+<ul>
+<li>As the form <code class="prettyprint">action</code> the value is escaped with <code class="prettyprint">esc_url()</code>, and
+<code class="prettyprint">esc_url()</code> returns every string starting with <code class="prettyprint">/</code> unchanged
+(<code class="prettyprint">wp-includes/formatting.php</code>: <code class="prettyprint">if ( '/' === $url[0] ) { $good_protocol_url = $url; }</code>). A request for <code class="prettyprint">//fremder.host/x</code> —
+which WordPress happily serves, it just 404s — therefore produced
+<code class="prettyprint">action=&quot;//fremder.host/x&quot;</code>, a protocol-relative URL to a foreign
+host. The page auto-submits, so the browser POSTs the solved
+challenge there without the visitor doing anything.</li>
+<li>As the redirect target <code class="prettyprint">wp_validate_redirect()</code> does catch the foreign
+host, but it catches it by falling back to wp-admin: a LEGITIMATE
+visitor who requested <code class="prettyprint">//kontakt/</code> passed the gate and then landed in
+the dashboard instead of on his page.</li>
+</ul>
+<p><code class="prettyprint">creationell_captcha_request_path()</code> collapses the leading slashes to
+exactly one, which removes both. The query string is kept — dropping it
+would send the visitor to a different page than the one he asked for
+(<code class="prettyprint">/shop/?s=stuhl</code>). The fragment is dropped because browsers never send
+one.</p>
+</section>
+
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
 </article>
@@ -477,7 +713,7 @@ already sent and it could not be.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">274</span>
 
     </aside>
 
@@ -497,6 +733,68 @@ already sent and it could not be.</p>
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_verify_gate_payload">
+        verify_gate_payload()
+        <a href="classes/Creationell-Captcha-UnderAttack.html#method_verify_gate_payload" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-under-attack.php"><a href="files/includes-class-under-attack.html"><abbr title="includes/class-under-attack.php">class-under-attack.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">167</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Verifies the payload the interstitial posted back — as the under-attack
+gate, which is the only caller allowed to redeem a challenge that was
+issued under ctx suppression (FU-1).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">verify_gate_payload</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$payload</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Deliberately NOT <code class="prettyprint">creationell_captcha_verify_payload()</code> (includes/widget.php):
+that helper is the FORM path, and the whole point of the marker is that
+the form path keeps rejecting these challenges. The distinction is made
+by this call site — it is a PHP argument, not a request field, so no
+anonymous sender can claim it for himself.</p>
+<p>Everything else stays identical to the form helper: the kill switch is
+already handled in run() above, and the base64 pre-check below is the
+same one, kept so a junk field never reaches the decoder.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$payload</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The raw payload from the interstitial form field.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -623,9 +921,13 @@ already sent and it could not be.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_run">run()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_argon2id_worker_snippet">argon2id_worker_snippet()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_commit_pass">commit_pass()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_has_valid_pass">has_valid_pass()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_issue_pass">issue_pass()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_mint_pass">mint_pass()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_redeem">redeem()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_request_target">request_target()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_serve_interstitial">serve_interstitial()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-UnderAttack.html#method_verify_gate_payload">verify_gate_payload()</a></li>
                                     </ul>
             </li>
                     </ul>

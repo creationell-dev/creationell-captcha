@@ -179,6 +179,21 @@ expected code for at most $expiry_seconds. Returns the opaque ID that
   - missing transient (expired or unknown)</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_code_fail_key">creationell_captcha_code_fail_key()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Transient name of the per-token failed-attempt counter (CM-3).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_code_token_fail">creationell_captcha_code_token_fail()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Records one wrong image-code submission for a token and invalidates the
+token once its attempt budget is spent.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_rest_code_image">creationell_captcha_rest_code_image()</a>
     <span>
                                 &nbsp;: <abbr title="\WP_REST_Response">WP_REST_Response</abbr>    </span>
@@ -439,6 +454,94 @@ still work.</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_code_fail_key">
+        creationell_captcha_code_fail_key()
+        <a href="namespaces/default.html#function_creationell_captcha_code_fail_key" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">148</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Transient name of the per-token failed-attempt counter (CM-3).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_code_fail_key</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$token</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$token</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The 32-hex-char ID from <code class="prettyprint">code_token_issue</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_code_token_fail">
+        creationell_captcha_code_token_fail()
+        <a href="namespaces/default.html#function_creationell_captcha_code_token_fail" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">165</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Records one wrong image-code submission for a token and invalidates the
+token once its attempt budget is spent.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_code_token_fail</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$token</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Before this existed, a wrong code was completely free: <code class="prettyprint">/code-verify</code>
+returned 401 <em>before</em> the consume, nothing was counted, and the REST route
+is not covered by the default rate-limit scopes (<code class="prettyprint">core</code>/<code class="prettyprint">forms</code>). A client
+could therefore walk a token through the entire code space. The counter
+lives exactly as long as the token it belongs to, so it cannot be reset by
+waiting — only by fetching a fresh challenge, which also means a fresh PoW.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$token</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The 32-hex-char ID from <code class="prettyprint">code_token_issue</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_rest_code_image">
         creationell_captcha_rest_code_image()
         <a href="namespaces/default.html#function_creationell_captcha_rest_code_image" class="headerlink"><i class="fas fa-link"></i></a>
@@ -447,7 +550,7 @@ still work.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">155</span>
+    <span class="phpdocumentor-element-found-in__line">209</span>
 
     </aside>
 
@@ -499,7 +602,7 @@ token is unknown/expired or PHP-GD is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
     </aside>
 
@@ -515,19 +618,23 @@ token is unknown/expired or PHP-GD is unavailable.</p>
 <p>Code-Challenge mode: { &quot;code&quot;: &quot;<user-input>&quot;, &quot;payload&quot;: &quot;<base64>&quot; }
 The widget rendered a code-image because the /challenge response
 embedded data.ccode. Token lookup → case-insensitive match →
-single-use consume → fresh signed payload.</p>
-</li>
-<li>
-<p>Plain server-verify mode: { &quot;payload&quot;: &quot;<base64>&quot; } (no code)
+single-use consume → &quot;code stage passed&quot; marker for this challenge.</p>
+<ul>
+<li>Plain server-verify mode: { &quot;payload&quot;: &quot;<base64>&quot; } (no code)
 ALTCHA's widget posts here unconditionally whenever verifyUrl is
 set (see widget.js logic: <code class="prettyprint">verifyUrl ? _e() : verified()</code>).
-Structural verify on the incoming payload + single-use replay
-guard on its signature + fresh signed payload back. The replay
-guard matters: without it a single solved PoW could be amplified
-into N fresh payloads, undercutting Engine::verify()'s per-form
-single-use protection.</p>
+Structural verify only — nothing is consumed, because there is
+nothing to protect: the endpoint hands back exactly what it was
+given.</li>
+</ul>
 </li>
 </ul>
+<p>Neither mode mints a payload any more (CM-5, Wurzel 3.1). The old handler
+ended in <code class="prettyprint">Engine::issue_signed_payload()</code>, which made the SERVER solve a
+fresh PoW (<code class="prettyprint">solveChallenge()</code>) and returned a ready-to-use payload — one
+client-side solve was enough to drive an endless loop of server-side key
+derivations. The response now echoes the SUBMITTED payload back verbatim,
+so a caller never gains anything it did not already have.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -552,8 +659,7 @@ single-use protection.</p>
                     &mdash;
                 <section class="phpdocumentor-description"><p>200 on success ({payload, verified: true});
 400 on malformed body; 401 on wrong code;
-410 on missing/expired/replayed payload or token;
-500 on internal error.</p>
+410 on missing/expired/unsigned payload or token.</p>
 </section>
 
             </section>
@@ -568,7 +674,7 @@ single-use protection.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">386</span>
 
     </aside>
 
@@ -703,6 +809,8 @@ codeChallenge field and the data.ccode embed.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_charset">creationell_captcha_code_charset()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_fail_key">creationell_captcha_code_fail_key()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_token_fail">creationell_captcha_code_token_fail()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_token_issue">creationell_captcha_code_token_issue()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_token_verify">creationell_captcha_code_token_verify()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_generate_code">creationell_captcha_generate_code()</a></li>

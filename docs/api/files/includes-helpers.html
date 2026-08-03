@@ -198,6 +198,30 @@
 </dt>
 <dd>Maps WordPress locales to the matching ALTCHA i18n locale bundle.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX">CREATIONELL_CAPTCHA_PURPOSE_UA_CTX</a>
+    <span>
+        &nbsp;= &#039;underattack-ctx&#039;                            </span>
+</dt>
+<dd>Purpose label of the under-attack code-challenge suppression token (`ctx`).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS">CREATIONELL_CAPTCHA_PURPOSE_UA_PASS</a>
+    <span>
+        &nbsp;= &#039;underattack-pass&#039;                            </span>
+</dt>
+<dd>Purpose label of the under-attack pass-cookie key.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_UA_CTX_TTL">CREATIONELL_CAPTCHA_UA_CTX_TTL</a>
+    <span>
+        &nbsp;= 120                            </span>
+</dt>
+<dd>Lifetime (seconds) of a `ctx` suppression token. The interstitial widget
+fetches the challenge on load, i.e. within seconds of the 503 being
+rendered; two minutes is generous for that and replaces the ~10 minutes the
+old 5-minute-bucket pair accepted (BK-4).</dd>
+
     </dl>
 
 
@@ -281,6 +305,56 @@ so callers that read settings after an update see the fresh value.</dd>
 <dd>The HMAC key-signature secret (enables the fast verification path).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_derive_hmac_key">creationell_captcha_derive_hmac_key()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Derives a purpose-bound HMAC key from the plugin&#039;s base signature secret.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_client_ua">creationell_captcha_client_ua()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>The request&#039;s User-Agent, capped at 256 bytes. MAC input for the
+under-attack tokens — never rendered, never stored.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding">creationell_captcha_underattack_pass_binding()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>The fingerprint the under-attack pass cookie is bound to (BK-3).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue">creationell_captcha_underattack_pass_issue()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Mints an under-attack pass token for the current visitor.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_underattack_pass_check">creationell_captcha_underattack_pass_check()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Verifies an under-attack pass token against the CURRENT visitor.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue">creationell_captcha_underattack_ctx_issue()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Mints a single-use `ctx` suppression token for one interstitial rendering.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check">creationell_captcha_underattack_ctx_check()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Verifies a `ctx` suppression token and consumes it.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_engine">creationell_captcha_engine()</a>
     <span>
                                 &nbsp;: <a href="classes/Creationell-Captcha-Engine.html"><abbr title="\Creationell\Captcha\Engine">Engine</abbr></a>    </span>
@@ -293,6 +367,15 @@ so callers that read settings after an update see the fresh value.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Write a message to the debug log when CREATIONELL_CAPTCHA_DEBUG is active.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_normalize_ip">creationell_captcha_normalize_ip()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Canonicalises an IPv4-mapped IPv6 address (`::ffff:a.b.c.d`) into its plain
+IPv4 spelling. Every other value — including anything that is not an IP at
+all — is handed back unchanged.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_get_client_ip">creationell_captcha_get_client_ip()</a>
@@ -534,6 +617,102 @@ since only the bundles enqueued by this plugin are registered).</p>
 than patching this constant.</p>
 </section>
 
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX">
+        CREATIONELL_CAPTCHA_PURPOSE_UA_CTX
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">363</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Purpose label of the under-attack code-challenge suppression token (`ctx`).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_PURPOSE_UA_CTX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;underattack-ctx&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS">
+        CREATIONELL_CAPTCHA_PURPOSE_UA_PASS
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">358</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Purpose label of the under-attack pass-cookie key.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_PURPOSE_UA_PASS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;underattack-pass&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_UA_CTX_TTL">
+        CREATIONELL_CAPTCHA_UA_CTX_TTL
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_UA_CTX_TTL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">371</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Lifetime (seconds) of a `ctx` suppression token. The interstitial widget
+fetches the challenge on load, i.e. within seconds of the 503 being
+rendered; two minutes is generous for that and replaces the ~10 minutes the
+old 5-minute-bucket pair accepted (BK-4).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_UA_CTX_TTL</span>
+    = <span class="phpdocumentor-signature__default-value">120</span>
+</code>
+
+
+    
     
     
 
@@ -909,6 +1088,479 @@ so callers that read settings after an update see the fresh value.</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_derive_hmac_key">
+        creationell_captcha_derive_hmac_key()
+        <a href="namespaces/default.html#function_creationell_captcha_derive_hmac_key" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">392</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Derives a purpose-bound HMAC key from the plugin&#039;s base signature secret.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_derive_hmac_key</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$purpose</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Wurzel 3.5: the challenge signature, the under-attack pass cookie and the
+<code class="prettyprint">ctx</code> suppression token were all MACs under the SAME key. Cross-purpose use
+was only prevented by the differing message layout — a fragile property that
+breaks silently as soon as one token family changes its format. HKDF-style
+expansion with a purpose label makes the separation structural: a MAC minted
+for one purpose verifies under no other key.</p>
+<p>The base secret stays exactly where it is (<code class="prettyprint">CREATIONELL_CAPTCHA_HMAC_SECRET</code>
+/ the stored option) — the derivation sits in front of it, so the ALTCHA
+library keeps signing challenges with the unchanged base key.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$purpose</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Stable purpose label, e.g. <code class="prettyprint">underattack-pass</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_derive_hmac_key#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>64-char hex key, or '' when no base secret is available
+(callers must fail closed on '').</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_client_ua">
+        creationell_captcha_client_ua()
+        <a href="namespaces/default.html#function_creationell_captcha_client_ua" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">407</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The request&#039;s User-Agent, capped at 256 bytes. MAC input for the
+under-attack tokens — never rendered, never stored.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_client_ua</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_client_ua#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_underattack_pass_binding">
+        creationell_captcha_underattack_pass_binding()
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">442</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The fingerprint the under-attack pass cookie is bound to (BK-3).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_underattack_pass_binding</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Two components, neither of which travels inside the cookie. Only one of them
+is load-bearing, and it is worth naming which: the NETWORK is what a
+recipient cannot bring along, because it is where his packets come from. The
+User-Agent he can bring along — he sends it himself, and whoever passes the
+cookie on passes the UA string on with it. So the UA is a cheap extra, the
+network is the half that actually refuses a transferred cookie.</p>
+<ul>
+<li>the client NETWORK (IPv4 /24, IPv6 /48 — the same reduction the analytics
+anonymiser applies), resolved through <code class="prettyprint">creationell_captcha_get_client_ip()</code>
+so a forwarded header only counts behind a trusted proxy (BK-7/BK-8) and
+never straight off an attacker-set header;</li>
+<li>the User-Agent.</li>
+</ul>
+<p>Trade-off, deliberately made here and not at the two call sites: the
+User-Agent alone is weak (whoever passes the cookie on passes the UA string
+on with it), the full address breaks on every mobile hand-over. The network
+is the middle ground — it survives the address churn inside one access
+network (CGNAT pool, IPv6 privacy extensions) and still refuses a cookie
+that travelled to a different one. A false negative costs exactly one extra
+proof-of-work: the visitor sees the interstitial again, solves it and gets a
+cookie bound to the new network. No lock-out, no loop.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Binding string; '' disables the binding entirely.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_underattack_pass_issue">
+        creationell_captcha_underattack_pass_issue()
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">471</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Mints an under-attack pass token for the current visitor.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_underattack_pass_issue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$expiry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$expiry</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Absolute Unix timestamp the pass runs out at.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p><code class="prettyprint">&lt;expiry&gt;.&lt;mac&gt;</code> token, or '' when no key could be derived.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_underattack_pass_check">
+        creationell_captcha_underattack_pass_check()
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">495</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Verifies an under-attack pass token against the CURRENT visitor.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_underattack_pass_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cookie</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>BK-3: before 1.1.0 the MAC covered the expiry timestamp and nothing else, so
+one solved interstitial produced a bearer token that worked from any client,
+any address, for up to <code class="prettyprint">underattack_pass_duration</code> (86400 s). The MAC now
+covers the visitor binding as well, which is not part of the cookie value.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$cookie</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw cookie value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_check#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_underattack_ctx_issue">
+        creationell_captcha_underattack_ctx_issue()
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">591</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Mints a single-use `ctx` suppression token for one interstitial rendering.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_underattack_ctx_issue</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>BK-4/CM-4/W5: the old token was <code class="prettyprint">HMAC(secret, 'ua-ctx|' . floor(time()/300))</code>
+— identical for every visitor inside a five-minute bucket and accepted for
+the current AND the previous bucket, i.e. up to ten minutes. It was handed
+to every anonymous 503 visitor inside the HTML. Unforgeable, yes — but
+trivially <em>obtainable</em>, transferable and replayable.</p>
+<p>The replacement carries a random nonce (so every rendering gets its own
+token), an explicit expiry and a MAC over nonce, expiry and the visitor's
+User-Agent. It is burned on first use in <code class="prettyprint">…_ctx_check()</code>.</p>
+<p>What this closes, precisely — and what it does NOT:</p>
+<ul>
+<li>REPLAY is closed. The nonce is burned on first use, so one token buys at
+most one suppressed challenge (1.0.2: unlimited inside its bucket pair).</li>
+<li>The accepted WINDOW shrinks from ~10 minutes to 120 seconds.</li>
+<li>ACQUISITION stays open. One GET of a 503 page still yields one fresh
+token, i.e. one code-stage-free challenge. Closing that needs the issued
+challenge itself to be marked under-attack-only and checked on redemption
+inside <code class="prettyprint">Engine::verify()</code> — outside this file (R1 in the task report).</li>
+<li>HANDING A FRESH TOKEN ON stays open as well. The MAC covers the
+User-Agent, but the User-Agent is a value the RECIPIENT sends himself:
+whoever passes the token to a bot passes the UA string along with it. The
+binding costs an attacker one header, no more. It is kept because it is
+free and it does stop a token that leaked WITHOUT its UA (log excerpt,
+referrer, a URL shared out of band). It is not a transfer barrier, and no
+comment on this token may claim that it is — W5 was exactly that kind of
+claim, made about exactly this token.</li>
+</ul>
+<p>WHAT SINGLE USE COSTS (m7): the token is spent by the FIRST challenge fetch
+of the interstitial that carried it. If the very same 503 HTML reaches a
+browser a second time — restored from the back/forward cache, or replayed by
+a full-page cache or CDN that ignores the response headers — the widget
+fetches again with a token that is already burned. <code class="prettyprint">/challenge</code> then answers
+without the suppression, and with <code class="prettyprint">code_challenge_enabled</code> on that means the
+INVISIBLE interstitial widget receives an image code it cannot display: that
+visitor never passes the gate at all. The interstitial itself asks not to be
+stored (<code class="prettyprint">nocache_headers()</code> sends <code class="prettyprint">no-store, private</code>, measured against the
+WordPress 7.0.2 of the test instance), so this needs a cache that disregards
+that — but such caches exist, and &quot;under attack&quot; is exactly when an operator
+puts one in front of the site. Making that visible is a <code class="prettyprint">doctor</code> job
+(&quot;under-attack mode on and a full-page cache detected&quot;); it cannot be fixed
+from the token side without giving up the single use that closed BK-4.</p>
+<p>Why no client-network binding here, unlike the pass cookie: it would not
+reduce what an attacker can do — every bot can fetch its own 503 page, so
+handing a token around buys nothing over simply acquiring one — while a
+false negative here is a dead end instead of a retry. A rejected pass cookie
+costs one extra proof-of-work; a rejected <code class="prettyprint">ctx</code> gets the interstitial's
+invisible widget an image code it cannot display, and that visitor never
+passes the gate at all. On top of that the address is not even constant
+across the two requests of ONE visitor: the XHR that fetches the challenge
+can leave through a different address than the page view that carried the
+token (dual-stack clients pick the family per connection, egress pools
+rotate well beyond a /24).</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p><code class="prettyprint">&lt;nonce&gt;.&lt;expiry&gt;.&lt;mac&gt;</code>, or '' when no key could be derived.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_underattack_ctx_check">
+        creationell_captcha_underattack_ctx_check()
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">616</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Verifies a `ctx` suppression token and consumes it.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_underattack_ctx_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$token</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Returns true at most ONCE per token: the nonce is recorded for the rest of
+the token's lifetime, every later presentation of the same token fails.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$token</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw <code class="prettyprint">ctx</code> query value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_engine">
         creationell_captcha_engine()
         <a href="namespaces/default.html#function_creationell_captcha_engine" class="headerlink"><i class="fas fa-link"></i></a>
@@ -917,7 +1569,7 @@ so callers that read settings after an update see the fresh value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">672</span>
 
     </aside>
 
@@ -947,7 +1599,7 @@ so callers that read settings after an update see the fresh value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">373</span>
+    <span class="phpdocumentor-element-found-in__line">705</span>
 
     </aside>
 
@@ -958,7 +1610,24 @@ so callers that read settings after an update see the fresh value.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>W1-13: Steuerzeichen werden entfernt, BEVOR die Zeile geschrieben wird —
+dieselbe Reduktion, die <code class="prettyprint">Analytics::current_path()</code> für die Log-Tabelle
+vornimmt. Mehrere Meldungen tragen vom Absender bestimmte Bestandteile in
+die Zeile, allen voran der Interceptor („interceptor blocked POST to &quot; plus
+dem EINMAL dekodierten Pfad, class-interceptor.php): ein anonymer
+<code class="prettyprint">POST /kontakt%0A</code> auf einen per <code class="prettyprint">/kontakt*</code> geschützten Pfad wird von
+WordPress geroutet (<code class="prettyprint">WP::parse_request()</code> trimmt, und die Rewrite-Regel
+<code class="prettyprint">^kontakt/?$</code> trifft dank <code class="prettyprint">$</code> vor dem Zeilenumbruch), der Interceptor
+blockiert — und die Logzeile enthielt einen echten Zeilenumbruch. Damit
+bestimmte der Absender, wo eine Zeile im PHP-Fehlerlog endet, und konnte
+eine zweite, frei gewählte anhängen.</p>
+<p>Bewusst hier und nicht an der einen Aufrufstelle: dies ist die Senke, durch
+die JEDE Meldung des Plugins geht, und keine von ihnen enthält eine
+beabsichtigte mehrzeilige Ausgabe (nachgezählt über alle Aufrufer). Eine
+Reparatur je Aufrufstelle wäre dieselbe Zeile mehrfach — und die nächste
+neue Meldung hätte sie wieder nicht.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -977,6 +1646,90 @@ so callers that read settings after an update see the fresh value.</p>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_normalize_ip">
+        creationell_captcha_normalize_ip()
+        <a href="namespaces/default.html#function_creationell_captcha_normalize_ip" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">743</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Canonicalises an IPv4-mapped IPv6 address (`::ffff:a.b.c.d`) into its plain
+IPv4 spelling. Every other value — including anything that is not an IP at
+all — is handed back unchanged.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_normalize_ip</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><h2>WHY (audit module 27, finding I2)</h2>
+<p>On every server whose PHP sees the peer address in IPv4-mapped notation
+(nginx <code class="prettyprint">listen [::]:443 ipv6only=off</code>, Apache on an IPv6 socket, plenty of
+container and proxy setups) <code class="prettyprint">REMOTE_ADDR</code> reads <code class="prettyprint">::ffff:203.0.113.7</code> for an
+ordinary IPv4 client. That string passes <code class="prettyprint">FILTER_VALIDATE_IP</code> — it is a
+perfectly valid IPv6 address — so nothing ever complained, but:</p>
+<ul>
+<li><code class="prettyprint">ip_in_cidr()</code> refuses a family change (4 vs. 16 bytes, correctly so),
+and <code class="prettyprint">ip_in_list()</code> otherwise compares plain strings;</li>
+<li>so <code class="prettyprint">firewall_ip_block</code>, <code class="prettyprint">firewall_ip_allow</code>, <code class="prettyprint">firewall_trusted_proxies</code>
+and <code class="prettyprint">code_challenge_watchlist</code> matched NOTHING for those clients — the
+IP firewall was silently inert, and the admin who allow-listed his own
+address locked himself out anyway;</li>
+<li><code class="prettyprint">anonymize_ip()</code> reduced all of them to <code class="prettyprint">::</code>, which took the network
+half out of the BK-3 under-attack pass binding and left a pure bearer
+token behind.</li>
+</ul>
+<p>The check runs on the binary form rather than on the string, so the rarer
+spellings (<code class="prettyprint">::FFFF:cb00:7107</code>, <code class="prettyprint">0:0:0:0:0:ffff:203.0.113.7</code>) are caught as
+well. <code class="prettyprint">::</code> and <code class="prettyprint">::ffff:0:0:0</code> are NOT mapped addresses and stay untouched.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$ip</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Candidate address.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_normalize_ip#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Plain IPv4 spelling for mapped addresses, else the input.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_get_client_ip">
         creationell_captcha_get_client_ip()
         <a href="namespaces/default.html#function_creationell_captcha_get_client_ip" class="headerlink"><i class="fas fa-link"></i></a>
@@ -985,7 +1738,7 @@ so callers that read settings after an update see the fresh value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">795</span>
 
     </aside>
 
@@ -999,6 +1752,29 @@ so callers that read settings after an update see the fresh value.</p>
         <section class="phpdocumentor-description"><p>Returns the validated REMOTE_ADDR by default. When the <code class="prettyprint">firewall_behind_proxy</code>
 setting is on, the configured forwarded header is used instead — falling back
 to REMOTE_ADDR if it yields no valid IP.</p>
+<p>This is the single ingress for client addresses: every list check, the
+rate-limit bucket key, the pass binding and the event log take their value
+from here. Canonicalising IPv4-mapped addresses therefore happens HERE and
+not at each of those places (I2).</p>
+<p>WHAT THE FALLBACK COSTS (m3 / W2-3) — say it here, because it is not obvious
+at the call sites: every <code class="prettyprint">return $remote</code> below hands the PROXY's address to
+everything downstream. That is the safe direction (BK-8: an entry we cannot
+classify must never let a forged one to its left win), but it is not a free
+one. If a fallback fires on EVERY request — an upstream that appends
+<code class="prettyprint">unknown</code> or an obfuscated identifier per RFC 7239, an Azure-style
+<code class="prettyprint">ip:port</code> hop, a <code class="prettyprint">firewall_proxy_header</code> naming a header this installation
+does not actually receive — then all visitors share one address:</p>
+<ul>
+<li>the rate limiter counts the whole site into one bucket and locks everyone
+out at the threshold;</li>
+<li><code class="prettyprint">firewall_ip_block</code> and <code class="prettyprint">code_challenge_watchlist</code> hit all or nothing;</li>
+<li>and if the proxy address happens to sit in <code class="prettyprint">firewall_ip_allow</code>, every
+visitor is bypassed.</li>
+</ul>
+<p>Each fallback therefore names itself through <code class="prettyprint">creationell_captcha_log()</code>.
+That is only visible with <code class="prettyprint">CREATIONELL_CAPTCHA_DEBUG</code>; making it visible
+without the debug switch belongs to the settings help text and to
+<code class="prettyprint">wp creacaptcha doctor</code>, not here.</p>
 </section>
 
     
@@ -1019,7 +1795,7 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">457</span>
+    <span class="phpdocumentor-element-found-in__line">919</span>
 
     </aside>
 
@@ -1030,7 +1806,18 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_ip_in_list</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$list</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>This is the choke point all four address lists run through — blocklist,
+allowlist, trusted proxies and the code-challenge watchlist — which is why
+the IPv4-mapped canonicalisation is applied here and not four times over.</p>
+<p>Admin-typed entries are canonicalised as well, so an installation that spelled
+an entry <code class="prettyprint">::ffff:203.0.113.7</code> (the only spelling that worked on an affected
+server before this release) keeps matching. CIDR entries are deliberately NOT
+rewritten: a mapped range like <code class="prettyprint">::ffff:0:0/96</code> would widen to &quot;every IPv4
+address&quot;, and silently widening a TRUSTED-PROXY range is the one direction
+this plugin must never take (LK-13/AF-5). A CIDR written in mapped notation
+therefore stops matching — see the note on ip_in_cidr().</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1070,7 +1857,7 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">485</span>
+    <span class="phpdocumentor-element-found-in__line">962</span>
 
     </aside>
 
@@ -1081,7 +1868,13 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_ip_in_cidr</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cidr</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>The subject is canonicalised (I2); the RANGE is taken as written. A range
+spelled in IPv4-mapped notation (<code class="prettyprint">::ffff:203.0.113.0/120</code>) consequently no
+longer matches an IPv4 client — deliberately, because converting it would
+mean rewriting prefix lengths, and a wrong prefix in a trusted-proxy list is
+the failure mode this plugin has already had to close twice.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1121,7 +1914,7 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">529</span>
+    <span class="phpdocumentor-element-found-in__line">1016</span>
 
     </aside>
 
@@ -1132,7 +1925,16 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_is_valid_ip_or_cidr</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>Prefix length 0 (<code class="prettyprint">0.0.0.0/0</code>, <code class="prettyprint">::/0</code>) is refused: it is valid CIDR notation
+but matches every address, so as a firewall-allow, trusted-proxy or
+blocklist entry it silently disables the very list it is in (AF-5). An admin
+who really wants to cover the whole address space can still spell it out as
+two halves (<code class="prettyprint">0.0.0.0/1</code> + <code class="prettyprint">128.0.0.0/1</code>) and thereby say so on purpose.</p>
+<p>This is an input guard only — it decides what may be STORED. Values already
+in the database keep working; reporting on those is the fail-safe migration's
+job, not this function's.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1163,7 +1965,7 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">561</span>
+    <span class="phpdocumentor-element-found-in__line">1085</span>
 
     </aside>
 
@@ -1172,10 +1974,40 @@ to REMOTE_ADDR if it yields no valid IP.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_wildcard_match</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subject</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$patterns</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wildcard_match</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subject</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$patterns</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$empty_subject_matches</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$allow_catch_all</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
         <section class="phpdocumentor-description"><p>The pattern alphabet is the same as the firewall UA-blocklist: <code class="prettyprint">*</code> is the
 single wildcard, everything else is matched literally.</p>
+<p>The two edge cases used to be decided implicitly, and the decision was wrong
+for one of the two call sites (BK-9). Both are now the caller's to make:</p>
+<ul>
+<li><code class="prettyprint">$empty_subject_matches</code> — a missing header is not &quot;the empty string&quot;, it
+is no information at all. For a blocklist &quot;no match&quot; is the safe answer,
+for an allowlist it is too, but the two reach it for opposite reasons, so
+neither may inherit it silently.</li>
+<li><code class="prettyprint">$allow_catch_all</code> — a pattern of nothing but <code class="prettyprint">*</code> matches every non-empty
+subject. Harmless in a blocklist, a total shutdown of the protection in
+an allowlist. Pass false there and such a pattern is skipped.</li>
+</ul>
+<h2>WHERE <code class="prettyprint">$allow_catch_all</code> STOPS — READ THIS BEFORE TRUSTING IT</h2>
+<p>The guard is SYNTACTIC and nothing else: it drops a pattern when
+<code class="prettyprint">trim( $pattern, '*' )</code> leaves nothing behind, i.e. <code class="prettyprint">*</code>, <code class="prettyprint">**</code>, <code class="prettyprint">***</code>. It does
+NOT drop a pattern that merely happens to match everything in practice.
+Measured against the production path: star-slash-star (written out because the
+literal form would close this comment block) passes this guard and matches
+every realistic User-Agent — every one of them carries a slash. Same for
+star-dot-star. <code class="prettyprint">false</code> here therefore means &quot;no bare star&quot;, not &quot;no
+catch-all&quot;.</p>
+<p>That boundary is deliberate. &quot;Matches every real subject&quot; is not a decidable
+property of a pattern; the nearest thing to it is the five-probe criterion in
+<code class="prettyprint">creationell_captcha_hardening_matches_every_user_agent()</code>, and a heuristic
+has no business deciding a single request — least of all one that would run
+on every request, for every stored pattern. Applying it here would also
+silently reinterpret patterns an operator has already stored. Reporting such
+an entry is the fail-safe migration's job
+(<code class="prettyprint">includes/hardening-migration.php</code>, section 3, finding class <code class="prettyprint">jeder-ua</code>,
+<code class="prettyprint">wirkung: aktiv</code>): it names the entry and leaves the decision with the
+operator. <code class="prettyprint">tests/test-bypass-roots.php</code> section 4a pins both halves.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1198,6 +2030,26 @@ single wildcard, everything else is matched literally.</p>
 </section>
 
             </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$empty_subject_matches</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>What an empty subject means for this call
+site. Default false (previous behaviour).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$allow_catch_all</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">true</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether a bare <code class="prettyprint">*</code> pattern is honoured.
+Default true (previous behaviour).</p>
+</section>
+
+            </dd>
             </dl>
 
     
@@ -1217,7 +2069,7 @@ single wildcard, everything else is matched literally.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">584</span>
+    <span class="phpdocumentor-element-found-in__line">1123</span>
 
     </aside>
 
@@ -1248,7 +2100,7 @@ single wildcard, everything else is matched literally.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">602</span>
+    <span class="phpdocumentor-element-found-in__line">1141</span>
 
     </aside>
 
@@ -1280,7 +2132,7 @@ scalar; invalid entries are dropped.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">637</span>
+    <span class="phpdocumentor-element-found-in__line">1176</span>
 
     </aside>
 
@@ -1330,7 +2182,7 @@ scalar; invalid entries are dropped.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">683</span>
+    <span class="phpdocumentor-element-found-in__line">1222</span>
 
     </aside>
 
@@ -1399,7 +2251,7 @@ is responsible for providing the values.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">743</span>
+    <span class="phpdocumentor-element-found-in__line">1299</span>
 
     </aside>
 
@@ -1435,7 +2287,7 @@ within a single PHP request. Only <code class="prettyprint">reason</code> flows 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">774</span>
+    <span class="phpdocumentor-element-found-in__line">1330</span>
 
     </aside>
 
@@ -1485,7 +2337,7 @@ patterns of only <code class="prettyprint">!</code> are rejected.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">795</span>
+    <span class="phpdocumentor-element-found-in__line">1353</span>
 
     </aside>
 
@@ -1496,9 +2348,11 @@ patterns of only <code class="prettyprint">!</code> are rejected.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_validate_cookie_entry</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
-        <section class="phpdocumentor-description"><p>Name must be alphanumeric, <code class="prettyprint">_</code> or <code class="prettyprint">-</code>. Value may be empty and is
-length-capped to 200 bytes. The returned entry has the value passed
-through <code class="prettyprint">sanitize_text_field()</code>.</p>
+        <section class="phpdocumentor-description"><p>Name must be alphanumeric, <code class="prettyprint">_</code> or <code class="prettyprint">-</code>. The value is length-capped to 200
+bytes and passed through <code class="prettyprint">sanitize_text_field()</code>; an entry whose value is
+empty — before or after sanitising — is refused (BK-14): <code class="prettyprint">hash_equals('','')</code>
+is true, so such an entry would let anybody past who sends the bare cookie
+name. A bypass cookie is a shared secret; a secret of zero length is none.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1535,7 +2389,7 @@ through <code class="prettyprint">sanitize_text_field()</code>.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">820</span>
+    <span class="phpdocumentor-element-found-in__line">1388</span>
 
     </aside>
 
@@ -1547,7 +2401,13 @@ IPv6 → last 80 bits zeroed. Invalid IPs return &#039;&#039;.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_anonymize_ip</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>I2: an IPv4-mapped address is canonicalised first. Without that every such
+client reduced to <code class="prettyprint">::</code> — one value for the whole IPv4 internet, which made
+the event log useless AND emptied the network half of the under-attack pass
+binding (BK-3). Callers normally pass <code class="prettyprint">creationell_captcha_get_client_ip()</code>,
+which canonicalises already; this repeats it for the direct callers.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1578,7 +2438,7 @@ IPv6 → last 80 bits zeroed. Invalid IPs return &#039;&#039;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">855</span>
+    <span class="phpdocumentor-element-found-in__line">1425</span>
 
     </aside>
 
@@ -1615,7 +2475,7 @@ to &quot;}&quot; rather than truncated mid-entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">913</span>
+    <span class="phpdocumentor-element-found-in__line">1483</span>
 
     </aside>
 
@@ -1671,7 +2531,7 @@ to &quot;}&quot; rather than truncated mid-entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">946</span>
+    <span class="phpdocumentor-element-found-in__line">1516</span>
 
     </aside>
 
@@ -1714,7 +2574,7 @@ replaces +/ with -_ so the value is URL-safe.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">956</span>
+    <span class="phpdocumentor-element-found-in__line">1526</span>
 
     </aside>
 
@@ -1757,7 +2617,7 @@ bytes. Returns the empty string on malformed input (no exceptions).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/helpers.php"><a href="files/includes-helpers.html"><abbr title="includes/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">971</span>
+    <span class="phpdocumentor-element-found-in__line">1541</span>
 
     </aside>
 
@@ -1910,6 +2770,9 @@ for the current window.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_LOCALE_MAP">CREATIONELL_CAPTCHA_LOCALE_MAP</a></li>
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX">CREATIONELL_CAPTCHA_PURPOSE_UA_CTX</a></li>
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS">CREATIONELL_CAPTCHA_PURPOSE_UA_PASS</a></li>
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_UA_CTX_TTL">CREATIONELL_CAPTCHA_UA_CTX_TTL</a></li>
                                             </ul>
                 </li>
             
@@ -1920,6 +2783,8 @@ for the current window.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_base64url_decode">creationell_captcha_base64url_decode()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_base64url_encode">creationell_captcha_base64url_encode()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_block_response">creationell_captcha_block_response()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_client_ua">creationell_captcha_client_ua()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_derive_hmac_key">creationell_captcha_derive_hmac_key()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_engine">creationell_captcha_engine()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_evaluate_bypass">creationell_captcha_evaluate_bypass()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_generate_secrets">creationell_captcha_generate_secrets()</a></li>
@@ -1936,6 +2801,7 @@ for the current window.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_is_trusted_proxy">creationell_captcha_is_trusted_proxy()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_is_valid_ip_or_cidr">creationell_captcha_is_valid_ip_or_cidr()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_log">creationell_captcha_log()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_normalize_ip">creationell_captcha_normalize_ip()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_private_ranges">creationell_captcha_private_ranges()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_ratelimit_current_count">creationell_captcha_ratelimit_current_count()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_request_body_fingerprint">creationell_captcha_request_body_fingerprint()</a></li>
@@ -1943,6 +2809,11 @@ for the current window.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_resolve_widget_locale">creationell_captcha_resolve_widget_locale()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_sodium_available">creationell_captcha_sodium_available()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_trusted_proxies_constant">creationell_captcha_trusted_proxies_constant()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check">creationell_captcha_underattack_ctx_check()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue">creationell_captcha_underattack_ctx_issue()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding">creationell_captcha_underattack_pass_binding()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_underattack_pass_check">creationell_captcha_underattack_pass_check()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue">creationell_captcha_underattack_pass_issue()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_validate_action_pattern">creationell_captcha_validate_action_pattern()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_validate_cookie_entry">creationell_captcha_validate_cookie_entry()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wildcard_match">creationell_captcha_wildcard_match()</a></li>

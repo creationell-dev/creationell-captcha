@@ -109,7 +109,11 @@
             <p class="phpdocumentor-summary">Uninstall routine for CreaCaptcha.</p>
 
         
-        
+            <section class="phpdocumentor-description"><p>Runs without the plugin loaded, so every name it touches is repeated here
+rather than taken from a constant — with the single exception of the
+replay-marker prefix, whose class file is pulled in below.</p>
+</section>
+
         
 
 
@@ -130,11 +134,106 @@
 
 
 
+<h4 id="toc-functions">
+    Functions
+    <a href="files/uninstall.html#toc-functions" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_uninstall_site">creationell_captcha_uninstall_site()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Removes every trace of the plugin from the site that is currently switched
+to: options, replay markers, transients, cron slots and the event-log table.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_uninstall_user_meta">creationell_captcha_uninstall_user_meta()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Removes the plugin&#039;s per-user data.</dd>
+
+    </dl>
 
 
         
 
-        
+            <section class="phpdocumentor-functions">
+        <h3 class="phpdocumentor-elements__header" id="functions">
+            Functions
+            <a href="files/uninstall.html#functions" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_uninstall_site">
+        creationell_captcha_uninstall_site()
+        <a href="namespaces/default.html#function_creationell_captcha_uninstall_site" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="uninstall.php"><a href="files/uninstall.html">uninstall.php</a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">38</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Removes every trace of the plugin from the site that is currently switched
+to: options, replay markers, transients, cron slots and the event-log table.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_uninstall_site</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Reads <code class="prettyprint">$wpdb</code> freshly on each call because <code class="prettyprint">switch_to_blog()</code> repoints
+<code class="prettyprint">$wpdb-&gt;prefix</code> and <code class="prettyprint">$wpdb-&gt;options</code> at the other site's tables.</p>
+</section>
+
+    
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_uninstall_user_meta">
+        creationell_captcha_uninstall_user_meta()
+        <a href="namespaces/default.html#function_creationell_captcha_uninstall_user_meta" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="uninstall.php"><a href="files/uninstall.html">uninstall.php</a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">113</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Removes the plugin&#039;s per-user data.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_uninstall_user_meta</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>B-M4: the hardening notice introduced in this release remembers per
+administrator that it was dismissed. Without this, one <code class="prettyprint">wp_usermeta</code> row per
+administrator who ever clicked the notice away survives the uninstall — and
+the routine above promises to remove &quot;every trace&quot;.</p>
+<p>Deliberately NOT part of creationell_captcha_uninstall_site(): <code class="prettyprint">wp_usermeta</code>
+is a network-global table that <code class="prettyprint">switch_to_blog()</code> does not repoint, so this
+runs exactly once for the whole installation. <code class="prettyprint">delete_metadata()</code> with
+<code class="prettyprint">$delete_all = true</code> ignores the object id and removes the key for every user
+in a single statement.</p>
+</section>
+
+    
+    
+
+    
+</article>
+            </section>
+
         <div class="phpdocumentor-modal" id="source-view">
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
@@ -240,10 +339,18 @@
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                                                                                                                </ul>
+                                                                                                                                                                                        <li><a href="files/uninstall.html#toc-functions">Functions</a></li>
+                                    </ul>
             </li>
 
             
+                            <li class="phpdocumentor-on-this-page-section__title">Functions</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_uninstall_site">creationell_captcha_uninstall_site()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_uninstall_user_meta">creationell_captcha_uninstall_user_meta()</a></li>
+                                            </ul>
+                </li>
                     </ul>
     </section>
 

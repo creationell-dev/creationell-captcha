@@ -155,6 +155,21 @@ full-page output buffer (module 8).</dd>
 front-end requests it enqueues the decoder script and starts an output
 buffer whose callback obfuscates the page body at flush time.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_email_buffer_filter">creationell_captcha_email_buffer_filter()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>The buffer callback itself: decides whether this response gets rewritten and
+hands it to the obfuscator when it does.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_response_is_html">creationell_captcha_response_is_html()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the response being buffered is (still) an HTML document.</dd>
+
     </dl>
 
 
@@ -204,7 +219,7 @@ full-page output buffer (module 8).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/email-obfuscation.php"><a href="files/includes-email-obfuscation.html"><abbr title="includes/email-obfuscation.php">email-obfuscation.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
     </aside>
 
@@ -217,7 +232,24 @@ buffer whose callback obfuscates the page body at flush time.</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_register_email_buffer</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/Creationell-Captcha-EmailObfuscator.html"><abbr title="\Creationell\Captcha\EmailObfuscator">EmailObfuscator</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$obfuscator</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>Der Callback fasst den Puffer nur an, wenn die Antwort HTML ist (EO-5) und
+eine Größengrenze nicht überschreitet (EO-4). Beides schützt fremde
+Antworten davor, umgeschrieben zu werden, und verhindert, dass der
+Obfuskator für eine sehr große Antwort eine zweite Kopie im Speicher
+aufbaut. Was beides NICHT verhindert: dass PHPs Ausgabepuffer die Antwort
+überhaupt zwischenspeichert. Ein Handler, der eine große Datei per
+<code class="prettyprint">readfile()</code> ausgibt, ohne die offenen Puffer vorher zu leeren, hält sie so
+oder so komplett im Speicher — das ist eine Eigenschaft von <code class="prettyprint">ob_start()</code>
+und trifft jeden Puffer auf der Seite, nicht nur diesen.</p>
+<p>Kein <code class="prettyprint">creationell_captcha_request_bypassed()</code> (EO-10, bewusst): Die
+Obfuskation ist kein Zugangs-Gate, sondern eine Darstellungsänderung — sie
+lässt niemanden durch und hält niemanden auf. Der Content-Filter-Modus
+fragt den Bypass ebenso wenig ab; ihn nur hier zu verdrahten, hieße, aus
+einer Einstellung zwei Verhaltensweisen zu machen, je nach gewähltem Modus.
+Funktionaler Schaden entsteht nicht: der Decoder stellt die Adresse
+clientseitig wieder her.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -234,6 +266,109 @@ buffer whose callback obfuscates the page body at flush time.</p>
     
 
     
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_email_buffer_filter">
+        creationell_captcha_email_buffer_filter()
+        <a href="namespaces/default.html#function_creationell_captcha_email_buffer_filter" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/email-obfuscation.php"><a href="files/includes-email-obfuscation.html"><abbr title="includes/email-obfuscation.php">email-obfuscation.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">114</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The buffer callback itself: decides whether this response gets rewritten and
+hands it to the obfuscator when it does.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_email_buffer_filter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$html</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/Creationell-Captcha-EmailObfuscator.html"><abbr title="\Creationell\Captcha\EmailObfuscator">EmailObfuscator</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$obfuscator</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Bewusst eine eigene benannte Funktion statt einer Closure im <code class="prettyprint">ob_start()</code>:
+Die beiden Weichen (EO-5 Content-Type, EO-4 Größengrenze) sind der Fix, und
+ein Test muss sie direkt aufrufen können. In der Closure waren sie nur über
+einen echten Request erreichbar — der einzige „Nachweis&quot;, der dann noch
+möglich war, prüfte den Default-Wert gegen sich selbst und wäre auch ohne die
+Weiche grün geblieben.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$html</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Der gepufferte Antwort-Body.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$obfuscator</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/Creationell-Captcha-EmailObfuscator.html"><abbr title="\Creationell\Captcha\EmailObfuscator">EmailObfuscator</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The obfuscator.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Umgeschriebener oder unveränderter Body.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_response_is_html">
+        creationell_captcha_response_is_html()
+        <a href="namespaces/default.html#function_creationell_captcha_response_is_html" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/email-obfuscation.php"><a href="files/includes-email-obfuscation.html"><abbr title="includes/email-obfuscation.php">email-obfuscation.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">173</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the response being buffered is (still) an HTML document.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_response_is_html</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>EO-5: <code class="prettyprint">process_page()</code> prüfte nie den Content-Type. Eine Nicht-HTML-Antwort,
+die zufällig <code class="prettyprint">&lt;body…&gt;</code>, <code class="prettyprint">&lt;/body&gt;</code> und ein „@&quot; enthielt — etwa ein von einem
+Mu-Plugin auf <code class="prettyprint">template_redirect</code> ausgegebenes JSON mit HTML-Fragment —,
+wurde umgeschrieben und war danach kaputt.</p>
+<p>Ein fehlender Content-Type gilt als HTML: <code class="prettyprint">template_redirect</code> ist der
+Template-Pfad von WordPress, dessen Antwort per Definition das Theme rendert,
+und PHPs <code class="prettyprint">default_mimetype</code> ist <code class="prettyprint">text/html</code>. Die Prüfung entscheidet
+ausschließlich darüber, OB umgeschrieben wird — sie ist keine
+Sicherheitskontrolle, und ein „nein&quot; ist immer die harmlosere Antwort.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -350,8 +485,10 @@ buffer whose callback obfuscates the page body at flush time.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Functions</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_email_buffer_filter">creationell_captcha_email_buffer_filter()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_email_buffer">creationell_captcha_register_email_buffer()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_email_obfuscation">creationell_captcha_register_email_obfuscation()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_response_is_html">creationell_captcha_response_is_html()</a></li>
                                             </ul>
                 </li>
                     </ul>

@@ -123,6 +123,33 @@ file as a downstream copy of that shared codebase.</p>
 plugin-information popup; fix pending upstream port)</li>
 <li>no_update entries include <code class="prettyprint">new_version</code>/<code class="prettyprint">package</code>/<code class="prettyprint">tested</code>/<code class="prettyprint">requires_php</code>
 (WP-CLI reads new_version in <code class="prettyprint">wp plugin list</code>; fix pending upstream port)</li>
+<li>Security audit Modul 27 (all worth porting upstream, LK-1 … LK-7):
+the verified download is handed to the installer instead of being thrown
+away and fetched a second time; a missing/malformed checksum aborts the
+update instead of skipping the gate; package URLs must be https; the
+package is matched to this plugin by identity, not by a slug substring;
+failed manifest fetches are negatively cached; the manifest is size- and
+schema-checked before it is cached AND again after it is read back from
+the cache (W3-14: the transient outlives the plugin update that
+introduced the check); contributor URLs are validated.
+<code class="prettyprint">sprintf()</code> calls no longer pass <code class="prettyprint">values:</code> as a named argument (that is an
+ArgumentCountError at runtime, not a syntax error), and the manifest
+fields that reach a sanitiser which is <em>not</em> type-safe are bounded to a
+string first (<code class="prettyprint">manifest_string()</code>): <code class="prettyprint">array_map()</code> over a missing
+<code class="prettyprint">requires_plugins</code>, <code class="prettyprint">trim()</code> over non-string <code class="prettyprint">tags</code> entries, in
+<code class="prettyprint">plugin_info()</code> additionally sections / readme_html / slug / author /
+author_profile / homepage / license_uri, and in <code class="prettyprint">check_update()</code> the icon
+URL of both the update and the no_update entry. The remaining
+manifest-fed calls are covered by one of three mechanisms: the sanitiser
+itself (<code class="prettyprint">sanitize_text_field()</code>, <code class="prettyprint">wp_http_validate_url()</code>,
+<code class="prettyprint">sanitize_key()</code> all return ''/false for array and object), an
+<code class="prettyprint">is_string()</code> test at the call site, or <code class="prettyprint">validate_manifest()</code>, which
+rejects the whole manifest when <code class="prettyprint">version</code>, <code class="prettyprint">download_url</code> or
+<code class="prettyprint">checksum_sha256</code> is not a usable string — that third one is what covers
+<code class="prettyprint">version_compare( $remote-&gt;version )</code> in <code class="prettyprint">check_update()</code>, whose first
+parameter is string-typed (W3-13; the list used to name only the first
+two). Audited call by call on 2026-07-30; re-audit after every upstream
+merge.</li>
 </ul>
 <p>Both renames are necessary to avoid <code class="prettyprint">Cannot redeclare class</code> fatals
 when more than one of Jean Pierre's plugins (each carrying its own
@@ -138,14 +165,17 @@ comprehensive security features including:</p>
 <li>URL validation and sanitization of all remote data</li>
 <li>Race condition prevention for manifest fetching</li>
 <li>Comprehensive error logging in WP_DEBUG mode</li>
-<li>Transient caching with 24-hour TTL</li>
-<li>Backward compatibility with manifests without checksums</li>
+<li>Transient caching with 24-hour TTL, negative caching of failed fetches</li>
 </ul>
 <p>Security Features:</p>
 <ul>
-<li>All URLs are validated using wp_http_validate_url() before use</li>
+<li>All URLs are validated using wp_http_validate_url() before use; the
+package URL must additionally be https</li>
 <li>All manifest data is sanitized before display</li>
-<li>Download packages are verified against SHA256 checksum from manifest</li>
+<li>The bytes that were hashed are the bytes that get installed: the verified
+temp file is returned to WP_Upgrader::download_package() instead of being
+discarded</li>
+<li>A missing or malformed checksum aborts the update (fail closed)</li>
 <li>Failed verifications prevent installation and log errors</li>
 </ul>
 <p>Namespace: Creationell\Captcha\GitUpdate (renamed from JPKComPostFilterGitUpdate)

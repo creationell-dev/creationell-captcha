@@ -165,6 +165,13 @@
 <dd>Handles the settings-import upload.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_collect_settings_error_messages">creationell_captcha_collect_settings_error_messages()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>Collects the plugin&#039;s queued settings-error messages, de-duplicated.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_handle_reset_settings">creationell_captcha_handle_reset_settings()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -345,6 +352,40 @@
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_collect_settings_error_messages">
+        creationell_captcha_collect_settings_error_messages()
+        <a href="namespaces/default.html#function_creationell_captcha_collect_settings_error_messages" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/tools-actions.php"><a href="files/includes-tools-actions.html"><abbr title="includes/tools-actions.php">tools-actions.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">146</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Collects the plugin&#039;s queued settings-error messages, de-duplicated.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_collect_settings_error_messages</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>Der Sanitizer läuft auf dem Importweg zweimal (einmal explizit, einmal über
+den <code class="prettyprint">sanitize_option</code>-Filter in <code class="prettyprint">update_option()</code>), meldet identische Funde
+also doppelt — deshalb <code class="prettyprint">array_unique</code>.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_handle_reset_settings">
         creationell_captcha_handle_reset_settings()
         <a href="namespaces/default.html#function_creationell_captcha_handle_reset_settings" class="headerlink"><i class="fas fa-link"></i></a>
@@ -353,7 +394,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/tools-actions.php"><a href="files/includes-tools-actions.html"><abbr title="includes/tools-actions.php">tools-actions.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
     </aside>
 
@@ -379,7 +420,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/tools-actions.php"><a href="files/includes-tools-actions.html"><abbr title="includes/tools-actions.php">tools-actions.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
     </aside>
 
@@ -405,7 +446,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/tools-actions.php"><a href="files/includes-tools-actions.html"><abbr title="includes/tools-actions.php">tools-actions.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
     </aside>
 
@@ -431,7 +472,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/tools-actions.php"><a href="files/includes-tools-actions.html"><abbr title="includes/tools-actions.php">tools-actions.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">181</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
     </aside>
 
@@ -563,6 +604,7 @@
                             <li class="phpdocumentor-on-this-page-section__title">Functions</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_collect_settings_error_messages">creationell_captcha_collect_settings_error_messages()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_handle_cloudflare_clear">creationell_captcha_handle_cloudflare_clear()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_handle_cloudflare_refresh">creationell_captcha_handle_cloudflare_refresh()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_handle_export_settings">creationell_captcha_handle_export_settings()</a></li>

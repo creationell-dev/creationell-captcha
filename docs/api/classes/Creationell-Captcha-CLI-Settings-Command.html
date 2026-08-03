@@ -154,6 +154,20 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#constant_BOOL_WORDS">BOOL_WORDS</a>
+    <span>
+        &nbsp;= [&#039;true&#039; =&gt; [&#039;1&#039;, &#039;true&#039;, &#039;yes&#039;, &#039;on&#039;], &#039;false&#039; =&gt; [&#039;0&#039;, &#039;false&#039;, &#039;no&#039;, &#039;off&#039;]]                            </span>
+</dt>
+<dd>The words `parse_bool()` accepts, per resulting value.</dd>
+
+    </dl>
 
 
 
@@ -163,6 +177,16 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_count_dropped_list_entries">count_dropped_list_entries()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Zählt, wie viele Listeneinträge zwischen zwei Settings-Ständen verschwunden
+sind — reine Zähllogik, öffentlich für den direkten Ebene-2-Test (dieselbe
+Begründung wie bei `sensitive_value_notice()` oben). Zählt nur VERLUSTE
+(ein Feld mit mehr Einträgen danach als vorher trägt 0 bei, nicht negativ).</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_export">export()</a>
     <span>
@@ -199,11 +223,26 @@
 <dd>Resets configuration values to default but keeps the lists.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool">parse_bool()</a>
+    <span>
+                                &nbsp;: bool|null    </span>
+</dt>
+<dd>Parses a boolean-ish CLI string; NULL for anything that is neither.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_reset">reset()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Resets every setting to its default — including emptying all lists.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_sensitive_value_notice">sensitive_value_notice()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
+<dd>Warnt vor Klartext-Geheimnissen, die eine Ausgabe gleich mitliefert —
+dieselben zwei Felder, die `export()` schon benennt (B-M22).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_set">set()</a>
@@ -213,11 +252,13 @@
 <dd>Sets one setting value.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool">parse_bool()</a>
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_report_reset_state">report_reset_state()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>Parses a boolean-ish CLI string.</dd>
+<dd>Prints the success line of `reset`/`load-defaults` together with the one
+consequence that is easy to overlook: the event log is back to its
+default (off).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_stringify">stringify()</a>
@@ -226,11 +267,57 @@
 </dt>
 <dd>Converts a setting value to a printable string.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_warn_if_inside_webroot">warn_if_inside_webroot()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Warns when the export target lies inside the WordPress installation
+directory and would therefore likely be reachable over HTTP.</dd>
+
     </dl>
 
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_BOOL_WORDS">
+        BOOL_WORDS
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#constant_BOOL_WORDS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">556</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The words `parse_bool()` accepts, per resulting value.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">array&lt;string, array&lt;int, string&gt;&gt;</span>
+    <span class="phpdocumentor-signature__name">BOOL_WORDS</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;true&#039; =&gt; [&#039;1&#039;, &#039;true&#039;, &#039;yes&#039;, &#039;on&#039;], &#039;false&#039; =&gt; [&#039;0&#039;, &#039;false&#039;, &#039;no&#039;, &#039;off&#039;]]</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+            </section>
 
         
 
@@ -240,6 +327,78 @@
             <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_count_dropped_list_entries">
+        count_dropped_list_entries()
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_count_dropped_list_entries" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">507</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Zählt, wie viele Listeneinträge zwischen zwei Settings-Ständen verschwunden
+sind — reine Zähllogik, öffentlich für den direkten Ebene-2-Test (dieselbe
+Begründung wie bei `sensitive_value_notice()` oben). Zählt nur VERLUSTE
+(ein Feld mit mehr Einträgen danach als vorher trägt 0 bei, nicht negativ).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">count_dropped_list_entries</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$before</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$after</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$list_keys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$before</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Settings vor dem Schreibvorgang.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$after</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Settings nach dem Schreibvorgang.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$list_keys</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Zu zählende Listen-Schlüssel.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
                     <article
         class="phpdocumentor-element
             -method
@@ -254,7 +413,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">242</span>
 
     </aside>
 
@@ -267,9 +426,16 @@
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><h2>OPTIONS</h2>
+        <section class="phpdocumentor-description"><p>Die Ausgabe enthält Klartext-Geheimnisse: <code class="prettyprint">bypass_cookies</code> sind
+<code class="prettyprint">name=wert</code>-Paare, mit denen jeder Client den kompletten Schutz umgeht,
+und <code class="prettyprint">firewall_ip_allow</code> beschreibt, wer ihn ohne Prüfung passiert. Nur
+die HMAC-Signaturschlüssel sind bewusst ausgenommen. Die Datei ist damit
+so schützenswert wie ein Passwort — <code class="prettyprint">--file</code> legt sie deshalb mit den
+Rechten 0600 an und weist auf einen Pfad im Web-Root hin (CLI-6).</p>
+<h2>OPTIONS</h2>
 <p>[--file=<path>]
-: Write to this file instead of STDOUT.</p>
+: Write to this file instead of STDOUT. Die Datei wird mit den Rechten
+0600 (nur der ausführende Benutzer) angelegt.</p>
 <h2>EXAMPLES</h2>
 <pre class="prettyprint"><code class="prettyprint">wp creacaptcha settings export --file=backup.json
 </code></pre>
@@ -317,7 +483,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
     </aside>
 
@@ -380,7 +546,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">218</span>
+    <span class="phpdocumentor-element-found-in__line">377</span>
 
     </aside>
 
@@ -524,7 +690,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">285</span>
+    <span class="phpdocumentor-element-found-in__line">467</span>
 
     </aside>
 
@@ -593,6 +759,68 @@
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_parse_bool">
+        parse_bool()
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">574</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Parses a boolean-ish CLI string; NULL for anything that is neither.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">parse_bool</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>CLI-4: Die Whitelist war einseitig — alles außer <code class="prettyprint">1/true/yes/on</code> wurde
+kommentarlos zu FALSE. <code class="prettyprint">settings set firewall_enabled y</code> schaltete damit
+die Firewall AB, obwohl der Aufrufer sie einschalten wollte. Ein Wort,
+das in keiner der beiden Listen steht, ist keine Angabe von <code class="prettyprint">false</code>,
+sondern ein Tippfehler — der Aufrufer bekommt jetzt NULL und darüber
+einen Fehler statt eines stillen Gegenteils.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>TRUE/FALSE bei bekanntem Wort, sonst NULL.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_reset">
@@ -603,7 +831,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">429</span>
 
     </aside>
 
@@ -656,6 +884,71 @@
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_sensitive_value_notice">
+        sensitive_value_notice()
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_sensitive_value_notice" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">112</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Warnt vor Klartext-Geheimnissen, die eine Ausgabe gleich mitliefert —
+dieselben zwei Felder, die `export()` schon benennt (B-M22).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">sensitive_value_notice</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Öffentlich, weil dies die Entscheidungs-Nahtstelle ist, die
+<code class="prettyprint">tests/test-cli-output-accuracy.php</code> direkt prüfen muss (dasselbe Muster wie
+<code class="prettyprint">List_Command::normalise()</code>/<code class="prettyprint">reject_reason()</code>).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Settings-Schlüssel.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Zugehöriger Wert.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_set">
@@ -666,7 +959,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
     </aside>
 
@@ -683,7 +976,8 @@
 <key>
 : The setting key.
 <value>
-: The new value. Checkboxes accept true/false/1/0/yes/no/on/off.
+: The new value. Checkboxes accept true/false/1/0/yes/no/on/off — jedes
+  andere Wort ist ein Fehler (Exit 1), kein stilles „false".
 <h2>EXAMPLES</h2>
 <pre class="prettyprint"><code class="prettyprint">wp creacaptcha settings set difficulty high
 </code></pre>
@@ -723,23 +1017,25 @@
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_parse_bool">
-        parse_bool()
-        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_report_reset_state">
+        report_reset_state()
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_report_reset_state" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">312</span>
+    <span class="phpdocumentor-element-found-in__line">525</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Parses a boolean-ish CLI string.</p>
+        <p class="phpdocumentor-summary">Prints the success line of `reset`/`load-defaults` together with the one
+consequence that is easy to overlook: the event log is back to its
+default (off).</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">parse_bool</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">report_reset_state</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$headline</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -748,11 +1044,11 @@
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                <span class="phpdocumentor-argument-list__argument__name">$headline</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Raw value.</p>
+                    <section class="phpdocumentor-description"><p>Success message of the calling command.</p>
 </section>
 
             </dd>
@@ -762,11 +1058,7 @@
 
         
     
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -782,7 +1074,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">296</span>
+    <span class="phpdocumentor-element-found-in__line">540</span>
 
     </aside>
 
@@ -818,6 +1110,59 @@
         <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_warn_if_inside_webroot">
+        warn_if_inside_webroot()
+        <a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_warn_if_inside_webroot" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-settings-command.php"><a href="files/includes-cli-class-cli-settings-command.html"><abbr title="includes/cli/class-cli-settings-command.php">class-cli-settings-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">334</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Warns when the export target lies inside the WordPress installation
+directory and would therefore likely be reachable over HTTP.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">warn_if_inside_webroot</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Bewusst eine Warnung, kein Fehler: Ob ein Pfad wirklich ausgeliefert
+wird, hängt von der Webserver-Konfiguration ab, die hier niemand kennt.
+Die Prüfung behauptet nur, was sie sieht — dass der Pfad unterhalb von
+ABSPATH liegt.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$path</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Target path as given on the command line.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
 </article>
             </section>
 
@@ -926,23 +1271,34 @@
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#toc-constants">Constants</a></li>
                                                                                 <li><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#constant_BOOL_WORDS">BOOL_WORDS</a></li>
+                                            </ul>
+                </li>
             
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_count_dropped_list_entries">count_dropped_list_entries()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_export">export()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_get">get()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_import">import()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_list_settings">list_settings()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_load_defaults">load_defaults()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_reset">reset()</a></li>
-                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_set">set()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool">parse_bool()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_reset">reset()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_sensitive_value_notice">sensitive_value_notice()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_set">set()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_report_reset_state">report_reset_state()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_stringify">stringify()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Settings-Command.html#method_warn_if_inside_webroot">warn_if_inside_webroot()</a></li>
                                     </ul>
             </li>
                     </ul>

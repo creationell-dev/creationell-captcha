@@ -117,7 +117,38 @@ WordPress comment system and are already covered by <code class="prettyprint">pr
 through WordPress core's <code class="prettyprint">retrieve_password()</code>, which fires
 <code class="prettyprint">lostpassword_post</code>. Our existing core module
 (<code class="prettyprint">includes/forms/password-reset.php</code>) hooks that action — adding another
-verify here would just produce duplicate verification and duplicate events.</p>
+verify here would just produce duplicate verification and duplicate events.
+<code class="prettyprint">protect_wc_lost_password</code> (render) and <code class="prettyprint">protect_password_reset</code> (verify)
+are independent toggles — see IN-5 below for the resulting split states,
+surfaced via <code class="prettyprint">wp creacaptcha doctor</code>.</p>
+<p>Known, deliberately-scoped gaps (Modul 27 security audit, 2026-07-29):</p>
+<ul>
+<li>IN-2 (P0): the WooCommerce Block Checkout (Store API route) never calls
+<code class="prettyprint">process_checkout()</code>, so neither the render hook
+(<code class="prettyprint">woocommerce_review_order_before_submit</code>) nor the verify hook
+(<code class="prettyprint">woocommerce_after_checkout_validation</code>) below ever runs for it — a
+Block Checkout is completely unprotected regardless of
+<code class="prettyprint">protect_wc_checkout</code>. Building Store-API protection is explicitly OUT
+OF SCOPE here (new functionality, its own module per the audit's Phase-2
+plan); <code class="prettyprint">creationell_captcha_wc_uses_block_checkout()</code> below only detects
+the gap so <code class="prettyprint">wp creacaptcha doctor</code> and the Settings help text can stop
+giving a false &quot;protected&quot; impression.</li>
+<li>IN-3/IN-4: the classic checkout's account-creation branch and the
+standalone My-Account registration form both funnel through
+<code class="prettyprint">woocommerce_registration_errors</code> (fired unconditionally by
+<code class="prettyprint">wc_create_new_customer()</code>) — see the per-request verify cache and the
+form-context guard below.</li>
+<li>IN-12 (P3, fail-closed): all four render hooks above sit in overridable
+WooCommerce templates (<code class="prettyprint">payment.php</code>, <code class="prettyprint">form-login.php</code>,
+<code class="prettyprint">form-lost-password.php</code>, <code class="prettyprint">global/form-login.php</code>), while every verify
+runs from core PHP hooks that do not depend on the template at all. A
+theme that copies one of these templates and drops the corresponding
+<code class="prettyprint">do_action()</code> call loses the widget but NOT the server-side check —
+the form fails closed (no spam bypass) rather than open, but every
+submission is then rejected. This is a general theme-customization risk
+common to any WooCommerce hook-based extension, not fixable from inside
+this plugin; documented here rather than &quot;fixed&quot;.</li>
+</ul>
 </section>
 
         
@@ -154,6 +185,15 @@ verify here would just produce duplicate verification and duplicate events.</p>
 <dd>Whether any WooCommerce protection applies right now.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_wc_uses_block_checkout">creationell_captcha_wc_uses_block_checkout()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the currently configured WooCommerce checkout page uses the Block
+Checkout (the `woocommerce/checkout` block) rather than the classic
+`[woocommerce_checkout]` shortcode.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_wc_checkout_active">creationell_captcha_wc_checkout_active()</a>
     <span>
                                 &nbsp;: bool    </span>
@@ -166,6 +206,14 @@ verify here would just produce duplicate verification and duplicate events.</p>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Renders the widget directly before the Place-Order button on the checkout.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify_cache">creationell_captcha_wc_checkout_verify_cache()</a>
+    <span>
+                                &nbsp;: bool|null    </span>
+</dt>
+<dd>Per-request cache of the checkout&#039;s own verify verdict, keyed by the raw
+`altcha` payload currently in `$_POST`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify">creationell_captcha_wc_checkout_verify()</a>
@@ -210,6 +258,27 @@ verify here would just produce duplicate verification and duplicate events.</p>
 <dd>Renders the widget at the bottom of the WooCommerce registration form.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_wc_nonce_verifies">creationell_captcha_wc_nonce_verifies()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Reads a nonce value the way the given WooCommerce field name(s) would,
+replicating WooCommerce core&#039;s own field-name-agnostic fallback: the
+dedicated field wins if present, otherwise the generic `_wpnonce` field is
+used. WooCommerce&#039;s own nonce checks do not care WHICH field carried the
+value — only whether the value itself verifies against the action name.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_wc_registration_form_context">creationell_captcha_wc_registration_form_context()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the current `wc_create_new_customer()` call originates from a
+genuine WooCommerce registration- or checkout-form POST, as opposed to a
+Store-API, programmatic or CLI call that never had a form (and therefore
+no `altcha` field) in the first place.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_wc_registration_verify">creationell_captcha_wc_registration_verify()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -250,7 +319,7 @@ verify here would just produce duplicate verification and duplicate events.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">32</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
     </aside>
 
@@ -276,6 +345,48 @@ toggle so each form predicate just needs to add its own sub-toggle check.</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_uses_block_checkout">
+        creationell_captcha_wc_uses_block_checkout()
+        <a href="namespaces/default.html#function_creationell_captcha_wc_uses_block_checkout" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">89</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the currently configured WooCommerce checkout page uses the Block
+Checkout (the `woocommerce/checkout` block) rather than the classic
+`[woocommerce_checkout]` shortcode.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wc_uses_block_checkout</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>IN-2: this codebase only ever protects the classic checkout — the render
+hook (<code class="prettyprint">woocommerce_review_order_before_submit</code>) and the verify hook
+(<code class="prettyprint">woocommerce_after_checkout_validation</code>) both fire exclusively from
+<code class="prettyprint">WC_Checkout::process_checkout()</code>, which the Block Checkout's Store API
+route never calls. This function exists purely to DETECT that gap for
+<code class="prettyprint">wp creacaptcha doctor</code> and the Settings help text — it deliberately does
+NOT attempt to inject the widget or hook the Store API route (out of
+scope per the audit's Phase-2 plan; that would be new functionality
+belonging to its own module).</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_checkout_active">
         creationell_captcha_wc_checkout_active()
         <a href="namespaces/default.html#function_creationell_captcha_wc_checkout_active" class="headerlink"><i class="fas fa-link"></i></a>
@@ -284,7 +395,7 @@ toggle so each form predicate just needs to add its own sub-toggle check.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
     </aside>
 
@@ -314,7 +425,7 @@ toggle so each form predicate just needs to add its own sub-toggle check.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
     </aside>
 
@@ -332,6 +443,74 @@ toggle so each form predicate just needs to add its own sub-toggle check.</p>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_checkout_verify_cache">
+        creationell_captcha_wc_checkout_verify_cache()
+        <a href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify_cache" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">175</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Per-request cache of the checkout&#039;s own verify verdict, keyed by the raw
+`altcha` payload currently in `$_POST`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wc_checkout_verify_cache</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$set</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
+
+        <section class="phpdocumentor-description"><p>IN-3: the classic checkout, when the customer checks &quot;create an
+account?&quot;, posts exactly ONE <code class="prettyprint">altcha</code> payload but runs it through TWO of
+our verify hooks within the same request —
+<code class="prettyprint">creationell_captcha_wc_checkout_verify()</code> first (inside
+<code class="prettyprint">WC_Checkout::validate_checkout()</code>), then
+<code class="prettyprint">creationell_captcha_wc_registration_verify()</code> a few lines later (inside
+<code class="prettyprint">WC_Checkout::process_customer()</code> → <code class="prettyprint">wc_create_new_customer()</code>), reading
+the IDENTICAL <code class="prettyprint">$_POST['altcha']</code>. The underlying ALTCHA challenge is
+single-use (<code class="prettyprint">class-engine.php</code>'s replay-transient marker), so the second
+check would always find the payload already marked used and fail — an
+account-creating order could never succeed. Recording the checkout
+verdict here lets the registration verify reuse it for the same payload
+instead of re-running the used-marker check a second time.</p>
+<p>Scoped to this file/request only (<code class="prettyprint">static</code>, resets every request) — it
+does not weaken replay protection across requests: a genuinely replayed
+payload from an EARLIER request still hits the used-marker on its very
+first check here, because this cache starts empty every time.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$set</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Pass a bool to record the verdict for the current
+raw payload; omit (null, default) to just read a
+previously recorded one.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The cached verdict for the current raw payload, or
+<code class="prettyprint">null</code> if none has been recorded yet this request.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_checkout_verify">
         creationell_captcha_wc_checkout_verify()
         <a href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify" class="headerlink"><i class="fas fa-link"></i></a>
@@ -340,7 +519,7 @@ toggle so each form predicate just needs to add its own sub-toggle check.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
     </aside>
 
@@ -391,7 +570,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">247</span>
 
     </aside>
 
@@ -421,7 +600,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">154</span>
+    <span class="phpdocumentor-element-found-in__line">258</span>
 
     </aside>
 
@@ -447,7 +626,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">186</span>
+    <span class="phpdocumentor-element-found-in__line">290</span>
 
     </aside>
 
@@ -506,7 +685,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">337</span>
 
     </aside>
 
@@ -536,7 +715,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">348</span>
 
     </aside>
 
@@ -554,6 +733,160 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_nonce_verifies">
+        creationell_captcha_wc_nonce_verifies()
+        <a href="namespaces/default.html#function_creationell_captcha_wc_nonce_verifies" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">396</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Reads a nonce value the way the given WooCommerce field name(s) would,
+replicating WooCommerce core&#039;s own field-name-agnostic fallback: the
+dedicated field wins if present, otherwise the generic `_wpnonce` field is
+used. WooCommerce&#039;s own nonce checks do not care WHICH field carried the
+value — only whether the value itself verifies against the action name.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wc_nonce_verifies</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$source</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dedicated_field</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$action</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Review fix (Fix-Runde 1, IN-4 critical): an earlier version of this guard
+checked the dedicated field's mere PRESENCE
+(<code class="prettyprint">isset( $_POST['woocommerce-register-nonce'] )</code>) as its &quot;genuine form&quot;
+signal. That was exploitable — WooCommerce itself resolves the nonce
+VALUE via the same <code class="prettyprint">_wpnonce</code> fallback implemented here, so an anonymous
+attacker could read the nonce value off the real registration form's
+hidden field and resubmit <code class="prettyprint">register=…&amp;email=…&amp;_wpnonce=&lt;value&gt;</code> while
+OMITTING the <code class="prettyprint">woocommerce-register-nonce</code> field. WooCommerce would still
+accept the nonce via its fallback and create the account, while the old,
+presence-only guard saw no dedicated field and treated the request as
+&quot;no form context&quot; — skipping the captcha check entirely. Checking the
+NONCE VALUE (via <code class="prettyprint">wp_verify_nonce()</code>) instead of field presence closes
+this: the fallback is followed identically on both sides, so there is no
+field-name an attacker can omit to fool this guard while WooCommerce
+itself still accepts the request.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$source</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p><code class="prettyprint">$_POST</code> or <code class="prettyprint">$_REQUEST</code>.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dedicated_field</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The form's own nonce field name.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$action</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The nonce action to verify against.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_registration_form_context">
+        creationell_captcha_wc_registration_form_context()
+        <a href="namespaces/default.html#function_creationell_captcha_wc_registration_form_context" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">454</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the current `wc_create_new_customer()` call originates from a
+genuine WooCommerce registration- or checkout-form POST, as opposed to a
+Store-API, programmatic or CLI call that never had a form (and therefore
+no `altcha` field) in the first place.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_wc_registration_form_context</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>IN-4: <code class="prettyprint">wc_create_new_customer()</code> fires <code class="prettyprint">woocommerce_registration_errors</code>
+— the filter this module hooks — UNCONDITIONALLY, including for the
+Woo Blocks Store API's own account-creation path and for direct
+programmatic calls (<code class="prettyprint">wp eval</code>, custom scripts, other plugins). Hard-
+rejecting those whenever no <code class="prettyprint">altcha</code> field happens to be present made
+<code class="prettyprint">wc_create_new_customer()</code> unusable outside an actual captcha-protected
+form — the customer was simply never created.</p>
+<p>Both genuine entry points already verify their OWN nonce, inside
+WooCommerce core, before ever calling <code class="prettyprint">wc_create_new_customer()</code> — so
+independently re-verifying the SAME nonce value/action here (not
+consuming anything, <code class="prettyprint">wp_verify_nonce()</code> is read-only) is a safe, precise
+signal, as long as it replicates WC's exact field-name fallback (see
+<code class="prettyprint">creationell_captcha_wc_nonce_verifies()</code> above — a presence-only check
+was exploitable, see that function's docblock):</p>
+<ul>
+<li>Standalone My-Account registration form:
+<code class="prettyprint">WC_Form_Handler::process_registration()</code> gates on
+<code class="prettyprint">isset( $_POST['register'], $_POST['email'] )</code> plus a valid
+<code class="prettyprint">woocommerce-register</code> nonce (dedicated field
+<code class="prettyprint">woocommerce-register-nonce</code>, falling back to <code class="prettyprint">_wpnonce</code>) before ever
+calling <code class="prettyprint">wc_create_new_customer()</code>.</li>
+<li>Classic checkout with &quot;Create an account?&quot;: <code class="prettyprint">WC_Checkout::process_checkout()</code>
+verifies the <code class="prettyprint">woocommerce-process_checkout</code> nonce (dedicated field
+<code class="prettyprint">woocommerce-process-checkout-nonce</code>, falling back to <code class="prettyprint">_wpnonce</code>, read
+from <code class="prettyprint">$_REQUEST</code>) before <code class="prettyprint">validate_checkout()</code>/<code class="prettyprint">process_customer()</code>
+run — and by the time this filter fires from inside
+<code class="prettyprint">process_customer()</code>, our OWN checkout verify
+(<code class="prettyprint">creationell_captcha_wc_checkout_verify()</code>) has already run too, see
+IN-3's cache below.</li>
+</ul>
+<p>CLI/cron/XML-RPC calls need no explicit exclusion here: none of them ever
+populate <code class="prettyprint">$_POST</code>/<code class="prettyprint">$_REQUEST</code> with a nonce that verifies against either
+action, so both checks below already resolve to <code class="prettyprint">false</code> for them without
+a dedicated SAPI/constant check — one less thing to keep in sync, and it
+keeps this guard testable by directly setting <code class="prettyprint">$_POST</code> (see tests/eval/).</p>
+<p>Deliberately does NOT exclude on <code class="prettyprint">wp_doing_ajax()</code>: WooCommerce's classic
+checkout is itself normally submitted via <code class="prettyprint">wc-ajax=checkout</code>
+(<code class="prettyprint">WC_AJAX::checkout()</code>, which defines <code class="prettyprint">DOING_AJAX</code> itself before
+dispatch) — excluding AJAX outright would silently re-open IN-3/IN-4 for
+the majority of real-world checkouts.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_wc_registration_verify">
         creationell_captcha_wc_registration_verify()
         <a href="namespaces/default.html#function_creationell_captcha_wc_registration_verify" class="headerlink"><i class="fas fa-link"></i></a>
@@ -562,7 +895,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">486</span>
 
     </aside>
 
@@ -618,7 +951,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">328</span>
+    <span class="phpdocumentor-element-found-in__line">558</span>
 
     </aside>
 
@@ -648,7 +981,7 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/integrations/woocommerce.php"><a href="files/includes-integrations-woocommerce.html"><abbr title="includes/integrations/woocommerce.php">woocommerce.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">339</span>
+    <span class="phpdocumentor-element-found-in__line">569</span>
 
     </aside>
 
@@ -783,14 +1116,18 @@ to the passed-through <code class="prettyprint">WP_Error</code> aborts the order
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_checkout_active">creationell_captcha_wc_checkout_active()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_checkout_render">creationell_captcha_wc_checkout_render()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify">creationell_captcha_wc_checkout_verify()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_checkout_verify_cache">creationell_captcha_wc_checkout_verify_cache()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_login_active">creationell_captcha_wc_login_active()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_login_render">creationell_captcha_wc_login_render()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_login_verify">creationell_captcha_wc_login_verify()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_lost_password_active">creationell_captcha_wc_lost_password_active()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_lost_password_render">creationell_captcha_wc_lost_password_render()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_nonce_verifies">creationell_captcha_wc_nonce_verifies()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_registration_active">creationell_captcha_wc_registration_active()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_registration_form_context">creationell_captcha_wc_registration_form_context()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_registration_render">creationell_captcha_wc_registration_render()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_registration_verify">creationell_captcha_wc_registration_verify()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_wc_uses_block_checkout">creationell_captcha_wc_uses_block_checkout()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_woocommerce_active">creationell_captcha_woocommerce_active()</a></li>
                                             </ul>
                 </li>

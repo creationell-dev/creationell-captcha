@@ -148,7 +148,7 @@
     <span>
                                 &nbsp;: array&lt;string|int, string&gt;    </span>
 </dt>
-<dd>The active CF range list: cached option (if fresh) → bundled snapshot.</dd>
+<dd>The active CF range list: cached option (if fresh and valid) → bundled snapshot.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_refresh_cloudflare_ips_now">creationell_captcha_refresh_cloudflare_ips_now()</a>
@@ -230,11 +230,11 @@ when the option was absent or the delete failed.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cloudflare-proxies.php"><a href="files/includes-cloudflare-proxies.html"><abbr title="includes/cloudflare-proxies.php">cloudflare-proxies.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">The active CF range list: cached option (if fresh) → bundled snapshot.</p>
+        <p class="phpdocumentor-summary">The active CF range list: cached option (if fresh and valid) → bundled snapshot.</p>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
@@ -243,6 +243,16 @@ when the option was absent or the delete failed.</dd>
 
         <section class="phpdocumentor-description"><p>The cached option is considered stale once it is older than 48 hours,
 shielding against a silently broken cron job.</p>
+<p>Every entry is re-validated on read. The refresh path already filters what
+it fetches, but the option is a persisted value: it can predate the day
+<code class="prettyprint">is_valid_ip_or_cidr()</code> started rejecting a prefix length of 0, and it can be
+written from outside this file (<code class="prettyprint">wp option update</code>, a restored backup). One
+<code class="prettyprint">0.0.0.0/0</code> in there turns every peer into a trusted proxy, which makes
+<code class="prettyprint">X-Forwarded-For</code> — and with it the client IP the whole bypass chain runs on
+— spoofable (LK-13). The validator is the one in helpers.php, deliberately
+not a second copy of the rule.</p>
+<p>A cached list that does not survive validation is not partially used: the
+bundled snapshot is the safer answer than a list somebody has been editing.</p>
 </section>
 
     
@@ -267,7 +277,7 @@ shielding against a silently broken cron job.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cloudflare-proxies.php"><a href="files/includes-cloudflare-proxies.html"><abbr title="includes/cloudflare-proxies.php">cloudflare-proxies.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
     </aside>
 
@@ -297,7 +307,7 @@ shielding against a silently broken cron job.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cloudflare-proxies.php"><a href="files/includes-cloudflare-proxies.html"><abbr title="includes/cloudflare-proxies.php">cloudflare-proxies.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
     </aside>
 
@@ -329,7 +339,7 @@ when the option was absent or the delete failed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cloudflare-proxies.php"><a href="files/includes-cloudflare-proxies.html"><abbr title="includes/cloudflare-proxies.php">cloudflare-proxies.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
     </aside>
 
@@ -369,7 +379,7 @@ when the option was absent or the delete failed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cloudflare-proxies.php"><a href="files/includes-cloudflare-proxies.html"><abbr title="includes/cloudflare-proxies.php">cloudflare-proxies.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">193</span>
 
     </aside>
 

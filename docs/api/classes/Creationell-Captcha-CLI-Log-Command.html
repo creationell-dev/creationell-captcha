@@ -171,6 +171,20 @@
 <dd>Empties the event-log table.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_control_chars">escape_control_chars()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Replaces terminal control characters with a printable escape.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_row">escape_row()</a>
+    <span>
+                                &nbsp;: array&lt;string, string&gt;    </span>
+</dt>
+<dd>Runs every cell of an event row through escape_control_chars().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-Log-Command.html#method_list_events">list_events()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -183,6 +197,13 @@
                                 &nbsp;: void    </span>
 </dt>
 <dd>Deletes event-log rows older than the configured retention period.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Log-Command.html#method_resolve_fields">resolve_fields()</a>
+    <span>
+                                &nbsp;: array{fields: array<int,string>, unknown: array<int,string>}    </span>
+</dt>
+<dd>Splits a `--fields` value and separates known from unknown columns.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-CLI-Log-Command.html#method_show">show()</a>
@@ -219,7 +240,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
     </aside>
 
@@ -272,6 +293,124 @@
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_escape_control_chars">
+        escape_control_chars()
+        <a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_control_chars" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">243</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Replaces terminal control characters with a printable escape.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">escape_control_chars</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>CLI-5: Die Spalten <code class="prettyprint">user_agent</code>, <code class="prettyprint">referrer</code>, <code class="prettyprint">path</code>, <code class="prettyprint">reason</code>,
+<code class="prettyprint">verification_data</code> und <code class="prettyprint">request_body</code> stammen aus anonymen Requests.
+<code class="prettyprint">sanitize_text_field()</code> entfernt kein 0x1B, und <code class="prettyprint">log list</code>/<code class="prettyprint">log show</code>
+gaben die Rohwerte über den Formatter aus — eine ESC-Sequenz aus einem
+fremden User-Agent wirkte damit im Terminal des Administrators
+(Farbwechsel, Cursorbewegung, Überschreiben früherer Zeilen). Neutralisiert
+werden die C0-Steuerzeichen (0x00–0x1F, einschließlich ESC, CR und LF),
+DEL (0x7F) und die UTF-8-kodierten C1-Steuerzeichen U+0080–U+009F (0xC2
+gefolgt von 0x80–0x9F) — genau der Bereich, den ein Terminal auswertet.
+Druckbare Zeichen und Mehrbyte-UTF-8 bleiben unverändert; die Ersetzung
+arbeitet bewusst byteweise (kein <code class="prettyprint">/u</code>), damit sie auch an einem ungültigen
+UTF-8-Rest nicht abbricht.</p>
+<p>Kein Escaping heißt hier NICHT „unschädlich&quot;: ein Wert kann weiterhin
+täuschende druckbare Zeichen enthalten (z. B. Unicode-Richtungswechsel).
+Verhindert wird die Steuerung des Terminals, nicht die Täuschung des Lesers.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw column value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_escape_row">
+        escape_row()
+        <a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_row" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">210</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Runs every cell of an event row through escape_control_chars().</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">escape_row</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$row</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, string&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$row</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>One event-log row.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_list_events">
@@ -282,7 +421,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
     </aside>
 
@@ -297,14 +436,19 @@
     
         <section class="phpdocumentor-description"><h2>OPTIONS</h2>
 <p>[--number=<n>]
-: How many rows to show. Default: 20.</p>
+: How many rows to show. Default: 20. Gedeckelt auf 1000
+(Analytics::query_events()) — ein größerer Wert wird still auf 1000
+begrenzt, ohne Meldung.</p>
 <p>[--type=<type>]
 : Filter by event type (verified, failed, firewall, ratelimit, underattack, underattack_passed, challenge).</p>
 <p>[--fields=<fields>]
 : Komma-Liste der anzuzeigenden Spalten. Default: created_at,event_type,ip,path.
 Verfügbare Spalten: id, created_at, event_type, ip, user_id, user_agent,
 referrer, path, plugin, action, form_id, interceptor, reason,
-verification_data, request_body.</p>
+verification_data, request_body.
+Ein unbekannter Spaltenname ist ein Fehler (Exit 1) — auch dann, wenn die
+Abfrage keine Zeilen liefert (E3c: die Prüfung läuft gegen die feste
+Spaltenliste oben, nicht mehr nur gegen die gefundenen Zeilen).</p>
 <p>[--format=<format>]
 : Output format (table, json, yaml, csv).</p>
 <h2>EXAMPLES</h2>
@@ -371,7 +515,7 @@ wp creacaptcha log list --fields=created_at,event_type,plugin,form_id
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">180</span>
+    <span class="phpdocumentor-element-found-in__line">325</span>
 
     </aside>
 
@@ -420,6 +564,66 @@ wp creacaptcha log list --fields=created_at,event_type,plugin,form_id
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_resolve_fields">
+        resolve_fields()
+        <a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_resolve_fields" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">266</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Splits a `--fields` value and separates known from unknown columns.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">resolve_fields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requested</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$available</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{fields: array<int,string>, unknown: array<int,string>}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$requested</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw <code class="prettyprint">--fields</code> value.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$available</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Column names of the result set.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{fields: array<int,string>, unknown: array<int,string>}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_show">
@@ -430,7 +634,7 @@ wp creacaptcha log list --fields=created_at,event_type,plugin,form_id
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-log-command.php"><a href="files/includes-cli-class-cli-log-command.html"><abbr title="includes/cli/class-cli-log-command.php">class-cli-log-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">167</span>
 
     </aside>
 
@@ -598,8 +802,11 @@ wp creacaptcha log show 42 --format=json
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_clear">clear()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_control_chars">escape_control_chars()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_row">escape_row()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_list_events">list_events()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_prune">prune()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_resolve_fields">resolve_fields()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Log-Command.html#method_show">show()</a></li>
                                     </ul>
             </li>

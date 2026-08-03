@@ -148,8 +148,32 @@
     <span>
                                 &nbsp;: void    </span>
 </dt>
-<dd>Runs on plugin deactivation: clears scheduled cron slots and lets every
-module react via the `creationell_captcha_deactivated` action hook.</dd>
+<dd>Runs on plugin deactivation: clears every cron slot the plugin owns, sweeps
+the expired replay markers out of the options table and lets every module
+react via the `creationell_captcha_deactivated` action hook.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_deactivate_site">creationell_captcha_deactivate_site()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>The deactivation work for exactly one site: clears the three cron slots this
+plugin owns there and sweeps that site&#039;s expired replay markers.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_deactivate_network">creationell_captcha_deactivate_network()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Runs the per-site deactivation work on every site of the network.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_delete_expired_replay_markers">creationell_captcha_delete_expired_replay_markers()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Deletes those replay-marker options of the current site whose lifetime has
+already run out.</dd>
 
     </dl>
 
@@ -197,23 +221,175 @@ module react via the `creationell_captcha_deactivated` action hook.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/lifecycle.php"><a href="files/includes-lifecycle.html"><abbr title="includes/lifecycle.php">lifecycle.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">34</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Runs on plugin deactivation: clears scheduled cron slots and lets every
-module react via the `creationell_captcha_deactivated` action hook.</p>
+        <p class="phpdocumentor-summary">Runs on plugin deactivation: clears every cron slot the plugin owns, sweeps
+the expired replay markers out of the options table and lets every module
+react via the `creationell_captcha_deactivated` action hook.</p>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_deactivate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_deactivate</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$network_deactivating</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>B-M5: cron slots and replay markers are per-site data, so on a network-wide
+deactivation the work has to be done on every site of the network — not just
+on whichever site happens to be current when <code class="prettyprint">deactivate_{$plugin}</code> fires
+(that is the network admin's site, usually the main site). <code class="prettyprint">uninstall.php</code>
+already walks the network this way since DS-3; this is the same walk for the
+same reason.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$network_deactivating</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the plugin is being deactivated for
+the whole network. WordPress passes this as
+the single argument of <code class="prettyprint">deactivate_{$plugin}</code>
+(wp-admin/includes/plugin.php,
+<code class="prettyprint">deactivate_plugins()</code>); the default keeps
+the function callable by hand.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_deactivate_site">
+        creationell_captcha_deactivate_site()
+        <a href="namespaces/default.html#function_creationell_captcha_deactivate_site" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/lifecycle.php"><a href="files/includes-lifecycle.html"><abbr title="includes/lifecycle.php">lifecycle.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">91</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The deactivation work for exactly one site: clears the three cron slots this
+plugin owns there and sweeps that site&#039;s expired replay markers.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_deactivate_site</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Everything in here is relative to the CURRENT site, so it is safe to call
+from inside a <code class="prettyprint">switch_to_blog()</code> bracket — <code class="prettyprint">wp_clear_scheduled_hook()</code> works
+on the current site's <code class="prettyprint">cron</code> option and the sweep re-reads <code class="prettyprint">$wpdb-&gt;options</code>
+on every call.</p>
+</section>
 
     
     
-    
 
     
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_deactivate_network">
+        creationell_captcha_deactivate_network()
+        <a href="namespaces/default.html#function_creationell_captcha_deactivate_network" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/lifecycle.php"><a href="files/includes-lifecycle.html"><abbr title="includes/lifecycle.php">lifecycle.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">120</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Runs the per-site deactivation work on every site of the network.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_deactivate_network</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+        <section class="phpdocumentor-description"><p>Walks the sites in batches instead of materialising every site id at once —
+same shape and same batch size as the DS-3 walk in <code class="prettyprint">uninstall.php</code>, so both
+routines behave the same way on the same network.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Number of sites processed.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_delete_expired_replay_markers">
+        creationell_captcha_delete_expired_replay_markers()
+        <a href="namespaces/default.html#function_creationell_captcha_delete_expired_replay_markers" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/lifecycle.php"><a href="files/includes-lifecycle.html"><abbr title="includes/lifecycle.php">lifecycle.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">178</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Deletes those replay-marker options of the current site whose lifetime has
+already run out.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_delete_expired_replay_markers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+        <section class="phpdocumentor-description"><p>Live markers are deliberately left in place. Removing them as well would be
+tidier — nothing sweeps them while the plugin is unloaded — but it would
+re-open the window CM-9 closed: a payload whose marker is gone passes
+<code class="prettyprint">Engine::verify()</code> a second time as long as its own signed <code class="prettyprint">expiresAt</code> has
+not been reached (<code class="prettyprint">challenge_expiry</code>, default 300 s, settings range
+60–3600 s, checked inside the ALTCHA library independently of the marker —
+lib/altcha-org/altcha/src/Altcha.php, <code class="prettyprint">verifySolution()</code>). Deactivating
+and re-activating inside that window is an everyday admin action — update,
+debugging, changing the plugin load order — so the marker has to survive it.</p>
+<p>What stays behind when the plugin is never re-activated is one option row per
+payload whose challenge has not run out yet (since 1.1.0 the marker lifetime
+is the challenge's own remaining validity — <code class="prettyprint">Engine::replay_marker_lifetime()</code>).
+<code class="prettyprint">uninstall.php</code> removes those unconditionally, and after a re-activation the
+next successful claim re-arms the cron slot cleared in
+<code class="prettyprint">creationell_captcha_deactivate_site()</code> (<code class="prettyprint">Engine::claim_replay_marker()</code> →
+<code class="prettyprint">schedule_replay_cleanup()</code>), whose sweep then drops them.</p>
+<p>The predicate is the one <code class="prettyprint">Engine::cleanup_replay_markers()</code> uses: the marker
+value is the Unix timestamp the marker expires at, written by
+<code class="prettyprint">Engine::claim_replay_marker()</code>. A row with a non-numeric value casts to 0
+and is therefore treated as expired — same fail-open-on-garbage behaviour as
+the sweep, and no caller outside the engine ever writes these rows.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Number of option rows removed.</p>
+</section>
+
+            </section>
+
 </article>
             </section>
 
@@ -332,6 +508,9 @@ module react via the `creationell_captcha_deactivated` action hook.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_activate">creationell_captcha_activate()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_deactivate">creationell_captcha_deactivate()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_deactivate_network">creationell_captcha_deactivate_network()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_deactivate_site">creationell_captcha_deactivate_site()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_delete_expired_replay_markers">creationell_captcha_delete_expired_replay_markers()</a></li>
                                             </ul>
                 </li>
                     </ul>

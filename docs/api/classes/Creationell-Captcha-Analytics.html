@@ -162,6 +162,13 @@ when the detailed event log is enabled, into a dedicated database table.</p>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#constant_PRUNE_HOOK">PRUNE_HOOK</a>
+    <span>
+        &nbsp;= &#039;creationell_captcha_prune_events&#039;                            </span>
+</dt>
+<dd>Cron hook that enforces the configured event-log retention.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#constant_COUNTER_RETENTION_DAYS">COUNTER_RETENTION_DAYS</a>
     <span>
@@ -197,6 +204,13 @@ when the detailed event log is enabled, into a dedicated database table.</p>
 </dt>
 <dd>The seven recognised event types.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#constant_VERIFICATION_DATA_TYPES">VERIFICATION_DATA_TYPES</a>
+    <span>
+        &nbsp;= [&#039;verified&#039;, &#039;failed&#039;, &#039;underattack_passed&#039;]                            </span>
+</dt>
+<dd>The event types whose request actually carries an ALTCHA payload, i.e.</dd>
+
     </dl>
 
 
@@ -229,6 +243,20 @@ get_option/update_option round-trip per counter table, regardless of N.</dd>
 </dt>
 <dd>Pending hourly counter deltas: { bucket =&gt; { type =&gt; count } }.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo">$table_exists_memo</a>
+    <span>
+                        &nbsp;: bool|null            </span>
+</dt>
+<dd>Request-local memo for table_exists().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo_blog">$table_exists_memo_blog</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+<dd>The blog the memo above was taken on, or -1 when it holds nothing.</dd>
+
     </dl>
 
 <h4 id="toc-methods">
@@ -252,6 +280,15 @@ get_option/update_option round-trip per counter table, regardless of N.</dd>
 <dd>Counts the event-log rows matching the given filter.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#method_ensure_prune_schedule">ensure_prune_schedule()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Makes sure the retention sweep is on the cron schedule. Idempotent —
+registered on `init`, so a slot lost to a `wp cron event delete`, a
+partial DB restore or a plugin re-activation comes back by itself.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#method_ensure_table">ensure_table()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -260,16 +297,19 @@ get_option/update_option round-trip per counter table, regardless of N.</dd>
 repeatedly.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#method_event_columns">event_columns()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>The columns of the event-log table, in schema order.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#method_flush_pending_deltas">flush_pending_deltas()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Flushes the accumulated daily and hourly counter deltas back to the
-options table. Reads the current value first and adds the deltas, so
-concurrent updates from parallel requests are not lost (the underlying
-get+update is still non-atomic, but only one round-trip per request
-narrows the race window considerably compared to one round-trip per
-event).</dd>
+options table.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#method_get_daily_counts">get_daily_counts()</a>
@@ -309,6 +349,15 @@ when the detailed event log is enabled and the per-type toggle is on —
 writes a table row. Never fatals.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#method_run_scheduled_prune">run_scheduled_prune()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Cron callback for self::PRUNE_HOOK — deletes rows past the retention
+window. Skips silently when the kill switch is set (W3-2, see
+ensure_prune_schedule()) or when the table does not exist.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#method_table_exists">table_exists()</a>
     <span>
                                 &nbsp;: bool    </span>
@@ -343,6 +392,13 @@ value and prunes buckets older than the retention window.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Accumulates the current hour&#039;s counter delta in the request-local cache.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Analytics.html#method_current_blog_id">current_blog_id()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>The current blog id, or 0 on a single site (B-M11).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Analytics.html#method_current_path">current_path()</a>
@@ -408,6 +464,37 @@ is recorded in this request.</dd>
             <a href="classes/Creationell-Captcha-Analytics.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PRUNE_HOOK">
+        PRUNE_HOOK
+        <a href="classes/Creationell-Captcha-Analytics.html#constant_PRUNE_HOOK" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">48</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Cron hook that enforces the configured event-log retention.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PRUNE_HOOK</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;creationell_captcha_prune_events&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
                     <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_COUNTER_RETENTION_DAYS">
         COUNTER_RETENTION_DAYS
@@ -418,7 +505,7 @@ is recorded in this request.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
     </aside>
 
@@ -449,7 +536,7 @@ is recorded in this request.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
     </aside>
 
@@ -563,6 +650,40 @@ is recorded in this request.</dd>
 
         
     </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_VERIFICATION_DATA_TYPES">
+        VERIFICATION_DATA_TYPES
+        <a href="classes/Creationell-Captcha-Analytics.html#constant_VERIFICATION_DATA_TYPES" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The event types whose request actually carries an ALTCHA payload, i.e.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">VERIFICATION_DATA_TYPES</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;verified&#039;, &#039;failed&#039;, &#039;underattack_passed&#039;]</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>the only ones for which the <code class="prettyprint">verification_data</code> column has diagnostic
+value. See verification_data() for why the other types must not copy it.</p>
+</section>
+
+    
+    
+
+        
+    </article>
             </section>
 
         
@@ -589,7 +710,7 @@ is recorded in this request.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
     </aside>
 
@@ -629,7 +750,7 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
     </aside>
 
@@ -667,7 +788,7 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
     </aside>
 
@@ -681,6 +802,95 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
     
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+            -static                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_table_exists_memo">
+        $table_exists_memo
+        <a href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">90</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Request-local memo for table_exists().</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">bool|null</span>
+    <span class="phpdocumentor-signature__name">$table_exists_memo</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>DS-4 put a table_exists() guard in front of every log_row() insert; that
+guard sits on the hot path of a logging-enabled site, so the <code class="prettyprint">SHOW TABLES</code> behind it must not run once per event. <code class="prettyprint">null</code> means &quot;not yet
+checked in this request&quot;; ensure_table() resets it to null so a table
+created mid-request is picked up.</p>
+</section>
+
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+            -static                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_table_exists_memo_blog">
+        $table_exists_memo_blog
+        <a href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo_blog" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">103</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The blog the memo above was taken on, or -1 when it holds nothing.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$table_exists_memo_blog</span>
+     = <span class="phpdocumentor-signature__default-value">-1</span></code>
+
+        <section class="phpdocumentor-description"><p>B-M11: table_name() reads <code class="prettyprint">$wpdb-&gt;prefix</code>, and <code class="prettyprint">switch_to_blog()</code> rewires
+that — the memo did not follow, so an answer taken on site A would have
+been reused for site B's differently named table. Nothing in the loaded
+plugin switches sites today (uninstall.php does, but never loads this
+class), so this is a latent trap rather than a live bug; the network
+deactivation loop added in this release walks sites with the plugin
+loaded, which is exactly the neighbourhood where it would go off.</p>
+</section>
+
     
     
 
@@ -710,7 +920,7 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">503</span>
 
     </aside>
 
@@ -753,7 +963,7 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">520</span>
+    <span class="phpdocumentor-element-found-in__line">792</span>
 
     </aside>
 
@@ -794,6 +1004,71 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensure_prune_schedule">
+        ensure_prune_schedule()
+        <a href="classes/Creationell-Captcha-Analytics.html#method_ensure_prune_schedule" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">425</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Makes sure the retention sweep is on the cron schedule. Idempotent —
+registered on `init`, so a slot lost to a `wp cron event delete`, a
+partial DB restore or a plugin re-activation comes back by itself.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensure_prune_schedule</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>DS-1: before this, <code class="prettyprint">analytics_log_retention</code> was enforced only by the
+1-in-20 opportunistic prune inside log_row() and by the CLI. Both need
+ongoing writes — switch the event log off (or lose the traffic) and the
+existing rows, IP/user-agent/referrer included, stayed forever even
+though the setting promised a retention window. The sweep below runs on
+its own schedule and deliberately does NOT look at <code class="prettyprint">analytics_event_log</code>:
+a switched-off log is precisely the case that needs it.</p>
+<p>W3-2 — it DOES look at the kill switch, and both halves do. Deleting rows
+is the only destructive background operation this plugin has, and an
+operator who sets <code class="prettyprint">CREATIONELL_CAPTCHA_DISABLE</code> during an incident is
+usually doing it to freeze the state, not to keep a sweep running against
+the evidence he is about to read. &quot;Off&quot; has to mean &quot;deletes nothing
+either&quot;; record() has read the same switch since Modul 11c.</p>
+<p>The slot itself is left alone rather than unscheduled: the switch is a
+wp-config constant and can come back at any request, and clearing the
+schedule here would make the kill switch quietly rewrite cron state.</p>
+<p>N6 — the limit of that argument, stated openly because the setting does
+not state it: it holds for the SHORT use (freeze the state during an
+incident). A kill switch that stays set longer than the retention window
+— a staging wp-config copied to production, &quot;plugin functionally off&quot;
+instead of deactivation — means the window never elapses, and the rows
+DS-1 was built for (IP, user agent, referrer, user ID of a log that is
+already switched off) stay forever. The guard is kept; the state is no
+longer silent: <code class="prettyprint">wp creacaptcha doctor</code> reports it (check 22,
+<code class="prettyprint">Doctor_Command::retention_sweep_check()</code>), the help text of
+<code class="prettyprint">analytics_log_retention</code> names it, and <code class="prettyprint">wp creacaptcha log prune</code> runs
+regardless of the kill switch as the way out.</p>
+</section>
+
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_ensure_table">
@@ -804,7 +1079,7 @@ get_option/update_option round-trip per counter table, regardless of N.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">353</span>
+    <span class="phpdocumentor-element-found-in__line">604</span>
 
     </aside>
 
@@ -832,6 +1107,72 @@ repeatedly.</p>
             -public
                                     -static                    "
 >
+    <h4 class="phpdocumentor-element__name" id="method_event_columns">
+        event_columns()
+        <a href="classes/Creationell-Captcha-Analytics.html#method_event_columns" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">571</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The columns of the event-log table, in schema order.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">event_columns</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>E3c — why this exists as a method rather than being derived from a row:
+<code class="prettyprint">wp creacaptcha log list --fields=quatsch</code> used to build its whitelist
+from <code class="prettyprint">array_keys( $rows[0] )</code>, so on an EMPTY log the command returned
+&quot;Keine Ereignisse gefunden.&quot; and exit 0 without ever looking at the
+<code class="prettyprint">--fields</code> value. A typo was reported as a typo on a busy site and
+silently accepted on a quiet one. A single source of truth that does not
+depend on there being data closes that.</p>
+<p>The list is checked against the CREATE TABLE statement in ensure_table()
+by tests/test-analytics-data-guards.php, so it cannot drift away from the
+schema unnoticed — a hand-kept copy of a schema is otherwise exactly the
+kind of assertion that ages badly.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Creationell-Captcha-Analytics.html#method_event_columns#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
     <h4 class="phpdocumentor-element__name" id="method_flush_pending_deltas">
         flush_pending_deltas()
         <a href="classes/Creationell-Captcha-Analytics.html#method_flush_pending_deltas" class="headerlink"><i class="fas fa-link"></i></a>
@@ -840,16 +1181,12 @@ repeatedly.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Flushes the accumulated daily and hourly counter deltas back to the
-options table. Reads the current value first and adds the deltas, so
-concurrent updates from parallel requests are not lost (the underlying
-get+update is still non-atomic, but only one round-trip per request
-narrows the race window considerably compared to one round-trip per
-event).</p>
+options table.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -858,7 +1195,19 @@ event).</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <section class="phpdocumentor-description"><p>DS-8 — known and accepted limitation, stated here so no caller assumes
+more than the code delivers: the read-modify-write below is NOT atomic.
+Two requests that flush at the same time can both read the same value
+and the later write wins, so the counters can under-count. Batching the
+whole request into a single round-trip per counter table narrows the
+window compared to one round-trip per event — it does not close it.</p>
+<p>The consequence is confined to the dashboard's aggregate tiles: the
+counters are display-only statistics, no protection decision reads them,
+and the detailed event log (when enabled) is written per row and is
+unaffected. A lock or a per-row counter table would be the fix if these
+numbers ever had to be exact.</p>
+</section>
+
     
     
 
@@ -880,7 +1229,7 @@ event).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">422</span>
+    <span class="phpdocumentor-element-found-in__line">678</span>
 
     </aside>
 
@@ -919,7 +1268,7 @@ event).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">433</span>
+    <span class="phpdocumentor-element-found-in__line">689</span>
 
     </aside>
 
@@ -958,7 +1307,7 @@ event).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">377</span>
 
     </aside>
 
@@ -1001,7 +1350,7 @@ event).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">496</span>
+    <span class="phpdocumentor-element-found-in__line">768</span>
 
     </aside>
 
@@ -1022,9 +1371,12 @@ event).</p>
                 : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Filter args (id, search, event_type,
-date_from, date_to) plus <code class="prettyprint">limit</code> (1–1000)
-and <code class="prettyprint">offset</code> (&gt;= 0).</p>
+                    <section class="phpdocumentor-description"><p>Filter args (id, before_id, search,
+event_type, date_from, date_to) plus
+<code class="prettyprint">limit</code> (1–1000) and <code class="prettyprint">offset</code> (&gt;= 0).
+Pass <code class="prettyprint">before_id</code> instead of <code class="prettyprint">offset</code>
+to page through a growing table
+without repeating rows.</p>
 </section>
 
             </dd>
@@ -1054,7 +1406,7 @@ and <code class="prettyprint">offset</code> (&gt;= 0).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
     </aside>
 
@@ -1102,6 +1454,43 @@ writes a table row. Never fatals.</p>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_run_scheduled_prune">
+        run_scheduled_prune()
+        <a href="classes/Creationell-Captcha-Analytics.html#method_run_scheduled_prune" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">442</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Cron callback for self::PRUNE_HOOK — deletes rows past the retention
+window. Skips silently when the kill switch is set (W3-2, see
+ensure_prune_schedule()) or when the table does not exist.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">run_scheduled_prune</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_table_exists">
@@ -1112,7 +1501,7 @@ writes a table row. Never fatals.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">294</span>
+    <span class="phpdocumentor-element-found-in__line">467</span>
 
     </aside>
 
@@ -1125,7 +1514,15 @@ writes a table row. Never fatals.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <section class="phpdocumentor-description"><p>DS-5: the table name goes through esc_like() before it is bound as a
+LIKE pattern. Without it the underscores in <code class="prettyprint">&lt;prefix&gt;creationell_captcha_events</code>
+stay single-character wildcards, so any table matching that shape — say
+<code class="prettyprint">wp0creationell0captcha0events</code> — can be returned by <code class="prettyprint">SHOW TABLES</code> and
+compared unequal to the real name, making this method answer <code class="prettyprint">false</code>
+while the table is right there. <code class="prettyprint">prepare()</code> escapes the value for the
+SQL string literal, it does not neutralise LIKE metacharacters.</p>
+</section>
+
     
     
 
@@ -1151,7 +1548,7 @@ writes a table row. Never fatals.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">174</span>
+    <span class="phpdocumentor-element-found-in__line">219</span>
 
     </aside>
 
@@ -1235,7 +1632,7 @@ value and prunes buckets older than the retention window.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">445</span>
+    <span class="phpdocumentor-element-found-in__line">701</span>
 
     </aside>
 
@@ -1256,7 +1653,7 @@ value and prunes buckets older than the retention window.</p>
                 : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Filter args: id, search, event_type, date_from, date_to.</p>
+                    <section class="phpdocumentor-description"><p>Filter args: id, before_id, search, event_type, date_from, date_to.</p>
 </section>
 
             </dd>
@@ -1290,7 +1687,7 @@ value and prunes buckets older than the retention window.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
     </aside>
 
@@ -1335,7 +1732,7 @@ value and prunes buckets older than the retention window.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">115</span>
+    <span class="phpdocumentor-element-found-in__line">151</span>
 
     </aside>
 
@@ -1370,6 +1767,50 @@ value and prunes buckets older than the retention window.</p>
         class="phpdocumentor-element
             -method
             -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_current_blog_id">
+        current_blog_id()
+        <a href="classes/Creationell-Captcha-Analytics.html#method_current_blog_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">494</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The current blog id, or 0 on a single site (B-M11).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">current_blog_id</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p><code class="prettyprint">get_current_blog_id()</code> is a WordPress core function and always exists at
+runtime; the guard is here because the Ebene-2 suites load this class
+without the WordPress bootstrap and must not have to stub a function to
+keep a memo key correct.</p>
+</section>
+
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_current_path">
@@ -1380,7 +1821,7 @@ value and prunes buckets older than the retention window.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">324</span>
+    <span class="phpdocumentor-element-found-in__line">538</span>
 
     </aside>
 
@@ -1398,6 +1839,22 @@ tokens passed as GET parameters (magic-login links, API keys, …) do
 not leak into the persistent event log. Strips control characters
 (DB hygiene) and caps at 255 bytes. The dashboard escapes the value
 on output.</p>
+<p>The path itself comes from creationell_captcha_request_path(), the same
+root the interceptor, the inject pass, the rate limiter, the firewall and
+the REST detection use (audit module 27, finding C1). It used to run
+<code class="prettyprint">wp_parse_url( REQUEST_URI, PHP_URL_PATH )</code> here, which reads a request
+target as if it were a URL: for <code class="prettyprint">//kontakt/</code> the first segment becomes
+the HOST and the path collapses to <code class="prettyprint">/</code>, for <code class="prettyprint">///kontakt/</code> to <code class="prettyprint">''</code>.</p>
+<p>That mattered more here than anywhere else. The one-character spelling
+<code class="prettyprint">POST //kontakt</code> was the bypass the C1 fix closed — and the event log is
+the record an operator reads afterwards to find out whether somebody
+tried it. With the old parser the attempt was logged under <code class="prettyprint">/</code>, i.e.
+under a path that was never requested, so the forensic trail pointed
+away from the attack instead of at it.</p>
+<p>Deliberately kept: the empty answer when the request carries no
+REQUEST_URI at all (WP-Cron, WP-CLI, unit runs). The root would report
+<code class="prettyprint">/</code> there, which reads like a real front-page request; <code class="prettyprint">''</code> says &quot;no
+request path&quot;, which is what actually happened.</p>
 </section>
 
     
@@ -1425,7 +1882,7 @@ on output.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">393</span>
+    <span class="phpdocumentor-element-found-in__line">649</span>
 
     </aside>
 
@@ -1463,7 +1920,7 @@ forces a filesort over a typed slice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">125</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
     </aside>
 
@@ -1499,7 +1956,7 @@ is recorded in this request.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">210</span>
+    <span class="phpdocumentor-element-found-in__line">264</span>
 
     </aside>
 
@@ -1514,6 +1971,14 @@ is recorded in this request.</p>
     
         <section class="phpdocumentor-description"><p>Honours the optional IP-anonymisation and request-body-fingerprint
 toggles from Modul 11c.</p>
+<p>DS-7 — scope of <code class="prettyprint">analytics_anonymize_ip</code>, spelled out so the field list
+below is not mistaken for an anonymised record: the toggle truncates the
+<code class="prettyprint">ip</code> column and nothing else. <code class="prettyprint">user_agent</code>, <code class="prettyprint">referrer</code>, <code class="prettyprint">user_id</code>,
+<code class="prettyprint">verification_data</code> and <code class="prettyprint">request_body</code> are stored as submitted, and
+<code class="prettyprint">path</code> keeps the request path (only its query string is dropped, see
+current_path()) — a row can therefore still be attributable with the
+toggle on. The event log as a whole is opt-in and bounded by
+<code class="prettyprint">analytics_log_retention</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1558,7 +2023,7 @@ toggles from Modul 11c.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">258</span>
+    <span class="phpdocumentor-element-found-in__line">335</span>
 
     </aside>
 
@@ -1618,7 +2083,7 @@ toggles from Modul 11c.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">343</span>
+    <span class="phpdocumentor-element-found-in__line">594</span>
 
     </aside>
 
@@ -1657,7 +2122,7 @@ toggles from Modul 11c.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-analytics.php"><a href="files/includes-class-analytics.html"><abbr title="includes/class-analytics.php">class-analytics.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">267</span>
+    <span class="phpdocumentor-element-found-in__line">361</span>
 
     </aside>
 
@@ -1665,13 +2130,39 @@ toggles from Modul 11c.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">verification_data</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">verification_data</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$type</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
-    
+        <section class="phpdocumentor-description"><p>DS-6: <code class="prettyprint">$_POST['altcha']</code> is anonymous, attacker-chosen input, and up to
+2048 bytes of it used to be copied into EVERY logged row — including
+<code class="prettyprint">firewall</code>, <code class="prettyprint">ratelimit</code>, <code class="prettyprint">underattack</code> and <code class="prettyprint">challenge</code> events. None of
+those four ever verified the value: the request was blocked, throttled
+or served an interstitial, or it merely fetched a new challenge. The
+copied bytes were therefore unverified input with no relation to the
+event, on exactly the high-volume anonymous paths — roughly 2 KB of log
+growth per blocked request, chosen by the sender. The column is now
+filled only for the event types that really are a verification attempt.</p>
+<p>What this does NOT do: it does not bound the field for those remaining
+types — a <code class="prettyprint">failed</code> event still stores up to 2048 attacker-chosen bytes.
+The bound there is the retention window (now scheduler-enforced, DS-1)
+plus the fact that the whole event log is opt-in.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$type</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The event type being logged.</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
         
@@ -1797,11 +2288,13 @@ toggles from Modul 11c.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_PRUNE_HOOK">PRUNE_HOOK</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_COUNTER_RETENTION_DAYS">COUNTER_RETENTION_DAYS</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_HOURLY_RETENTION_HOURS">HOURLY_RETENTION_HOURS</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_OPTION">OPTION</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_OPTION_HOURLY">OPTION_HOURLY</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_TYPES">TYPES</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Analytics.html#constant_VERIFICATION_DATA_TYPES">VERIFICATION_DATA_TYPES</a></li>
                                             </ul>
                 </li>
             
@@ -1811,6 +2304,8 @@ toggles from Modul 11c.</p>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#property_daily_deltas">$daily_deltas</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#property_flush_hooked">$flush_hooked</a></li>
                                                     <li class=""><a href="classes/Creationell-Captcha-Analytics.html#property_hourly_deltas">$hourly_deltas</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo">$table_exists_memo</a></li>
+                                                    <li class=""><a href="classes/Creationell-Captcha-Analytics.html#property_table_exists_memo_blog">$table_exists_memo_blog</a></li>
                                             </ul>
                 </li>
             
@@ -1819,18 +2314,22 @@ toggles from Modul 11c.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_clear_events">clear_events()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_count_events">count_events()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_ensure_prune_schedule">ensure_prune_schedule()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_ensure_table">ensure_table()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_event_columns">event_columns()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_flush_pending_deltas">flush_pending_deltas()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_get_daily_counts">get_daily_counts()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_get_hourly_counts">get_hourly_counts()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_prune_events">prune_events()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_query_events">query_events()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_record">record()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_run_scheduled_prune">run_scheduled_prune()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_table_exists">table_exists()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_apply_deltas">apply_deltas()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_build_event_filter">build_event_filter()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_bump_counter">bump_counter()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_bump_hourly_counter">bump_hourly_counter()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_current_blog_id">current_blog_id()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_current_path">current_path()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_ensure_event_type_index">ensure_event_type_index()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Analytics.html#method_ensure_flush_hook">ensure_flush_hook()</a></li>

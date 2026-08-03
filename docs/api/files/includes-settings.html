@@ -126,6 +126,35 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="files/includes-settings.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_FORM">CREATIONELL_CAPTCHA_SANITIZE_FORM</a>
+    <span>
+        &nbsp;= &#039;form&#039;                            </span>
+</dt>
+<dd>Sanitiser context: the settings form (`options.php`).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</a>
+    <span>
+        &nbsp;= &#039;programmatic&#039;                            </span>
+</dt>
+<dd>Sanitiser context: programmatischer Schreibvorgang (Import, Werksreset,
+„Standardwerte laden&quot;, WP-CLI).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET">CREATIONELL_CAPTCHA_SANITIZE_RESET</a>
+    <span>
+        &nbsp;= &#039;reset&#039;                            </span>
+</dt>
+<dd>Sanitiser context: Werksreset (`creationell_captcha_reset_settings()`).</dd>
+
+    </dl>
 
 
 
@@ -165,11 +194,69 @@
 <dd>Registers the plugin setting, the per-tab sections and the fields.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_sanitize_context">creationell_captcha_sanitize_context()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
+<dd>Liest — und setzt optional — den angehefteten Sanitizer-Kontext.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_with_sanitize_context">creationell_captcha_with_sanitize_context()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>Führt $callback aus, während der Sanitizer-Kontext auf $context festgelegt ist.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_sanitize_settings_option">creationell_captcha_sanitize_settings_option()</a>
+    <span>
+                                &nbsp;: array&lt;string, mixed&gt;    </span>
+</dt>
+<dd>Einstiegspunkt des `sanitize_option_creationell_captcha_settings`-Filters.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_truncate_setting_text">creationell_captcha_truncate_setting_text()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Kürzt einen Einstellungswert auf höchstens $max_chars Zeichen und garantiert
+gültiges UTF-8.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_truncate_chars">creationell_captcha_truncate_chars()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Kürzt gültiges UTF-8 ohne mbstring auf $max_chars ZEICHEN.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes">creationell_captcha_truncate_chars_by_bytes()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Dritte und letzte Kürzungsstufe: zählt UTF-8-Startbytes.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_sanitize_settings">creationell_captcha_sanitize_settings()</a>
     <span>
                                 &nbsp;: array&lt;string, mixed&gt;    </span>
 </dt>
 <dd>Sanitises the settings array before it is stored.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_sync_event_log_table">creationell_captcha_sync_event_log_table()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Legt die Ereignis-Log-Tabelle an, sobald das Detail-Log eingeschaltet
+GESPEICHERT wurde.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_store_settings">creationell_captcha_store_settings()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Der eine Schreibweg des Plugins auf `creationell_captcha_settings`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_render_engine_section">creationell_captcha_render_engine_section()</a>
@@ -276,10 +363,175 @@
 </dt>
 <dd>Renders a single settings field.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_field_label">creationell_captcha_field_label()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Liefert das Label eines Einstellungsfeldes (Fallback: der Schlüssel selbst).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_field_spec">creationell_captcha_field_spec()</a>
+    <span>
+                                &nbsp;: array&lt;string, array&lt;string, mixed&gt;&gt;    </span>
+</dt>
+<dd>Request-lokal gehaltene Feldspezifikation für die beiden Label-Helfer.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_field_option_label">creationell_captcha_field_option_label()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Liefert das Options-Label eines `select`-Feldes (Fallback: der Rohwert).</dd>
+
     </dl>
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="files/includes-settings.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_SANITIZE_FORM">
+        CREATIONELL_CAPTCHA_SANITIZE_FORM
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_FORM" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">841</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sanitiser context: the settings form (`options.php`).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_SANITIZE_FORM</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;form&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Ein <code class="prettyprint">disabled</code>-Input sendet beim Absenden keinen Wert — deshalb (und NUR
+deshalb) schreibt der Sanitizer in diesem Kontext gegatete Felder aus dem
+gespeicherten Zustand zurück.</p>
+</section>
+
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">
+        CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">850</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sanitiser context: programmatischer Schreibvorgang (Import, Werksreset,
+„Standardwerte laden&quot;, WP-CLI).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;programmatic&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Hier ist der übergebene Wert eine vollständige, bewusste Angabe; eine
+Rückschreibung aus dem Altzustand würde sie still überstimmen (AF-1/AF-3).</p>
+</section>
+
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_SANITIZE_RESET">
+        CREATIONELL_CAPTCHA_SANITIZE_RESET
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">880</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sanitiser context: Werksreset (`creationell_captcha_reset_settings()`).</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_SANITIZE_RESET</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;reset&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Wie PROGRAMMATIC — plus die eine Zusage, die den Werksreset von jedem
+anderen Schreibvorgang unterscheidet: KEIN gespeicherter Schlüssel wird
+übernommen, auch keiner ausserhalb der aktuellen Feldspezifikation.</p>
+<p>Warum das ein eigener Wert sein muss (Nachlese N6, Befund 5): Die
+Übernahme-Schleife am Ende von <code class="prettyprint">creationell_captcha_sanitize_settings()</code>
+hält gespeicherte Schlüssel fest, die <code class="prettyprint">creationell_captcha_settings_fields()</code>
+gerade nicht liefert — die Schalter der Formular-Plugins hängen an
+<code class="prettyprint">class_exists()</code>, sind bei deaktiviertem Plugin also nicht in der
+Spezifikation. Für jeden regulären Schreibvorgang ist das richtig
+(sonst löschte ein Speichern der Einstellungsseite den Schalter eines
+gerade deaktivierten Plugins). Für den dokumentierten „vollen Werksreset&quot;
+ist es falsch: <code class="prettyprint">wp creacaptcha settings reset --yes</code> meldete
+„Auf Werkseinstellungen zurückgesetzt&quot;, während ein <code class="prettyprint">protect_wpforms =&gt; false</code>
+aus der Zeit vor der Deaktivierung — oder ein beliebiger Fremdschlüssel aus
+<code class="prettyprint">wp option patch</code>/DB-Restore — die Option unverändert überlebte.</p>
+<p>Der Wert ersetzt PROGRAMMATIC ausschliesslich beim Reset. Import,
+„Standardwerte laden&quot;, WP-CLI-Schreibvorgänge und die Listen-Befehle
+bleiben auf PROGRAMMATIC: sie übergeben zwar ebenfalls einen vollständigen
+Wertesatz, sind aber kein Werksreset und dürfen den Schalter eines gerade
+inaktiven Formular-Plugins nicht wegräumen.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+        
+    </article>
+            </section>
 
             <section class="phpdocumentor-functions">
         <h3 class="phpdocumentor-elements__header" id="functions">
@@ -402,7 +654,7 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">772</span>
+    <span class="phpdocumentor-element-found-in__line">777</span>
 
     </aside>
 
@@ -420,24 +672,136 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
-    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_sanitize_settings">
-        creationell_captcha_sanitize_settings()
-        <a href="namespaces/default.html#function_creationell_captcha_sanitize_settings" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_sanitize_context">
+        creationell_captcha_sanitize_context()
+        <a href="namespaces/default.html#function_creationell_captcha_sanitize_context" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">822</span>
+    <span class="phpdocumentor-element-found-in__line">893</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Sanitises the settings array before it is stored.</p>
+        <p class="phpdocumentor-summary">Liest — und setzt optional — den angehefteten Sanitizer-Kontext.</p>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_sanitize_settings</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_sanitize_context</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|false|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$set</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+        <section class="phpdocumentor-description"><p>Der Kontext wird bewusst EXPLIZIT gesetzt und nicht aus <code class="prettyprint">is_admin()</code>,
+<code class="prettyprint">admin_init</code> oder ähnlichen Umgebungsindizien erraten: genau dieses Raten ist
+die Wurzel der Kartenwidersprüche W1/W2 der Befunddatei (ein Menüpunkt, zwei
+Semantiken, je nachdem ob <code class="prettyprint">admin_init</code> gefeuert hat).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$set</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|false|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>FALSE liest nur; ein String oder NULL setzt.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Aktuell angehefteter Kontext oder NULL.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_with_sanitize_context">
+        creationell_captcha_with_sanitize_context()
+        <a href="namespaces/default.html#function_creationell_captcha_with_sanitize_context" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">916</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Führt $callback aus, während der Sanitizer-Kontext auf $context festgelegt ist.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_with_sanitize_context</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">callable&nbsp;</span><span class="phpdocumentor-signature__argument__name">$callback</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+        <section class="phpdocumentor-description"><p>Nötig, weil <code class="prettyprint">register_setting()</code> den Sanitizer zusätzlich als
+<code class="prettyprint">sanitize_option_creationell_captcha_settings</code>-Filter anhängt: jeder
+<code class="prettyprint">update_option()</code>-Aufruf im Admin-Kontext läuft durch ihn hindurch, auch
+Import und Reset über <code class="prettyprint">admin-post.php</code>. Ohne diese Klammer bekämen genau
+jene Pfade Formular-Semantik.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Einer der CREATIONELL_CAPTCHA_SANITIZE_*-Werte.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$callback</span>
+                : <span class="phpdocumentor-argument-list__argument__type">callable</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Auszuführender Schreibvorgang.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">mixed</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Rückgabewert von $callback.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_sanitize_settings_option">
+        creationell_captcha_sanitize_settings_option()
+        <a href="namespaces/default.html#function_creationell_captcha_sanitize_settings_option" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">935</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Einstiegspunkt des `sanitize_option_creationell_captcha_settings`-Filters.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_sanitize_settings_option</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -447,7 +811,7 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
                 : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Raw input from the settings form.</p>
+                    <section class="phpdocumentor-description"><p>Rohwert aus dem Schreibvorgang.</p>
 </section>
 
             </dd>
@@ -462,6 +826,426 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_truncate_setting_text">
+        creationell_captcha_truncate_setting_text()
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_setting_text" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">959</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Kürzt einen Einstellungswert auf höchstens $max_chars Zeichen und garantiert
+gültiges UTF-8.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_truncate_setting_text</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$max_chars</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Bewusst zeichen- statt byteorientiert: <code class="prettyprint">substr()</code> schnitt bisher mitten in
+eine Mehrbyte-Sequenz (AF-7). Ungültiges UTF-8 wird entfernt, bevor der Wert
+in den serialisierten Options-Blob wandert — nicht danach in der DB repariert.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Bereits vorsanitisierter Wert.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$max_chars</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Obergrenze in Zeichen (nicht Bytes).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_truncate_chars">
+        creationell_captcha_truncate_chars()
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1030</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Kürzt gültiges UTF-8 ohne mbstring auf $max_chars ZEICHEN.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_truncate_chars</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$max_chars</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Drei Stufen, weil jede einzelne ausfallen kann — und der Ausfall darf den
+Wert nicht kosten:</p>
+<ol>
+<li><code class="prettyprint">preg_match( '/^.{0,N}/us' )</code> — der schnelle Weg. <code class="prettyprint">s</code> lässt „.“ auch
+Zeilenumbrüche treffen (relevant für <code class="prettyprint">textblock</code>).</li>
+<li><code class="prettyprint">iconv_substr()</code> — greift, wenn Stufe 1 an einem PCRE-Limit scheitert
+(Backtrack-Limit, JIT-Stack). iconv ist keine PCRE-Bibliothek und
+deshalb von diesen Limits nicht betroffen.</li>
+<li>Ein Byte-Lauf über die UTF-8-Startbytes — braucht überhaupt keine
+Erweiterung und keine PCRE.</li>
+</ol>
+<h2>WARUM ES DIESE FUNKTION GIBT (Nachlese N6, Befund 7; Fehlerklasse 4)</h2>
+<p>Nach Stufe 1 stand hier bis zur Nachlese <code class="prettyprint">return '';</code>. Das war als
+„lieber ein leeres Feld, das der Betreiber sieht&quot; begründet — nur sieht er
+es nicht: an dieser Stelle wird keine <code class="prettyprint">add_settings_error()</code> erzeugt, das
+leere Feld ist also genau so still wie die kaputte Sequenz, gegen die die
+Begründung argumentierte. Und der Sanitizer läuft bei JEDEM Schreibvorgang,
+auch bei einem, der dieses Feld gar nicht anfasst (Werksreset,
+„Standardwerte laden&quot;, <code class="prettyprint">settings set</code> eines anderen Schlüssels, jedes
+Speichern der Einstellungsseite): ein gespeicherter CSS- oder
+Übersetzungsblock wäre damit still und vollständig weg gewesen. Der
+Vorgängerstand vor W2-7 lieferte an dieser Stelle wenigstens den Anfang des
+Wertes (<code class="prettyprint">substr()</code>, byteweise und deshalb möglicherweise mitten in einer
+Mehrbyte-Sequenz). Beide Stufen unten liefern denselben Anfang, nur an einer
+ZEICHEN-Grenze — der Datenverlust entfällt, ohne den AF-7-Fehler
+zurückzuholen.</p>
+<p>Vorbedingung: $value ist gültiges UTF-8. Der Aufrufer stellt das her; Stufe 3
+verlässt sich darauf, weil sie Startbytes zählt und Fortsetzungsbytes
+(0x80–0xBF) in gültigem UTF-8 nie an einer Zeichengrenze stehen.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Gültiges UTF-8.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$max_chars</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Obergrenze in Zeichen.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_truncate_chars_by_bytes">
+        creationell_captcha_truncate_chars_by_bytes()
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1063</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Dritte und letzte Kürzungsstufe: zählt UTF-8-Startbytes.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_truncate_chars_by_bytes</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$max_chars</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Braucht weder mbstring noch iconv noch PCRE — deshalb steht sie am Ende der
+Kette in <code class="prettyprint">creationell_captcha_truncate_chars()</code>. Eigene Funktion, weil sie
+sonst auf jedem Rechner mit iconv unerreichbar und damit ungetestet wäre.</p>
+<p>Startbytes: <code class="prettyprint">0xxxxxxx</code> = 1 Byte, <code class="prettyprint">110xxxxx</code> = 2, <code class="prettyprint">1110xxxx</code> = 3,
+<code class="prettyprint">11110xxx</code> = 4. Fortsetzungsbytes (<code class="prettyprint">10xxxxxx</code>, 0x80–0xBF) stehen in gültigem
+UTF-8 nie an einer Zeichengrenze; ungültige Eingaben schliesst der Aufrufer
+aus (<code class="prettyprint">creationell_captcha_truncate_setting_text()</code> prüft und repariert vorher).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Gültiges UTF-8.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$max_chars</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Obergrenze in Zeichen.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_sanitize_settings">
+        creationell_captcha_sanitize_settings()
+        <a href="namespaces/default.html#function_creationell_captcha_sanitize_settings" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1104</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sanitises the settings array before it is stored.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_sanitize_settings</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC"><abbr title="\CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</abbr></a></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$input</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw input from the settings form.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC"><abbr title="\CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</abbr></a></span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Schreibkontext, einer der
+CREATIONELL_CAPTCHA_SANITIZE_*-Werte. Default ist
+„programmatisch&quot;: alle direkten Aufrufer (Import,
+WP-CLI) übergeben einen vollständigen Wertesatz.
+Ausgewertet werden ausschließlich die zwei bekannten
+programmatischen Werte …_PROGRAMMATIC und …_RESET;
+jeder andere Wert — auch ein unerwarteter, etwa der
+Optionsname aus einer Legacy-<code class="prettyprint">sanitize_option</code>-
+Registrierung — erhält die verlustfreie
+Formular-Semantik. …_RESET unterscheidet sich von
+…_PROGRAMMATIC an genau einer Stelle: er übernimmt
+auch keine gespeicherten Schlüssel ausserhalb der
+aktuellen Feldspezifikation (voller Werksreset).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_sync_event_log_table">
+        creationell_captcha_sync_event_log_table()
+        <a href="namespaces/default.html#function_creationell_captcha_sync_event_log_table" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1551</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Legt die Ereignis-Log-Tabelle an, sobald das Detail-Log eingeschaltet
+GESPEICHERT wurde.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_sync_event_log_table</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>E3b — warum das hier hängt und nicht mehr im Sanitizer: Der Sanitizer ist
+über <code class="prettyprint">register_setting()</code> zugleich der <code class="prettyprint">sanitize_option</code>-Filter der Option
+und eine öffentliche, dokumentierte Funktion. Ein <code class="prettyprint">ensure_table()</code> in ihm
+bedeutete DDL für jeden Aufrufer, der nur prüfen, vergleichen oder eine
+Vorschau bauen will — <code class="prettyprint">wp creacaptcha doctor</code> verzichtet deshalb bereits
+ausdrücklich auf den Sanitizer-Vergleich (Check 9). Die Tabellenanlage
+gehört an das Ergebnis des Schreibvorgangs; das ist dieselbe Bauform, die
+creationell_captcha_sync_cloudflare_cron() für den Cron-Slot benutzt.</p>
+<p>Reichweite gegenüber vorher:</p>
+<ul>
+<li>wp-admin (Formular, Import, Werksreset, „Standardwerte laden&quot;): unverändert
+— die Tabelle entsteht weiterhin beim Speichern.</li>
+<li>WP-CLI und jeder andere Kontext ohne <code class="prettyprint">admin_init</code>: NEU abgedeckt. Dort hing
+der <code class="prettyprint">sanitize_option</code>-Filter gar nicht; <code class="prettyprint">wp option update creationell_captcha_settings</code> konnte das Log einschalten, ohne dass je eine
+Tabelle entstand (die Selbstheilungs-Lücke aus DS-4).</li>
+<li>Ein Speichern, das den Optionswert unverändert lässt: WordPress schreibt
+dann nichts und feuert keinen der beiden Hooks. Diese Lücke deckt seit der
+Nachlese N6 <code class="prettyprint">creationell_captcha_store_settings()</code> ab — jeder
+Plugin-eigene Schreibweg auf die Option ruft die Synchronisierung danach
+selbst noch einmal auf. Nicht abgedeckt bleibt ein Schreibvorgang an
+diesen Wegen vorbei (<code class="prettyprint">wp option update</code>, DB-Restore) ohne Wertänderung;
+dafür bleibt <code class="prettyprint">wp creacaptcha repair</code> der Weg, auf den Doctor-Check 3 und
+der Log-Hinweis in Analytics::log_row() verweisen.</li>
+</ul>
+<p>DS-2-Grenze: Auslöser ist ein bereits erfolgter Schreibvorgang auf die
+Plugin-Option. Anders als beim <code class="prettyprint">admin_init</code>-Aufhänger der Migration in
+upgrade.php gibt es hier keinen anonym erreichbaren Pfad — wer die Option
+schreiben kann, hat die Site ohnehin in der Hand.</p>
+</section>
+
+    
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_store_settings">
+        creationell_captcha_store_settings()
+        <a href="namespaces/default.html#function_creationell_captcha_store_settings" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1601</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Der eine Schreibweg des Plugins auf `creationell_captcha_settings`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_store_settings</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$clean</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Warum es ihn gibt (Nachlese N6, Befund 4): <code class="prettyprint">update_option()</code> feuert
+<code class="prettyprint">update_option_{$option}</code> NUR, wenn sich der gespeicherte Wert wirklich
+ändert (wp-includes/option.php vergleicht alt/neu und bricht sonst ohne
+DB-Schreibvorgang und ohne Hook ab). Seit E3b hängt die Anlage der
+Ereignis-Tabelle ausschliesslich an diesen Hooks — ein Schreibvorgang ohne
+Wertänderung ist damit ein Erfolg ohne Wirkung:</p>
+<pre class="prettyprint"><code class="prettyprint">wp creacaptcha settings set analytics_event_log 1   # steht schon auf 1
+wp creacaptcha blocklist add 203.0.113.9            # steht schon drin
+</code></pre>
+<p>meldeten Erfolg, während eine von Hand gelöschte Tabelle (DB-Restore,
+Migration) weg blieb und jedes Ereignis still verworfen wurde. Strang N2
+hatte das für <code class="prettyprint">Command::enable()</code> einzeln kompensiert; der zweite und dritte
+CLI-Weg auf denselben Schlüssel hatten die Kompensation nicht. Statt sie an
+jeder Stelle zu wiederholen, steht sie jetzt EINMAL hier, und alle
+Plugin-eigenen Schreibwege gehen hindurch.</p>
+<p>Nachgerufen wird nur, wenn <code class="prettyprint">update_option()</code> FALSE liefert — also genau
+dann, wenn der Hook nicht gefeuert hat. <code class="prettyprint">ensure_table()</code> ist zwar
+idempotent, aber nicht kostenlos (dbDelta liest das Schema), und ein
+zweiter Durchlauf bei jedem echten Speichervorgang wäre reine Wiederholung.
+Der FALSE-Zweig deckt beide Ursachen ab: unveränderter Wert und
+fehlgeschlagener Schreibvorgang.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$clean</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Bereits sanitisierter Wertesatz.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_store_settings#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_render_engine_section">
         creationell_captcha_render_engine_section()
         <a href="namespaces/default.html#function_creationell_captcha_render_engine_section" class="headerlink"><i class="fas fa-link"></i></a>
@@ -470,7 +1254,7 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1177</span>
+    <span class="phpdocumentor-element-found-in__line">1612</span>
 
     </aside>
 
@@ -496,7 +1280,7 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1184</span>
+    <span class="phpdocumentor-element-found-in__line">1619</span>
 
     </aside>
 
@@ -522,7 +1306,7 @@ it renders in; the section ids match creationell_captcha_admin_sections().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1200</span>
+    <span class="phpdocumentor-element-found-in__line">1635</span>
 
     </aside>
 
@@ -551,7 +1335,7 @@ it, image rendering cannot work and the trigger logic stays disabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1220</span>
+    <span class="phpdocumentor-element-found-in__line">1655</span>
 
     </aside>
 
@@ -577,7 +1361,7 @@ it, image rendering cannot work and the trigger logic stays disabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1227</span>
+    <span class="phpdocumentor-element-found-in__line">1662</span>
 
     </aside>
 
@@ -603,7 +1387,7 @@ it, image rendering cannot work and the trigger logic stays disabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1237</span>
+    <span class="phpdocumentor-element-found-in__line">1672</span>
 
     </aside>
 
@@ -632,7 +1416,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1254</span>
+    <span class="phpdocumentor-element-found-in__line">1689</span>
 
     </aside>
 
@@ -658,7 +1442,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1261</span>
+    <span class="phpdocumentor-element-found-in__line">1696</span>
 
     </aside>
 
@@ -684,7 +1468,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1268</span>
+    <span class="phpdocumentor-element-found-in__line">1703</span>
 
     </aside>
 
@@ -710,7 +1494,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1275</span>
+    <span class="phpdocumentor-element-found-in__line">1710</span>
 
     </aside>
 
@@ -736,7 +1520,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1282</span>
+    <span class="phpdocumentor-element-found-in__line">1717</span>
 
     </aside>
 
@@ -762,7 +1546,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1289</span>
+    <span class="phpdocumentor-element-found-in__line">1724</span>
 
     </aside>
 
@@ -788,7 +1572,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1296</span>
+    <span class="phpdocumentor-element-found-in__line">1731</span>
 
     </aside>
 
@@ -814,7 +1598,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1303</span>
+    <span class="phpdocumentor-element-found-in__line">1738</span>
 
     </aside>
 
@@ -840,7 +1624,7 @@ description doubles as a hint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1312</span>
+    <span class="phpdocumentor-element-found-in__line">1747</span>
 
     </aside>
 
@@ -868,6 +1652,134 @@ description doubles as a hint.</p>
     
 
     
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_field_label">
+        creationell_captcha_field_label()
+        <a href="namespaces/default.html#function_creationell_captcha_field_label" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1896</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Liefert das Label eines Einstellungsfeldes (Fallback: der Schlüssel selbst).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_field_label</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Feldschlüssel.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_field_spec">
+        creationell_captcha_field_spec()
+        <a href="namespaces/default.html#function_creationell_captcha_field_spec" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1912</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Request-lokal gehaltene Feldspezifikation für die beiden Label-Helfer.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_field_spec</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, array&lt;string, mixed&gt;&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>W2-8: Beide hielten je einen wortgleichen <code class="prettyprint">static $spec</code>-Block und damit zwei
+unabhängige Kopien der ~75-Felder-Spezifikation im Speicher. Eine gemeinsame
+Zugriffsfunktion genügt — und sie macht zugleich sichtbar, dass beide
+denselben Stand meinen.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, array&lt;string, mixed&gt;&gt;</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_field_option_label">
+        creationell_captcha_field_option_label()
+        <a href="namespaces/default.html#function_creationell_captcha_field_option_label" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/settings.php"><a href="files/includes-settings.html"><abbr title="includes/settings.php">settings.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1928</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Liefert das Options-Label eines `select`-Feldes (Fallback: der Rohwert).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_field_option_label</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Feldschlüssel.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Optionswert.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
             </section>
 
@@ -976,16 +1888,28 @@ description doubles as a hint.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                                                                                                                        <li><a href="files/includes-settings.html#toc-functions">Functions</a></li>
+                                                                                                                                                                    <li><a href="files/includes-settings.html#toc-constants">Constants</a></li>
+                                                                <li><a href="files/includes-settings.html#toc-functions">Functions</a></li>
                                     </ul>
             </li>
 
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_FORM">CREATIONELL_CAPTCHA_SANITIZE_FORM</a></li>
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</a></li>
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET">CREATIONELL_CAPTCHA_SANITIZE_RESET</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Functions</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_admin_sections">creationell_captcha_admin_sections()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_admin_tabs">creationell_captcha_admin_tabs()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_field_label">creationell_captcha_field_label()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_field_option_label">creationell_captcha_field_option_label()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_field_spec">creationell_captcha_field_spec()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_settings">creationell_captcha_register_settings()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_analytics_section">creationell_captcha_render_analytics_section()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_bypass_section">creationell_captcha_render_bypass_section()</a></li>
@@ -1002,8 +1926,16 @@ description doubles as a hint.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_underattack_appearance_section">creationell_captcha_render_underattack_appearance_section()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_underattack_section">creationell_captcha_render_underattack_section()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_widget_appearance_section">creationell_captcha_render_widget_appearance_section()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_sanitize_context">creationell_captcha_sanitize_context()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_sanitize_settings">creationell_captcha_sanitize_settings()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_sanitize_settings_option">creationell_captcha_sanitize_settings_option()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_settings_fields">creationell_captcha_settings_fields()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_store_settings">creationell_captcha_store_settings()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_sync_event_log_table">creationell_captcha_sync_event_log_table()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_truncate_chars">creationell_captcha_truncate_chars()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes">creationell_captcha_truncate_chars_by_bytes()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_truncate_setting_text">creationell_captcha_truncate_setting_text()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_with_sanitize_context">creationell_captcha_with_sanitize_context()</a></li>
                                             </ul>
                 </li>
                     </ul>

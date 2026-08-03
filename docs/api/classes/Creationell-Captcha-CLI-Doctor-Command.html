@@ -170,6 +170,156 @@
 </dt>
 <dd>Runs the diagnostic checklist and prints a status table.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_cloudflare_cron_check">cloudflare_cron_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 4 — Cloudflare-Refresh-Cron.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_filtered_interceptor_lists">filtered_interceptor_lists()</a>
+    <span>
+                                &nbsp;: array{paths: array<int,string>, actions: array<int,string>}    </span>
+</dt>
+<dd>The interceptor&#039;s own guard lists, run through the SAME filters
+`Interceptor::is_guarded()`/`action_patterns()` apply at runtime
+(`creationell_captcha_interceptor_paths` / `_actions`).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_gd_check">gd_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 10 — PHP-GD-Extension (für Code-Challenge erforderlich).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_hmac_secrets_check">hmac_secrets_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 2 — HMAC-Secrets.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_inject_pattern_covered">inject_pattern_covered()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Check 15 — whether a single inject-path pattern has a real counterpart
+in the guard list.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_check">login_coverage_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 11 — Login-Formular-Abdeckung.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_row">login_coverage_row()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Ableitung zu Check 11 — B-I7.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_cidr_check">mapped_cidr_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 18 — CIDR-Einträge in IPv4-mapped-Notation (Cross-Strang-Hinweis F1).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_remote_addr_check">mapped_remote_addr_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 17 — IPv4-mapped REMOTE_ADDR (Cross-Strang-Hinweis F1, Bündel 4/I2).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_neutralising_excludes">neutralising_excludes()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>Returns the `!`-exclusion patterns of a list that on their own match
+every positive pattern of the same list — i.e. that neutralise it.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_probe_paths">probe_paths()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>Turns a wildcard pattern into concrete sample strings it covers.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_proxy_header_choice_check">proxy_header_choice_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 20 — Proxy-Header-Auswahl (Cross-Strang-Hinweis N1, &quot;m2&quot;).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_retention_sweep_check">retention_sweep_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 22 — läuft die Aufbewahrungsfrist des Event-Logs überhaupt?</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sanitized_snapshot">sanitized_snapshot()</a>
+    <span>
+                                &nbsp;: array&lt;string, mixed&gt;    </span>
+</dt>
+<dd>Ableitung zu Check 9 / CLI-10 — der sanitisierte Vergleichsstand.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_secret_resolvable">secret_resolvable()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Ableitung zu Check 2 und Check 19 — löst EIN Secret aus seinen beiden
+Quellen auf, ohne die Getter zu rufen.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_settings_defaults_check">settings_defaults_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 9 — Settings-Defaults-Vollstaendigkeit + CLI-10-Wertspezifikation.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sodium_check">sodium_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 7b — Sodium-Extension (für Argon2id-Algorithmus erforderlich).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_cache_check">underattack_cache_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 21 — Under-Attack-Interstitial und Full-Page-Cache (Cross-Strang-Hinweis
+N1, &quot;m7&quot;, §3.3 — nennt alle drei hier verwendeten Signale ausdrücklich).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_pass_rate_check">underattack_pass_rate_check()</a>
+    <span>
+                                &nbsp;: array{check: string, status: string, meldung: string}    </span>
+</dt>
+<dd>Check 19 — Under-Attack-Pass-Rate (Cross-Strang-Hinweis N1, &quot;m4&quot;/&quot;m7&quot;).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_is_mapped_cidr">is_mapped_cidr()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether a CIDR range&#039;s subnet part is written in IPv4-mapped notation
+(`::ffff:a.b.c.d/N` — RFC 4291 §2.5.5.2), the one shape
+`creationell_captcha_normalize_ip()` deliberately does not touch (see Check
+18&#039;s docblock). Mirrors that function&#039;s binary-form check, scoped to the
+subnet segment of a CIDR entry instead of a plain address.</dd>
+
     </dl>
 
 
@@ -198,7 +348,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
     </aside>
 
@@ -212,6 +362,17 @@
         </div>
     
         <section class="phpdocumentor-description"><p>Exit code 1 if at least one check is <code class="prettyprint">error</code>, 0 otherwise.</p>
+<p>Grenze des Werkzeugs (CLI-10): <code class="prettyprint">doctor</code> liest ausschließlich — es prüft
+Vorhandensein und Erreichbarkeit (Datei, Option, Tabelle, Cron, Extension)
+sowie einige Konsistenzen zwischen Schaltern. Seit der Nachlese vergleicht
+Check 9 den gespeicherten Wertesatz zusätzlich gegen den Sanitizer (rein
+lesend, siehe dort) und erkennt damit einen an den Plugin-Schreibwegen
+vorbei gesetzten Wert, der von der Feldspezifikation abweicht
+(<code class="prettyprint">algorithm=boguswert</code> per <code class="prettyprint">wp option patch</code>). Nicht geprüft bleibt, ob
+ein Wert innerhalb seiner Spezifikation auch inhaltlich sinnvoll ist
+(ein syntaktisch gültiges, aber unerreichbares Cloudflare-IP-Ziel o. Ä.).
+„status: ok&quot; heißt deshalb „dieser Check hat nichts gefunden&quot;, nicht
+„die Installation ist korrekt konfiguriert&quot;.</p>
 <p>Third-party modules can extend the list via the
 <code class="prettyprint">creationell_captcha_doctor_checks</code> filter. Filter receives the array
 of checks (each <code class="prettyprint">[check =&gt; string, status =&gt; 'ok'|'warn'|'error', meldung =&gt; string]</code>) and must return the same shape.</p>
@@ -266,6 +427,1377 @@ of checks (each <code class="prettyprint">[check =&gt; string, status =&gt; 'ok'
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_cloudflare_cron_check">
+        cloudflare_cron_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_cloudflare_cron_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">630</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 4 — Cloudflare-Refresh-Cron.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">cloudflare_cron_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int|false&nbsp;</span><span class="phpdocumentor-signature__argument__name">$next_scheduled</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>B-I4: the auto-refresh cron slot is only ever scheduled when BOTH
+<code class="prettyprint">firewall_trust_cloudflare</code> AND <code class="prettyprint">firewall_cloudflare_auto_refresh</code> are
+on (<code class="prettyprint">creationell_captcha_sync_cloudflare_cron()</code>,
+cloudflare-proxies.php:173-176) — reading <code class="prettyprint">firewall_cloudflare_auto_refresh</code>
+alone made this check report a permanent <code class="prettyprint">error</code> on a healthy install
+whose proxy mode is off but whose two dependent fields are still frozen
+<code class="prettyprint">true</code> by the settings requires-rewrite (they are simply gated, not
+broken). Mirrors the exact condition <code class="prettyprint">sync_cloudflare_cron()</code> uses, and
+downgrades the &quot;gated&quot; case to <code class="prettyprint">warn</code> — the field not taking effect is
+expected, not a defect.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$next_scheduled</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|false</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Return value of
+<code class="prettyprint">wp_next_scheduled('creationell_captcha_refresh_cloudflare_ips')</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_filtered_interceptor_lists">
+        filtered_interceptor_lists()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_filtered_interceptor_lists" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1247</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The interceptor&#039;s own guard lists, run through the SAME filters
+`Interceptor::is_guarded()`/`action_patterns()` apply at runtime
+(`creationell_captcha_interceptor_paths` / `_actions`).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">filtered_interceptor_lists</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{paths: array<int,string>, actions: array<int,string>}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>W1-9: checks 14 and 15 used to read <code class="prettyprint">$settings['interceptor_paths']</code>/
+<code class="prettyprint">['interceptor_actions']</code> directly. That is not what the interceptor
+itself decides on — a site using the documented
+<code class="prettyprint">creationell_captcha_protect_path()</code> developer API only ever touches
+these filters, never the settings option, so the raw read was blind to
+filter-added guards (false &quot;uncovered&quot;/&quot;ok, no exclusion problem&quot;) and
+equally blind to a filter that REMOVES a settings entry.</p>
+<p>Public and static so the filter wiring itself — not just what the
+downstream checks do with the result — can be exercised directly in
+<code class="prettyprint">tests/test-cli-doctor-checks.php</code>.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{paths: array<int,string>, actions: array<int,string>}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_gd_check">
+        gd_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_gd_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">866</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 10 — PHP-GD-Extension (für Code-Challenge erforderlich).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">gd_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$gd_loaded</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>B-I5: fehlendes GD lässt <code class="prettyprint">should_issue_code_challenge()</code>
+(code-challenge.php:31-33) die Zusatzstufe grundsätzlich nie auslösen —
+die PoW-Stufe bleibt unverändert aktiv, nichts fällt aus. Working
+degradation statt Ausfall, also <code class="prettyprint">warn</code> statt <code class="prettyprint">error</code> (siehe Check 16).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$gd_loaded</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Result of <code class="prettyprint">extension_loaded('gd')</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_hmac_secrets_check">
+        hmac_secrets_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_hmac_secrets_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">748</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 2 — HMAC-Secrets.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">hmac_secrets_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sig_resolved</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key_resolved</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>B-M22: signature and key-signature each resolve independently — a site can set
+one wp-config constant and rely on the stored option for the other. Missing
+either one leaves the engine unable to sign/verify challenges, so <code class="prettyprint">error</code> (not
+<code class="prettyprint">warn</code>) is correct here, matching the <code class="prettyprint">error</code>-Regel in Check 16's comment.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$sig_resolved</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the signature secret resolves (constant or option).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key_resolved</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the key-signature secret resolves (constant or option).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_inject_pattern_covered">
+        inject_pattern_covered()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_inject_pattern_covered" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1291</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 15 — whether a single inject-path pattern has a real counterpart
+in the guard list.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">inject_pattern_covered</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pattern</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$guard_paths</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Fixes two bugs found for this check (Bündel 5 / W1-10, W1-15):</p>
+<ul>
+<li>B-I6/W1-10: the previous loop set <code class="prettyprint">$covered = true</code> on the FIRST
+matching probe and broke — an existence quantor answering &quot;is ANY
+request under this pattern protected?&quot; where the check's own claim
+(&quot;jeder Inject-Pfad hat ein Gegenstück&quot;) requires a universal
+quantor. <code class="prettyprint">neutralising_excludes()</code> right above already gets this
+direction correct for its own probes; this method aligns with it: ALL
+probes from <code class="prettyprint">probe_paths()</code> must be covered.</li>
+<li>W1-15: matching only <code class="prettyprint">[rawurldecode($probe), $probe]</code> covers the
+&quot;inject pattern written percent-encoded&quot; direction but not the
+reverse (&quot;inject pattern written decoded, guard pattern written
+percent-encoded&quot;) — <code class="prettyprint">rawurldecode()</code> on an already-decoded string is
+a no-op, so the guard's percent-encoded spelling was never produced
+to compare against. Building a third candidate — the probe
+percent-re-encoded segment-by-segment (preserving <code class="prettyprint">/</code>) — covers that
+direction too, matching what a real browser sends over the wire for a
+non-ASCII path.</li>
+</ul>
+<p>Public and static — like <code class="prettyprint">Interceptor::match_path()</code> — so the three
+fixed constellations (Erst-Treffer, beide Kodierungsrichtungen) can be
+exercised directly in <code class="prettyprint">tests/test-cli-doctor-checks.php</code> without
+bootstrapping the whole WP-CLI command.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$pattern</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>One <code class="prettyprint">interceptor_inject_paths</code> pattern (no leading <code class="prettyprint">!</code>).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$guard_paths</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Filtered <code class="prettyprint">interceptor_paths</code> patterns (see <code class="prettyprint">apply_filters()</code> call in <code class="prettyprint">__invoke()</code>).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_login_coverage_check">
+        login_coverage_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">896</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 11 — Login-Formular-Abdeckung.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">login_coverage_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$woocommerce_installed</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wc_login_active</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>B-I7: reading <code class="prettyprint">protect_wc_login</code> raw ignored the kill switch and the
+<code class="prettyprint">protect_woocommerce</code> master toggle — a value frozen <code class="prettyprint">true</code> by the
+settings requires-rewrite from a time when Woo protection was on kept
+reporting &quot;ok&quot; long after <code class="prettyprint">protect_woocommerce</code> was switched off, hiding
+the exact IN-7 gap (My-Account login unprotected) this check exists to
+surface. <code class="prettyprint">creationell_captcha_wc_login_active()</code> is the single source
+of truth the render/verify hooks themselves use.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$woocommerce_installed</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Result of <code class="prettyprint">class_exists('WooCommerce')</code>.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$wc_login_active</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Result of <code class="prettyprint">creationell_captcha_wc_login_active()</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_login_coverage_row">
+        login_coverage_row()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_row" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">728</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Ableitung zu Check 11 — B-I7.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">login_coverage_row</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Die Substanz des B-I7-Fixes ist die QUELLE des dritten Arguments:
+<code class="prettyprint">creationell_captcha_wc_login_active()</code> statt des rohen Toggles
+<code class="prettyprint">$settings['protect_wc_login']</code>. Genau diese Wahl lag inline in run()
+und war deshalb von keiner Suite bewacht — login_coverage_check() selbst
+bekommt den Wert ja fertig gereicht. Als eigener Helfer ist der
+eingefrorene Fall (protect_wc_login = true bei ausgeschaltetem Master
+protect_woocommerce, AF-1) direkt pruefbar.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Aktueller Wertesatz.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_mapped_cidr_check">
+        mapped_cidr_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_cidr_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">973</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 18 — CIDR-Einträge in IPv4-mapped-Notation (Cross-Strang-Hinweis F1).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">mapped_cidr_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p><code class="prettyprint">creationell_captcha_normalize_ip()</code> (helpers.php) kanonisiert bewusst nur
+einzelne Adressen, nie CIDR-Bereiche — ein Umrechnen der Präfixlänge könnte
+eine Trusted-Proxy-Zeile stillschweigend verbreitern. Ein vor 1.1.0 in mapped
+Notation eingetragener Bereich (<code class="prettyprint">::ffff:203.0.113.0/120</code>) trifft seit 1.1.0
+deshalb nicht mehr; dieser Check macht das sichtbar statt es still wirkungslos
+werden zu lassen.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_mapped_remote_addr_check">
+        mapped_remote_addr_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_remote_addr_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">930</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 17 — IPv4-mapped REMOTE_ADDR (Cross-Strang-Hinweis F1, Bündel 4/I2).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">mapped_remote_addr_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$live_remote_addr</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logged_mapped_ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Zwei unabhängige Signale, weil ein <code class="prettyprint">wp</code>-Aufruf über die CLI-SAPI normalerweise
+KEINE echte HTTP-Verbindung hat: <code class="prettyprint">$_SERVER['REMOTE_ADDR']</code> ist unter WP-CLI
+meist gar nicht gesetzt, ein Live-Treffer also nur bei ungewöhnlichen
+Aufrufkontexten möglich. Das Event-Log ist die verlässlichere Quelle: da
+<code class="prettyprint">creationell_captcha_get_client_ip()</code> seit 1.1.0 jede IP kanonisiert, BEVOR sie
+geloggt wird, kann eine <code class="prettyprint">::ffff:</code>-Adresse im Log nur aus der Zeit VOR dem
+Update stammen — ein direkter, installationsspezifischer Nachweis, dass dieser
+Server REMOTE_ADDR mindestens zeitweise mapped ausliefert.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$live_remote_addr</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p><code class="prettyprint">$_SERVER['REMOTE_ADDR']</code> bei diesem Aufruf, oder ''.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$logged_mapped_ip</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Eine im Event-Log gefundene mapped-Adresse, oder null.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_neutralising_excludes">
+        neutralising_excludes()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_neutralising_excludes" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1333</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Returns the `!`-exclusion patterns of a list that on their own match
+every positive pattern of the same list — i.e. that neutralise it.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">neutralising_excludes</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$patterns</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Probing with concrete sample paths derived from the positive patterns
+(rather than comparing pattern strings) uses the real matcher, so the
+answer is exactly the runtime behaviour.</p>
+<p>B-M23: public (like <code class="prettyprint">inject_pattern_covered()</code> above) so Check 14's own
+matching — not just what the check does with the result — has a direct
+Ebene-2 test in <code class="prettyprint">tests/test-cli-doctor-checks.php</code>. Before this, the
+~300-line doctor addition from Modul 27 had no such coverage at all for the
+BK-15 exclusion logic; <code class="prettyprint">class-cli-list-command.php:339</code> makes the identical
+visibility argument for a comparable validation seam.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$patterns</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Raw pattern list from the settings.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Offending <code class="prettyprint">!</code>-patterns, original spelling.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_probe_paths">
+        probe_paths()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_probe_paths" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1388</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Turns a wildcard pattern into concrete sample strings it covers.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">probe_paths</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pattern</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Two probes per pattern — <code class="prettyprint">*</code> expanded to nothing and to a filler — so a
+narrow exclusion that only catches one of them is not mistaken for one
+that swallows the whole pattern.</p>
+<p>B-M23: public for the same reason as <code class="prettyprint">neutralising_excludes()</code> above.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$pattern</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Wildcard pattern (without a leading <code class="prettyprint">!</code>).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_proxy_header_choice_check">
+        proxy_header_choice_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_proxy_header_choice_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1116</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 20 — Proxy-Header-Auswahl (Cross-Strang-Hinweis N1, &quot;m2&quot;).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">proxy_header_choice_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>The four values mirror the <code class="prettyprint">firewall_proxy_header</code> select field's options in
+<code class="prettyprint">includes/settings.php</code> (and <code class="prettyprint">creationell_captcha_get_client_ip()</code>'s
+<code class="prettyprint">$header_map</code> in <code class="prettyprint">includes/helpers.php</code>) — kept in sync manually since this
+check must not depend on either of those files loading.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_retention_sweep_check">
+        retention_sweep_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_retention_sweep_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1200</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 22 — läuft die Aufbewahrungsfrist des Event-Logs überhaupt?</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">retention_sweep_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$disabled</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$table_exists</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$retention_days</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Nachlese N6, Befund 6. <code class="prettyprint">Analytics::run_scheduled_prune()</code> und
+<code class="prettyprint">ensure_prune_schedule()</code> steigen seit W3-2 beim Kill-Switch sofort aus.
+Für den kurzen Einsatz ist das richtig — Zeilen zu löschen ist die
+einzige zerstörende Hintergrundoperation dieses Plugins, und wer während
+eines Vorfalls <code class="prettyprint">CREATIONELL_CAPTCHA_DISABLE</code> setzt, will den Zustand
+einfrieren, nicht die Beweise wegräumen lassen. Für eine Konstante, die
+länger steht als die Aufbewahrungsdauer, ist es eine offene Zusage: die
+Einstellung sagt „ältere Einträge werden entfernt&quot;, und es passiert
+nichts. Der Guard bleibt (dieselbe Entscheidung wie in W3-2), aber der
+Zustand wird gemeldet statt still zu bleiben.</p>
+<p><code class="prettyprint">wp creacaptcha log prune</code> prüft den Kill-Switch NICHT und ist damit der
+Weg heraus, ohne die Konstante anzufassen — die Meldung nennt ihn.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$disabled</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the wp-config kill switch is set.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$table_exists</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the event-log table is present.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$retention_days</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Configured retention window in days.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_sanitized_snapshot">
+        sanitized_snapshot()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sanitized_snapshot" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">710</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Ableitung zu Check 9 / CLI-10 — der sanitisierte Vergleichsstand.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">sanitized_snapshot</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$stored</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Ruft den Sanitizer im PROGRAMMATIC-Kontext NUR zum Vergleichen auf und
+schreibt das Ergebnis nicht. Seit Welle 1 ist der Sanitizer
+seiteneffektfrei (der ensure_table()-Aufruf haengt an den
+update_option_/add_option_-Hooks, nicht mehr am Sanitizer), sonst waere
+dieser Aufruf aus einer rein lesenden Diagnose heraus unzulaessig.</p>
+<p>Eigener Helfer aus demselben Grund wie secret_resolvable(): stand diese
+Zeile inline in run(), liess sich der Wertvergleich auf <code class="prettyprint">$sanitized = $stored</code> zuruecknehmen, ohne dass eine Suite rot wurde — Check 9 haette
+dann strukturell nie eine Wertabweichung sehen koennen.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$stored</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Gespeicherter Wertesatz.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Der sanitisierte Wertesatz.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_secret_resolvable">
+        secret_resolvable()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_secret_resolvable" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">682</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Ableitung zu Check 2 und Check 19 — löst EIN Secret aus seinen beiden
+Quellen auf, ohne die Getter zu rufen.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">secret_resolvable</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$constant</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$secrets_option</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$option_key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Bis zum Re-Review stand diese Disjunktion inline in run(); die
+Doctor-Suite ruft aber ausschliesslich die reinen Check-Funktionen mit
+bereits fertigen Argumenten auf, sodass eine Ruecknahme des
+Konstanten-Zweigs von KEINEM Test bemerkt wurde (Fehlerklasse 2: der Fix
+stimmt, der Beweis trifft den Pfad nicht). Als eigener Helfer ist die
+B-M22-Divergenz — Konstante gesetzt, Option leer — direkt und
+diskriminierend pruefbar.</p>
+<p>Der Konstantenname kommt als Zeichenkette herein, damit ein Test beide
+Zweige im selben Prozess durchlaufen kann; <code class="prettyprint">constant()</code> liest ihn erst
+nach dem <code class="prettyprint">defined()</code>-Guard.</p>
+<p>Bewusst NICHT ueber creationell_captcha_get_hmac_secret(): der Getter
+heilt eine fehlende Option durch Neuerzeugen und PERSISTIEREN — ein
+Schreibvorgang, den diese rein lesende Diagnose nie ausloesen darf
+(Vertrag „doctor liest ausschliesslich&quot; im Klassen-Docblock).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$constant</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Name der wp-config-Konstante (Vorrang).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$secrets_option</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Inhalt der Option <code class="prettyprint">creationell_captcha_secrets</code> (Rueckfall).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$option_key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Schluessel innerhalb dieser Option.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_settings_defaults_check">
+        settings_defaults_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_settings_defaults_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">786</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 9 — Settings-Defaults-Vollstaendigkeit + CLI-10-Wertspezifikation.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">settings_defaults_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$defaults</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$stored</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sanitized</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Nachlese N2: schliesst die CLI-10-Grenze (&quot;nur die Schluesselmenge&quot;), seit der
+Sanitizer-Aufruf selbst kein DDL mehr ausloest (Welle 1). <code class="prettyprint">$sanitized</code> ist der
+Aufrufer-seitige, rein lesende Sanitizer-Durchlauf ueber <code class="prettyprint">$stored</code>
+(<code class="prettyprint">creationell_captcha_sanitize_settings($stored, CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC)</code>)
+— diese Methode selbst ruft ihn nicht auf und bleibt dadurch ohne jede
+settings.php-Abhaengigkeit direkt testbar.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$defaults</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p><code class="prettyprint">creationell_captcha_get_default_settings()</code>.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$stored</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Roher Optionswert.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$sanitized</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p><code class="prettyprint">$stored</code> durch den Sanitizer geschickt (PROGRAMMATIC, nicht geschrieben).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_sodium_check">
+        sodium_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sodium_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">840</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 7b — Sodium-Extension (für Argon2id-Algorithmus erforderlich).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">sodium_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sodium_available</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>B-I5: <code class="prettyprint">Engine::algorithm_key()</code> (class-engine.php:601-611) falls back to
+PBKDF2 silently and logs when <code class="prettyprint">ext-sodium</code> is missing — challenges keep
+working. That is a working degradation, not the &quot;cannot work&quot; state
+<code class="prettyprint">error</code> is reserved for (see the Check-16 comment below), so this is
+<code class="prettyprint">warn</code>.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current plugin settings.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$sodium_available</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Result of <code class="prettyprint">creationell_captcha_sodium_available()</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_underattack_cache_check">
+        underattack_cache_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_cache_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1147</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 21 — Under-Attack-Interstitial und Full-Page-Cache (Cross-Strang-Hinweis
+N1, &quot;m7&quot;, §3.3 — nennt alle drei hier verwendeten Signale ausdrücklich).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">underattack_cache_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$active_cache_plugins</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wp_cache_constant</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$advanced_cache_dropin</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$active_cache_plugins</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Labels of active known caching plugins.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$wp_cache_constant</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether <code class="prettyprint">WP_CACHE</code> is defined and truthy.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$advanced_cache_dropin</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether <code class="prettyprint">wp-content/advanced-cache.php</code> exists.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_underattack_pass_rate_check">
+        underattack_pass_rate_check()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_pass_rate_check" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1059</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check 19 — Under-Attack-Pass-Rate (Cross-Strang-Hinweis N1, &quot;m4&quot;/&quot;m7&quot;).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">underattack_pass_rate_check</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sig_resolvable</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array{attempts: int, passed: int}|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Two independent signals, checked in order of confidence:</p>
+<ol>
+<li><code class="prettyprint">$sig_resolvable</code> false — no HMAC signature secret resolves (neither the
+wp-config constant nor the stored option), so <code class="prettyprint">mint_pass()</code> cannot derive a
+token for ANY visitor. This is N1's suggested direct condition
+(<code class="prettyprint">creationell_captcha_derive_hmac_key(...) === ''</code>), reformulated without
+calling the self-healing getter chain (see the <code class="prettyprint">__invoke()</code> comment above
+this call) — <code class="prettyprint">error</code>, because the site is durably unusable, matching the
+<code class="prettyprint">error</code>-reservation rule from Check 16's comment.</li>
+<li><code class="prettyprint">$data</code> — the event-log symptom (see below), for the other cause
+(<code class="prettyprint">headers_sent()</code>), which cannot be observed directly from a WP-CLI process.</li>
+</ol>
+<p><code class="prettyprint">$data</code> is null when the prerequisites for a meaningful measurement are not
+met (event log off, either log gate off, or the table missing) — reported as
+&quot;not measurable&quot;, never as &quot;ok&quot; by absence of evidence. Below the attempt
+threshold the same applies: zero passes out of zero or a handful of attempts
+says nothing about whether the gate is passable at all.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$sig_resolvable</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether the HMAC
+signature secret
+resolves (constant
+or option).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$data</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{attempts: int, passed: int}|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Event counts, or null if unmeasurable.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{check: string, status: string, meldung: string}</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_is_mapped_cidr">
+        is_mapped_cidr()
+        <a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_is_mapped_cidr" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-doctor-command.php"><a href="files/includes-cli-class-cli-doctor-command.html"><abbr title="includes/cli/class-cli-doctor-command.php">class-cli-doctor-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1017</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether a CIDR range&#039;s subnet part is written in IPv4-mapped notation
+(`::ffff:a.b.c.d/N` — RFC 4291 §2.5.5.2), the one shape
+`creationell_captcha_normalize_ip()` deliberately does not touch (see Check
+18&#039;s docblock). Mirrors that function&#039;s binary-form check, scoped to the
+subnet segment of a CIDR entry instead of a plain address.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">is_mapped_cidr</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$entry</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>One list entry, already trimmed.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -383,6 +1915,26 @@ of checks (each <code class="prettyprint">[check =&gt; string, status =&gt; 'ok'
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method___invoke">__invoke()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_cloudflare_cron_check">cloudflare_cron_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_filtered_interceptor_lists">filtered_interceptor_lists()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_gd_check">gd_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_hmac_secrets_check">hmac_secrets_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_inject_pattern_covered">inject_pattern_covered()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_check">login_coverage_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_row">login_coverage_row()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_cidr_check">mapped_cidr_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_remote_addr_check">mapped_remote_addr_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_neutralising_excludes">neutralising_excludes()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_probe_paths">probe_paths()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_proxy_header_choice_check">proxy_header_choice_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_retention_sweep_check">retention_sweep_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sanitized_snapshot">sanitized_snapshot()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_secret_resolvable">secret_resolvable()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_settings_defaults_check">settings_defaults_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sodium_check">sodium_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_cache_check">underattack_cache_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_pass_rate_check">underattack_pass_rate_check()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Doctor-Command.html#method_is_mapped_cidr">is_mapped_cidr()</a></li>
                                     </ul>
             </li>
                     </ul>

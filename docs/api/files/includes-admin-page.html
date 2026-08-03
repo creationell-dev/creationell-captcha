@@ -151,6 +151,13 @@
 <dd>Renders the tabbed settings page.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_render_import_warning">creationell_captcha_render_import_warning()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Renders the &quot;an import replaces everything&quot; warning on the Werkzeuge page.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_render_trust_notice">creationell_captcha_render_trust_notice()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -227,6 +234,40 @@ when JavaScript is unavailable.</p>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_render_import_warning">
+        creationell_captcha_render_import_warning()
+        <a href="namespaces/default.html#function_creationell_captcha_render_import_warning" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">103</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Renders the &quot;an import replaces everything&quot; warning on the Werkzeuge page.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_render_import_warning</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>AF-6: Der Import prüft nur den Envelope (<code class="prettyprint">plugin</code>/<code class="prettyprint">type</code>/<code class="prettyprint">schema</code>), keine
+Herkunft — das exportierte <code class="prettyprint">site_url</code> wurde nie verglichen — und ungenannte
+Schlüssel fallen auf ihren Default, ein Teilimport ist also ein Vollreset.
+Das ist <code class="prettyprint">manage_options</code>-gated und damit kein anonymer Vektor; statt
+Signaturinfrastruktur bekommt der Vorgang eine Warnhinweis-Ebene: hier vor
+dem Import, und nach dem Import benennt die Erfolgsmeldung die Herkunft der
+Datei (siehe creationell_captcha_handle_import_settings()).</p>
+</section>
+
+    
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_render_trust_notice">
         creationell_captcha_render_trust_notice()
         <a href="namespaces/default.html#function_creationell_captcha_render_trust_notice" class="headerlink"><i class="fas fa-link"></i></a>
@@ -235,7 +276,7 @@ when JavaScript is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">128</span>
 
     </aside>
 
@@ -371,6 +412,7 @@ soon as any trust source is configured.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_admin_menu">creationell_captcha_register_admin_menu()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_import_warning">creationell_captcha_render_import_warning()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_settings_page">creationell_captcha_render_settings_page()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_trust_notice">creationell_captcha_render_trust_notice()</a></li>
                                             </ul>

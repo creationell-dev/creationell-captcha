@@ -51,6 +51,11 @@ Search.appendIndex(
             "summary": "Renders\u0020the\u0020tabbed\u0020settings\u0020page.",
             "url": "namespaces/default.html#function_creationell_captcha_render_settings_page"
         },                {
+            "fqsen": "\\creationell_captcha_render_import_warning\u0028\u0029",
+            "name": "creationell_captcha_render_import_warning",
+            "summary": "Renders\u0020the\u0020\u0022an\u0020import\u0020replaces\u0020everything\u0022\u0020warning\u0020on\u0020the\u0020Werkzeuge\u0020page.",
+            "url": "namespaces/default.html#function_creationell_captcha_render_import_warning"
+        },                {
             "fqsen": "\\creationell_captcha_render_trust_notice\u0028\u0029",
             "name": "creationell_captcha_render_trust_notice",
             "summary": "Renders\u0020the\u0020\u0022proxy\u0020mode\u0020on\u0020but\u0020trust\u002Dset\u0020empty\u0022\u0020admin\u0020notice\u0020on\u0020plugin\u0020pages.",
@@ -70,6 +75,11 @@ Search.appendIndex(
             "name": "creationell_captcha_render_nav_tabs",
             "summary": "Renders\u0020the\u0020no\u002DJavaScript\u0020fallback\u0020style\u0020and\u0020the\u0020nav\u002Dtab\u0020bar.",
             "url": "namespaces/default.html#function_creationell_captcha_render_nav_tabs"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS",
+            "name": "CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS",
+            "summary": "The\u0020default\u0020upper\u0020bound\u0020on\u0020rows\u0020in\u0020a\u0020single\u0020CSV\u0020export.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS"
         },                {
             "fqsen": "\\creationell_captcha_csv_cell\u0028\u0029",
             "name": "creationell_captcha_csv_cell",
@@ -193,7 +203,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Aflush_pending_deltas\u0028\u0029",
             "name": "flush_pending_deltas",
-            "summary": "Flushes\u0020the\u0020accumulated\u0020daily\u0020and\u0020hourly\u0020counter\u0020deltas\u0020back\u0020to\u0020the\noptions\u0020table.\u0020Reads\u0020the\u0020current\u0020value\u0020first\u0020and\u0020adds\u0020the\u0020deltas,\u0020so\nconcurrent\u0020updates\u0020from\u0020parallel\u0020requests\u0020are\u0020not\u0020lost\u0020\u0028the\u0020underlying\nget\u002Bupdate\u0020is\u0020still\u0020non\u002Datomic,\u0020but\u0020only\u0020one\u0020round\u002Dtrip\u0020per\u0020request\nnarrows\u0020the\u0020race\u0020window\u0020considerably\u0020compared\u0020to\u0020one\u0020round\u002Dtrip\u0020per\nevent\u0029.",
+            "summary": "Flushes\u0020the\u0020accumulated\u0020daily\u0020and\u0020hourly\u0020counter\u0020deltas\u0020back\u0020to\u0020the\noptions\u0020table.",
             "url": "classes/Creationell-Captcha-Analytics.html#method_flush_pending_deltas"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Aapply_deltas\u0028\u0029",
@@ -221,10 +231,25 @@ Search.appendIndex(
             "summary": "Deletes\u0020event\u002Dlog\u0020rows\u0020older\u0020than\u0020the\u0020configured\u0020retention\u0020period.",
             "url": "classes/Creationell-Captcha-Analytics.html#method_prune_events"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Aensure_prune_schedule\u0028\u0029",
+            "name": "ensure_prune_schedule",
+            "summary": "Makes\u0020sure\u0020the\u0020retention\u0020sweep\u0020is\u0020on\u0020the\u0020cron\u0020schedule.\u0020Idempotent\u0020\u2014\nregistered\u0020on\u0020\u0060init\u0060,\u0020so\u0020a\u0020slot\u0020lost\u0020to\u0020a\u0020\u0060wp\u0020cron\u0020event\u0020delete\u0060,\u0020a\npartial\u0020DB\u0020restore\u0020or\u0020a\u0020plugin\u0020re\u002Dactivation\u0020comes\u0020back\u0020by\u0020itself.",
+            "url": "classes/Creationell-Captcha-Analytics.html#method_ensure_prune_schedule"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Arun_scheduled_prune\u0028\u0029",
+            "name": "run_scheduled_prune",
+            "summary": "Cron\u0020callback\u0020for\u0020self\u003A\u003APRUNE_HOOK\u0020\u2014\u0020deletes\u0020rows\u0020past\u0020the\u0020retention\nwindow.\u0020Skips\u0020silently\u0020when\u0020the\u0020kill\u0020switch\u0020is\u0020set\u0020\u0028W3\u002D2,\u0020see\nensure_prune_schedule\u0028\u0029\u0029\u0020or\u0020when\u0020the\u0020table\u0020does\u0020not\u0020exist.",
+            "url": "classes/Creationell-Captcha-Analytics.html#method_run_scheduled_prune"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Atable_exists\u0028\u0029",
             "name": "table_exists",
             "summary": "Whether\u0020the\u0020event\u002Dlog\u0020table\u0020currently\u0020exists.",
             "url": "classes/Creationell-Captcha-Analytics.html#method_table_exists"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Acurrent_blog_id\u0028\u0029",
+            "name": "current_blog_id",
+            "summary": "The\u0020current\u0020blog\u0020id,\u0020or\u00200\u0020on\u0020a\u0020single\u0020site\u0020\u0028B\u002DM11\u0029.",
+            "url": "classes/Creationell-Captcha-Analytics.html#method_current_blog_id"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Aclear_events\u0028\u0029",
             "name": "clear_events",
@@ -235,6 +260,11 @@ Search.appendIndex(
             "name": "current_path",
             "summary": "The\u0020current\u0020request\u0020path\u0020for\u0020the\u0020event\u0020log.",
             "url": "classes/Creationell-Captcha-Analytics.html#method_current_path"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Aevent_columns\u0028\u0029",
+            "name": "event_columns",
+            "summary": "The\u0020columns\u0020of\u0020the\u0020event\u002Dlog\u0020table,\u0020in\u0020schema\u0020order.",
+            "url": "classes/Creationell-Captcha-Analytics.html#method_event_columns"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003Atable_name\u0028\u0029",
             "name": "table_name",
@@ -291,6 +321,16 @@ Search.appendIndex(
             "summary": "The\u0020seven\u0020recognised\u0020event\u0020types.",
             "url": "classes/Creationell-Captcha-Analytics.html#constant_TYPES"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003AVERIFICATION_DATA_TYPES",
+            "name": "VERIFICATION_DATA_TYPES",
+            "summary": "The\u0020event\u0020types\u0020whose\u0020request\u0020actually\u0020carries\u0020an\u0020ALTCHA\u0020payload,\u0020i.e.",
+            "url": "classes/Creationell-Captcha-Analytics.html#constant_VERIFICATION_DATA_TYPES"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003APRUNE_HOOK",
+            "name": "PRUNE_HOOK",
+            "summary": "Cron\u0020hook\u0020that\u0020enforces\u0020the\u0020configured\u0020event\u002Dlog\u0020retention.",
+            "url": "classes/Creationell-Captcha-Analytics.html#constant_PRUNE_HOOK"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003ACOUNTER_RETENTION_DAYS",
             "name": "COUNTER_RETENTION_DAYS",
             "summary": "Aggregate\u0020daily\u002Dcounter\u0020retention,\u0020in\u0020days.",
@@ -316,6 +356,16 @@ Search.appendIndex(
             "summary": "Whether\u0020the\u0020shutdown\u0020flush\u0020has\u0020already\u0020been\u0020hooked\u0020for\u0020this\u0020request.",
             "url": "classes/Creationell-Captcha-Analytics.html#property_flush_hooked"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003A\u0024table_exists_memo",
+            "name": "table_exists_memo",
+            "summary": "Request\u002Dlocal\u0020memo\u0020for\u0020table_exists\u0028\u0029.",
+            "url": "classes/Creationell-Captcha-Analytics.html#property_table_exists_memo"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Analytics\u003A\u003A\u0024table_exists_memo_blog",
+            "name": "table_exists_memo_blog",
+            "summary": "The\u0020blog\u0020the\u0020memo\u0020above\u0020was\u0020taken\u0020on,\u0020or\u0020\u002D1\u0020when\u0020it\u0020holds\u0020nothing.",
+            "url": "classes/Creationell-Captcha-Analytics.html#property_table_exists_memo_blog"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\EmailObfuscator",
             "name": "EmailObfuscator",
             "summary": "Obfuscates\u0020mailto\u003A\u0020links\u0020and\u0020plain\u002Dtext\u0020email\u0020addresses\u0020in\u0020front\u002Dend\noutput.\u0020The\u0020real\u0020address\u0020is\u0020XOR\u002Dhex\u0020encoded\u0020into\u0020a\u0020data\u002Dcce\u0020attribute\u0020and\nrestored\u0020client\u002Dside\u0020by\u0020the\u0020decoder\u0020script.\u0020Two\u0020modes\u0020share\u0020this\u0020class\u003A\u0020the\ncontent\u002Dfilter\u0020mode\u0020\u0028process\u0028\u0029\u0029\u0020and\u0020the\u0020full\u002Dpage\u002Dbuffer\u0020mode\n\u0028process_page\u0028\u0029\u0029.\u0020See\u0020the\u0020module\u002D7\u0020and\u0020module\u002D8\u0020design\u0020specs.",
@@ -333,13 +383,48 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Aobfuscate\u0028\u0029",
             "name": "obfuscate",
-            "summary": "The\u0020shared,\u0020script\u002Dsafe\u0020obfuscation\u0020pass.\u0020Tokenises\u0020the\u0020HTML\u0020once,\u0020then\nencodes\u0020\u0060mailto\u003A\u0060\u0020hrefs\u0020in\u0020tag\u0020segments\u0020and\u0020plain\u002Dtext\u0020addresses\u0020in\u0020text\nsegments\u003B\u0020\u003Cscript\u003E\u0020and\u0020\u003Cstyle\u003E\u0020blocks\u0020are\u0020skipped\u0020in\u0020both\u0020passes.",
+            "summary": "The\u0020shared,\u0020markup\u002Daware\u0020obfuscation\u0020pass.",
             "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_obfuscate"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Amarkup_end\u0028\u0029",
+            "name": "markup_end",
+            "summary": "Where\u0020the\u0020markup\u0020starting\u0020at\u0020\u0060\u0024lt\u0060\u0020ends\u0020\u2014\u0020or\u0020NULL\u0020when\u0020no\u0020markup\u0020starts\nthere\u0020and\u0020the\u0020\u0060\u003C\u0060\u0020is\u0020literal\u0020text.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_markup_end"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Aelement_name\u0028\u0029",
+            "name": "element_name",
+            "summary": "Lower\u002Dcased\u0020element\u0020name\u0020of\u0020a\u0020start\u0020or\u0020end\u0020tag\u003B\u0020\u0027\u0027\u0020for\u0020declarations.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_element_name"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Araw_text_end\u0028\u0029",
+            "name": "raw_text_end",
+            "summary": "Offset\u0020of\u0020the\u0020\u0060\u003C\u0060\u0020of\u0020the\u0020closing\u0020tag\u0020for\u0020a\u0020raw\u002Dtext\u0020element,\u0020or\u0020the\u0020end\nof\u0020the\u0020document\u0020when\u0020it\u0020never\u0020closes.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_raw_text_end"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Aencode_text\u0028\u0029",
+            "name": "encode_text",
+            "summary": "Encodes\u0020plain\u002Dtext\u0020addresses\u0020in\u0020a\u0020text\u0020segment.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_encode_text"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Aencode_tag\u0028\u0029",
+            "name": "encode_tag",
+            "summary": "Encodes\u0020a\u0020\u0060mailto\u003A\u0060\u0020href\u0020inside\u0020a\u0020single\u0020start\u0020tag.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_encode_tag"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Ais_html_space\u0028\u0029",
+            "name": "is_html_space",
+            "summary": "Whether\u0020the\u0020byte\u0020is\u0020HTML\u0020whitespace\u0020\u0028space,\u0020tab,\u0020LF,\u0020FF,\u0020CR\u0029.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_is_html_space"
         },                {
             "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003Aencode\u0028\u0029",
             "name": "encode",
             "summary": "XOR\u002Dhex\u0020encodes\u0020a\u0020string\u003A\u0020a\u0020random\u0020key\u0020byte\u0020followed\u0020by\u0020each\u0020byte\u0020of\u0020the\nvalue\u0020XOR\u002Ded\u0020with\u0020that\u0020key,\u0020all\u0020two\u002Ddigit\u0020hex.\u0020The\u0020result\u0020contains\u0020no\n\u0022\u0040\u0022\u0020and\u0020no\u0020recognisable\u0020email\u0020structure.",
             "url": "classes/Creationell-Captcha-EmailObfuscator.html#method_encode"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\EmailObfuscator\u003A\u003ASKIP_ELEMENTS",
+            "name": "SKIP_ELEMENTS",
+            "summary": "Elements\u0020whose\u0020content\u0020is\u0020never\u0020rewritten.",
+            "url": "classes/Creationell-Captcha-EmailObfuscator.html#constant_SKIP_ELEMENTS"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Engine",
             "name": "Engine",
@@ -351,6 +436,11 @@ Search.appendIndex(
             "summary": "Builds\u0020a\u0020fresh\u0020challenge\u0020as\u0020a\u0020JSON\u002Dserialisable\u0020array.",
             "url": "classes/Creationell-Captcha-Engine.html#method_create_challenge"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Acode_pass_key\u0028\u0029",
+            "name": "code_pass_key",
+            "summary": "Transient\u0020key\u0020of\u0020the\u0020\u0022image\u002Dcode\u0020stage\u0020passed\u0022\u0020marker\u0020for\u0020a\u0020challenge.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_code_pass_key"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Averify\u0028\u0029",
             "name": "verify",
             "summary": "Verifies\u0020a\u0020base64\u002Dencoded\u0020ALTCHA\u0020payload\u0020and\u0020enforces\u0020single\u0020use.",
@@ -358,13 +448,43 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Averify_structural\u0028\u0029",
             "name": "verify_structural",
-            "summary": "Verifies\u0020a\u0020base64\u0020ALTCHA\u0020payload\u0020structurally\u0020\u2014\u0020same\u0020checks\u0020as\n\u0060verify\u0028\u0029\u0060\u0020minus\u0020the\u0020single\u002Duse\u0020replay\u0020guard.\u0020Used\u0020by\u0020the\u0020code\u002D\nchallenge\u0020verify\u0020endpoint\u0020\u0028Modul\u002015\u0029,\u0020which\u0020must\u0020not\u0020consume\u0020the\nincoming\u0020payload\u0020because\u0020the\u0020user\u0020may\u0020retry\u0020on\u0020wrong\u0020code.",
+            "summary": "Verifies\u0020a\u0020base64\u0020ALTCHA\u0020payload\u0020structurally\u0020\u2014\u0020same\u0020signature\nrequirement\u0020and\u0020same\u0020derive\u002Dkey\u0020caps\u0020as\u0020\u0060verify\u0028\u0029\u0060,\u0020but\u0020without\u0020the\nsingle\u002Duse\u0020replay\u0020claim\u0020and\u0020without\u0020the\u0020code\u002Dstage\u0020rule.",
             "url": "classes/Creationell-Captcha-Engine.html#method_verify_structural"
         },                {
-            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aissue_signed_payload\u0028\u0029",
-            "name": "issue_signed_payload",
-            "summary": "Issues\u0020a\u0020fresh,\u0020server\u002Dsolved\u0020ALTCHA\u0020payload\u0020\u2014\u0020base64\u0020string\u0020that\n\u0060Engine\u003A\u003Averify\u0028\u0029\u0060\u0020will\u0020accept\u0020exactly\u0020once.\u0020Used\u0020by\u0020the\u0020code\u002Dchallenge\nverify\u0020endpoint\u0020\u0028Modul\u002015\u0029\u0020to\u0020substitute\u0020the\u0020user\u0027s\u0020original\u0020PoW\npayload\u0020\u0028which\u0020carried\u0020a\u0020data.ccode\u0020marker\u0020and\u0020would\u0020be\u0020rejected\u0020by\nverify\u0028\u0029\u0027s\u0020bypass\u0020guard\u0029\u0020with\u0020a\u0020clean\u0020payload\u0020that\u0020has\u0020no\u0020data.ccode.",
-            "url": "classes/Creationell-Captcha-Engine.html#method_issue_signed_payload"
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aprepare_payload\u0028\u0029",
+            "name": "prepare_payload",
+            "summary": "Decodes\u0020a\u0020base64\u0020ALTCHA\u0020payload\u0020and\u0020enforces\u0020everything\u0020that\u0020has\u0020to\u0020hold\nBEFORE\u0020the\u0020vendor\u0020library\u0020is\u0020allowed\u0020to\u0020derive\u0020a\u0020single\u0020key.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_prepare_payload"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aparams_within_caps\u0028\u0029",
+            "name": "params_within_caps",
+            "summary": "Server\u002Dside\u0020ceiling\u0020for\u0020the\u0020derive\u002Dkey\u0020work\u0020an\u0020INCOMING\u0020payload\u0020may\u0020ask\nfor\u0020\u0028CM\u002D6,\u0020Wurzel\u00203.1\u0029.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_params_within_caps"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Arun_verify_solution\u0028\u0029",
+            "name": "run_verify_solution",
+            "summary": "Hands\u0020a\u0020prepared\u0020payload\u0020to\u0020the\u0020vendor\u0020library.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_run_verify_solution"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Areplay_marker_lifetime\u0028\u0029",
+            "name": "replay_marker_lifetime",
+            "summary": "How\u0020long\u0020the\u0020single\u002Duse\u0020marker\u0020of\u0020a\u0020just\u002Dverified\u0020payload\u0020has\u0020to\u0020stay\naround\u0020\u2014\u0020namely\u0020for\u0020exactly\u0020as\u0020long\u0020as\u0020that\u0020payload\u0020can\u0020still\u0020be\u0020redeemed.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_replay_marker_lifetime"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aclaim_replay_marker\u0028\u0029",
+            "name": "claim_replay_marker",
+            "summary": "Claims\u0020the\u0020single\u002Duse\u0020replay\u0020marker\u0020for\u0020a\u0020challenge\u0020signature.\u0020Returns\ntrue\u0020for\u0020exactly\u0020one\u0020caller,\u0020false\u0020for\u0020every\u0020other.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_claim_replay_marker"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aschedule_replay_cleanup\u0028\u0029",
+            "name": "schedule_replay_cleanup",
+            "summary": "Makes\u0020sure\u0020the\u0020replay\u0020markers\u0020written\u0020above\u0020get\u0020swept\u0020again.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_schedule_replay_cleanup"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Acleanup_replay_markers\u0028\u0029",
+            "name": "cleanup_replay_markers",
+            "summary": "Deletes\u0020replay\u0020markers\u0020whose\u0020lifetime\u0020has\u0020run\u0020out\u0020and\u0020re\u002Darms\u0020itself\nwhile\u0020markers\u0020are\u0020still\u0020around.\u0020Registered\u0020on\u0020self\u003A\u003ACLEANUP_HOOK\u0020at\u0020the\nbottom\u0020of\u0020this\u0020file.",
+            "url": "classes/Creationell-Captcha-Engine.html#method_cleanup_replay_markers"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003Aalgorithm\u0028\u0029",
             "name": "algorithm",
@@ -390,6 +510,31 @@ Search.appendIndex(
             "name": "altcha",
             "summary": "Builds\u0020the\u0020underlying\u0020ALTCHA\u0020object\u0020with\u0020both\u0020HMAC\u0020secrets.",
             "url": "classes/Creationell-Captcha-Engine.html#method_altcha"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003AREPLAY_PREFIX",
+            "name": "REPLAY_PREFIX",
+            "summary": "Option\u002Dname\u0020prefix\u0020of\u0020the\u0020single\u002Duse\u0020replay\u0020markers\u0020claimed\u0020by\u0020verify\u0028\u0029.",
+            "url": "classes/Creationell-Captcha-Engine.html#constant_REPLAY_PREFIX"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003ACODE_PASS_PREFIX",
+            "name": "CODE_PASS_PREFIX",
+            "summary": "Transient\u002Dname\u0020prefix\u0020of\u0020the\u0020\u0022image\u002Dcode\u0020stage\u0020passed\u0022\u0020markers\u0020that\u0020the\n\u0060\/code\u002Dverify\u0060\u0020handler\u0020writes\u0020\u0028see\u0020includes\/code\u002Dchallenge.php\u0029.",
+            "url": "classes/Creationell-Captcha-Engine.html#constant_CODE_PASS_PREFIX"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003AUA_GATE_PARAM",
+            "name": "UA_GATE_PARAM",
+            "summary": "Key\u0020inside\u0020\u0060challenge.parameters.data\u0060\u0020that\u0020marks\u0020a\u0020challenge\u0020as\n\u0022issued\u0020for\u0020the\u0020under\u002Dattack\u0020gate\u0020only\u0022.",
+            "url": "classes/Creationell-Captcha-Engine.html#constant_UA_GATE_PARAM"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003ACLEANUP_HOOK",
+            "name": "CLEANUP_HOOK",
+            "summary": "Cron\u0020hook\u0020that\u0020sweeps\u0020expired\u0020replay\u0020markers\u0020out\u0020of\u0020the\u0020options\u0020table.",
+            "url": "classes/Creationell-Captcha-Engine.html#constant_CLEANUP_HOOK"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003ACLEANUP_INTERVAL",
+            "name": "CLEANUP_INTERVAL",
+            "summary": "Seconds\u0020between\u0020two\u0020replay\u002Dmarker\u0020sweeps\u0020while\u0020markers\u0020still\u0020exist.",
+            "url": "classes/Creationell-Captcha-Engine.html#constant_CLEANUP_INTERVAL"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Engine\u003A\u003APRESETS",
             "name": "PRESETS",
@@ -423,7 +568,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Acontext\u0028\u0029",
             "name": "context",
-            "summary": "Builds\u0020the\u0020request\u0020context.\u0020Adds\u0020an\u0020\u0060action\u0060\u0020field\u0020read\u0020from\n\u0024_POST\u005B\u0027action\u0027\u005D\u0020\u0028preferred\u0029\u0020or\u0020\u0024_GET\u005B\u0027action\u0027\u005D\u0020for\u0020action\u002Dbased\u0020protection.",
+            "summary": "Builds\u0020the\u0020request\u0020context.",
             "url": "classes/Creationell-Captcha-Interceptor.html#method_context"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Ais_ajax_request\u0028\u0029",
@@ -438,13 +583,28 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Ais_rest_request\u0028\u0029",
             "name": "is_rest_request",
-            "summary": "Whether\u0020the\u0020request\u0020path\u0020points\u0020at\u0020the\u0020REST\u0020API.",
+            "summary": "Whether\u0020the\u0020current\u0020request\u0020is\u0020served\u0020by\u0020the\u0020WordPress\u0020REST\u0020API.",
             "url": "classes/Creationell-Captcha-Interceptor.html#method_is_rest_request"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003A\u0024action_patterns",
+            "name": "action_patterns",
+            "summary": "Request\u002Dlocal\u0020cache\u0020of\u0020the\u0020filtered\u0020action\u0020patterns.\u0020The\u0020filter\u0020is\nevaluated\u0020in\u0020exactly\u0020one\u0020place\u0020\u0028self\u003A\u003Aaction_patterns\u0028\u0029\u0029\u0020and\u0020exactly\nonce\u0020per\u0020request,\u0020so\u0020the\u0020bypass\u0020step\u0020and\u0020the\u0020guard\u0020step\u0020can\u0020never\u0020see\ntwo\u0020different\u0020lists\u0020\u2014\u0020that\u0020asymmetry\u0020was\u0020BK\u002D10.",
+            "url": "classes/Creationell-Captcha-Interceptor.html#property_action_patterns"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Amatches_action\u0028\u0029",
+            "name": "matches_action",
+            "summary": "Whether\u0020any\u0020of\u0020the\u0020request\u0027s\u0020action\u0020candidates\u0020matches\u0020a\u0020pattern.",
+            "url": "classes/Creationell-Captcha-Interceptor.html#method_matches_action"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Ais_guarded\u0028\u0029",
             "name": "is_guarded",
             "summary": "Whether\u0020the\u0020current\u0020request\u0020is\u0020a\u0020guarded\u0020target.\u0020Checks\u0020both\u0020URL\u0020paths\n\u0028\u0060interceptor_paths\u0060\u0029\u0020and\u0020action\u0020slugs\u0020\u0028\u0060interceptor_actions\u0060\u0029\u003B\u0020a\u0020positive\nmatch\u0020in\u0020either\u0020list\u0020guards\u0020the\u0020request.",
             "url": "classes/Creationell-Captcha-Interceptor.html#method_is_guarded"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Amatch_request_path\u0028\u0029",
+            "name": "match_request_path",
+            "summary": "Matches\u0020a\u0020request\u0020path\u0020against\u0020the\u0020pattern\u0020list\u0020in\u0020BOTH\u0020spellings\u0020the\nrequest\u0020can\u0020have\u003A\u0020URL\u002Ddecoded\u0020and\u0020as\u0020it\u0020came\u0020off\u0020the\u0020wire.",
+            "url": "classes/Creationell-Captcha-Interceptor.html#method_match_request_path"
         },                {
             "fqsen": "\\Creationell\\Captcha\\Interceptor\u003A\u003Amatch_path\u0028\u0029",
             "name": "match_path",
@@ -476,10 +636,50 @@ Search.appendIndex(
             "summary": "Fetch\u0020and\u0020decode\u0020the\u0020remote\u0020manifest\u0020file.",
             "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_get_remote_manifest"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Afailure_key\u0028\u0029",
+            "name": "failure_key",
+            "summary": "Transient\u0020key\u0020under\u0020which\u0020a\u0020failed\u0020manifest\u0020fetch\u0020is\u0020remembered.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_failure_key"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Aremember_fetch_failure\u0028\u0029",
+            "name": "remember_fetch_failure",
+            "summary": "Remembers\u0020a\u0020failed\u0020manifest\u0020fetch\u0020so\u0020the\u0020next\u0020call\u0020does\u0020not\u0020repeat\u0020it.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_remember_fetch_failure"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Avalidate_manifest\u0028\u0029",
+            "name": "validate_manifest",
+            "summary": "Structural\u0020check\u0020of\u0020a\u0020decoded\u0020manifest.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_validate_manifest"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Amanifest_string\u0028\u0029",
+            "name": "manifest_string",
+            "summary": "A\u0020manifest\u0020field\u0020as\u0020a\u0020string,\u0020or\u0020the\u0020fallback\u0020when\u0020the\u0020manifest\u0020carried\nsomething\u0020else\u0020\u0028array,\u0020object,\u0020number,\u0020bool,\u0020null\u0029.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_manifest_string"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Ais_https_url\u0028\u0029",
+            "name": "is_https_url",
+            "summary": "Whether\u0020a\u0020URL\u0020is\u0020usable\u0020as\u0020a\u0020package\/download\u0020source\u003A\u0020valid\u0020per\nWordPress\u0027\u0020own\u0020rules\u0020\u002Aand\u002A\u0020https.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_is_https_url"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Aplugin_info\u0028\u0029",
             "name": "plugin_info",
             "summary": "Provide\u0020detailed\u0020plugin\u0020info\u0020in\u0020the\u0020\u201CView\u0020Details\u201D\u0020modal.",
             "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_plugin_info"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Adefault_profile_url\u0028\u0029",
+            "name": "default_profile_url",
+            "summary": "The\u0020wordpress.org\u0020profile\u0020URL\u0020used\u0020when\u0020the\u0020manifest\u0020supplies\u0020none.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_default_profile_url"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Adefault_avatar_url\u0028\u0029",
+            "name": "default_avatar_url",
+            "summary": "The\u0020wordpress.org\u0020avatar\u0020URL\u0020used\u0020when\u0020the\u0020manifest\u0020supplies\u0020none.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_default_avatar_url"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Amanifest_url_or_default\u0028\u0029",
+            "name": "manifest_url_or_default",
+            "summary": "Returns\u0020a\u0020manifest\u002Dsupplied\u0020URL\u0020if\u0020WordPress\u0020considers\u0020it\u0020a\u0020valid\nhttp\u0028s\u0029\u0020URL,\u0020otherwise\u0020the\u0020given\u0020default.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_manifest_url_or_default"
         },                {
             "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Acheck_update\u0028\u0029",
             "name": "check_update",
@@ -493,8 +693,23 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003Averify_download_checksum\u0028\u0029",
             "name": "verify_download_checksum",
-            "summary": "Verify\u0020download\u0020checksum\u0020before\u0020installation.",
+            "summary": "Verify\u0020the\u0020package\u0020checksum\u0020and\u0020hand\u0020the\u0020verified\u0020file\u0020to\u0020the\u0020installer.",
             "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#method_verify_download_checksum"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003AMAX_MANIFEST_BYTES",
+            "name": "MAX_MANIFEST_BYTES",
+            "summary": "Largest\u0020manifest\u0020body\u0020that\u0020is\u0020accepted,\u0020in\u0020bytes.",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#constant_MAX_MANIFEST_BYTES"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003AMANIFEST_JSON_DEPTH",
+            "name": "MANIFEST_JSON_DEPTH",
+            "summary": "",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#constant_MANIFEST_JSON_DEPTH"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003AFETCH_FAILURE_TTL",
+            "name": "FETCH_FAILURE_TTL",
+            "summary": "",
+            "url": "classes/Creationell-Captcha-GitUpdate-CreationellCaptchaGitPluginUpdater.html#constant_FETCH_FAILURE_TTL"
         },                {
             "fqsen": "\\Creationell\\Captcha\\GitUpdate\\CreationellCaptchaGitPluginUpdater\u003A\u003A\u0024plugin_slug",
             "name": "plugin_slug",
@@ -543,13 +758,18 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\RateLimiter\u003A\u003Ais_challenge_endpoint\u0028\u0029",
             "name": "is_challenge_endpoint",
-            "summary": "Whether\u0020the\u0020request\u0020points\u0020at\u0020the\u0020plugin\u0027s\u0020own\u0020challenge\u0020endpoint.",
+            "summary": "Whether\u0020the\u0020request\u0020is\u0020actually\u0020served\u0020by\u0020the\u0020plugin\u0027s\u0020own\u0020challenge\nendpoint\u0020\u2014\u0020the\u0020one\u0020route\u0020that\u0020must\u0020stay\u0020reachable\u0020without\u0020being\u0020counted,\nbecause\u0020the\u0020widget\u0020fetches\u0020a\u0020challenge\u0020for\u0020every\u0020protected\u0020form.",
             "url": "classes/Creationell-Captcha-RateLimiter.html#method_is_challenge_endpoint"
         },                {
             "fqsen": "\\Creationell\\Captcha\\RateLimiter\u003A\u003Ashould_count\u0028\u0029",
             "name": "should_count",
             "summary": "Whether\u0020the\u0020current\u0020request\u0020counts\u0020toward\u0020the\u0020rate\u0020limit.",
             "url": "classes/Creationell-Captcha-RateLimiter.html#method_should_count"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\RateLimiter\u003A\u003ACHALLENGE_ROUTE",
+            "name": "CHALLENGE_ROUTE",
+            "summary": "The\u0020plugin\u0027s\u0020own\u0020challenge\u0020route\u0020\u2014\u0020the\u0020only\u0020route\u0020exempt\u0020from\u0020counting.",
+            "url": "classes/Creationell-Captcha-RateLimiter.html#constant_CHALLENGE_ROUTE"
         },                {
             "fqsen": "\\Creationell\\Captcha\\UnderAttack",
             "name": "UnderAttack",
@@ -561,15 +781,35 @@ Search.appendIndex(
             "summary": "Runs\u0020the\u0020under\u002Dattack\u0020gate.\u0020Registered\u0020on\u0020\u0060template_redirect\u0060.\u0020Terminates\nthe\u0020request\u0020when\u0020an\u0020interstitial\u0020is\u0020served\u0020or\u0020a\u0020pass\u0020redirect\u0020is\u0020issued.",
             "url": "classes/Creationell-Captcha-UnderAttack.html#method_run"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Aredeem\u0028\u0029",
+            "name": "redeem",
+            "summary": "Redeems\u0020a\u0020posted\u0020interstitial\u0020solution\u003A\u0020mints\u0020the\u0020pass\u0020FIRST,\u0020spends\u0020the\nchallenge\u0020SECOND,\u0020sets\u0020the\u0020cookie\u0020LAST.",
+            "url": "classes/Creationell-Captcha-UnderAttack.html#method_redeem"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Arequest_target\u0028\u0029",
+            "name": "request_target",
+            "summary": "The\u0020URL\u0020the\u0020interstitial\u0020posts\u0020back\u0020to,\u0020and\u0020the\u0020one\u0020the\u0020visitor\u0020returns\nto\u0020after\u0020passing\u0020the\u0020gate.",
+            "url": "classes/Creationell-Captcha-UnderAttack.html#method_request_target"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Averify_gate_payload\u0028\u0029",
+            "name": "verify_gate_payload",
+            "summary": "Verifies\u0020the\u0020payload\u0020the\u0020interstitial\u0020posted\u0020back\u0020\u2014\u0020as\u0020the\u0020under\u002Dattack\ngate,\u0020which\u0020is\u0020the\u0020only\u0020caller\u0020allowed\u0020to\u0020redeem\u0020a\u0020challenge\u0020that\u0020was\nissued\u0020under\u0020ctx\u0020suppression\u0020\u0028FU\u002D1\u0029.",
+            "url": "classes/Creationell-Captcha-UnderAttack.html#method_verify_gate_payload"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Ahas_valid_pass\u0028\u0029",
             "name": "has_valid_pass",
-            "summary": "Whether\u0020the\u0020request\u0020carries\u0020a\u0020valid,\u0020unexpired\u0020pass\u0020token.",
+            "summary": "Whether\u0020the\u0020request\u0020carries\u0020a\u0020valid,\u0020unexpired\u0020pass\u0020token\u0020that\u0020belongs\nto\u0020THIS\u0020visitor.",
             "url": "classes/Creationell-Captcha-UnderAttack.html#method_has_valid_pass"
         },                {
-            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Aissue_pass\u0028\u0029",
-            "name": "issue_pass",
-            "summary": "Mints\u0020a\u0020fresh\u0020pass\u0020token\u0020and\u0020sets\u0020it\u0020as\u0020a\u0020cookie.",
-            "url": "classes/Creationell-Captcha-UnderAttack.html#method_issue_pass"
+            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Amint_pass\u0028\u0029",
+            "name": "mint_pass",
+            "summary": "Mints\u0020a\u0020fresh\u0020pass\u0020token\u0020WITHOUT\u0020setting\u0020anything.",
+            "url": "classes/Creationell-Captcha-UnderAttack.html#method_mint_pass"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Acommit_pass\u0028\u0029",
+            "name": "commit_pass",
+            "summary": "Sets\u0020a\u0020minted\u0020pass\u0020token\u0020as\u0020the\u0020visitor\u0027s\u0020cookie.",
+            "url": "classes/Creationell-Captcha-UnderAttack.html#method_commit_pass"
         },                {
             "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Aserve_interstitial\u0028\u0029",
             "name": "serve_interstitial",
@@ -666,6 +906,106 @@ Search.appendIndex(
             "summary": "Runs\u0020the\u0020diagnostic\u0020checklist\u0020and\u0020prints\u0020a\u0020status\u0020table.",
             "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method___invoke"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Acloudflare_cron_check\u0028\u0029",
+            "name": "cloudflare_cron_check",
+            "summary": "Check\u00204\u0020\u2014\u0020Cloudflare\u002DRefresh\u002DCron.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_cloudflare_cron_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Asecret_resolvable\u0028\u0029",
+            "name": "secret_resolvable",
+            "summary": "Ableitung\u0020zu\u0020Check\u00202\u0020und\u0020Check\u002019\u0020\u2014\u0020l\u00F6st\u0020EIN\u0020Secret\u0020aus\u0020seinen\u0020beiden\nQuellen\u0020auf,\u0020ohne\u0020die\u0020Getter\u0020zu\u0020rufen.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_secret_resolvable"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Asanitized_snapshot\u0028\u0029",
+            "name": "sanitized_snapshot",
+            "summary": "Ableitung\u0020zu\u0020Check\u00209\u0020\/\u0020CLI\u002D10\u0020\u2014\u0020der\u0020sanitisierte\u0020Vergleichsstand.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sanitized_snapshot"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Alogin_coverage_row\u0028\u0029",
+            "name": "login_coverage_row",
+            "summary": "Ableitung\u0020zu\u0020Check\u002011\u0020\u2014\u0020B\u002DI7.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_row"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Ahmac_secrets_check\u0028\u0029",
+            "name": "hmac_secrets_check",
+            "summary": "Check\u00202\u0020\u2014\u0020HMAC\u002DSecrets.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_hmac_secrets_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Asettings_defaults_check\u0028\u0029",
+            "name": "settings_defaults_check",
+            "summary": "Check\u00209\u0020\u2014\u0020Settings\u002DDefaults\u002DVollstaendigkeit\u0020\u002B\u0020CLI\u002D10\u002DWertspezifikation.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_settings_defaults_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Asodium_check\u0028\u0029",
+            "name": "sodium_check",
+            "summary": "Check\u00207b\u0020\u2014\u0020Sodium\u002DExtension\u0020\u0028f\u00FCr\u0020Argon2id\u002DAlgorithmus\u0020erforderlich\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_sodium_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Agd_check\u0028\u0029",
+            "name": "gd_check",
+            "summary": "Check\u002010\u0020\u2014\u0020PHP\u002DGD\u002DExtension\u0020\u0028f\u00FCr\u0020Code\u002DChallenge\u0020erforderlich\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_gd_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Alogin_coverage_check\u0028\u0029",
+            "name": "login_coverage_check",
+            "summary": "Check\u002011\u0020\u2014\u0020Login\u002DFormular\u002DAbdeckung.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_login_coverage_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Amapped_remote_addr_check\u0028\u0029",
+            "name": "mapped_remote_addr_check",
+            "summary": "Check\u002017\u0020\u2014\u0020IPv4\u002Dmapped\u0020REMOTE_ADDR\u0020\u0028Cross\u002DStrang\u002DHinweis\u0020F1,\u0020B\u00FCndel\u00204\/I2\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_remote_addr_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Amapped_cidr_check\u0028\u0029",
+            "name": "mapped_cidr_check",
+            "summary": "Check\u002018\u0020\u2014\u0020CIDR\u002DEintr\u00E4ge\u0020in\u0020IPv4\u002Dmapped\u002DNotation\u0020\u0028Cross\u002DStrang\u002DHinweis\u0020F1\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_mapped_cidr_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Ais_mapped_cidr\u0028\u0029",
+            "name": "is_mapped_cidr",
+            "summary": "Whether\u0020a\u0020CIDR\u0020range\u0027s\u0020subnet\u0020part\u0020is\u0020written\u0020in\u0020IPv4\u002Dmapped\u0020notation\n\u0028\u0060\u003A\u003Affff\u003Aa.b.c.d\/N\u0060\u0020\u2014\u0020RFC\u00204291\u0020\u00A72.5.5.2\u0029,\u0020the\u0020one\u0020shape\n\u0060creationell_captcha_normalize_ip\u0028\u0029\u0060\u0020deliberately\u0020does\u0020not\u0020touch\u0020\u0028see\u0020Check\n18\u0027s\u0020docblock\u0029.\u0020Mirrors\u0020that\u0020function\u0027s\u0020binary\u002Dform\u0020check,\u0020scoped\u0020to\u0020the\nsubnet\u0020segment\u0020of\u0020a\u0020CIDR\u0020entry\u0020instead\u0020of\u0020a\u0020plain\u0020address.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_is_mapped_cidr"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aunderattack_pass_rate_check\u0028\u0029",
+            "name": "underattack_pass_rate_check",
+            "summary": "Check\u002019\u0020\u2014\u0020Under\u002DAttack\u002DPass\u002DRate\u0020\u0028Cross\u002DStrang\u002DHinweis\u0020N1,\u0020\u0022m4\u0022\/\u0022m7\u0022\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_pass_rate_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aproxy_header_choice_check\u0028\u0029",
+            "name": "proxy_header_choice_check",
+            "summary": "Check\u002020\u0020\u2014\u0020Proxy\u002DHeader\u002DAuswahl\u0020\u0028Cross\u002DStrang\u002DHinweis\u0020N1,\u0020\u0022m2\u0022\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_proxy_header_choice_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aunderattack_cache_check\u0028\u0029",
+            "name": "underattack_cache_check",
+            "summary": "Check\u002021\u0020\u2014\u0020Under\u002DAttack\u002DInterstitial\u0020und\u0020Full\u002DPage\u002DCache\u0020\u0028Cross\u002DStrang\u002DHinweis\nN1,\u0020\u0022m7\u0022,\u0020\u00A73.3\u0020\u2014\u0020nennt\u0020alle\u0020drei\u0020hier\u0020verwendeten\u0020Signale\u0020ausdr\u00FCcklich\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_underattack_cache_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aretention_sweep_check\u0028\u0029",
+            "name": "retention_sweep_check",
+            "summary": "Check\u002022\u0020\u2014\u0020l\u00E4uft\u0020die\u0020Aufbewahrungsfrist\u0020des\u0020Event\u002DLogs\u0020\u00FCberhaupt\u003F",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_retention_sweep_check"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Afiltered_interceptor_lists\u0028\u0029",
+            "name": "filtered_interceptor_lists",
+            "summary": "The\u0020interceptor\u0027s\u0020own\u0020guard\u0020lists,\u0020run\u0020through\u0020the\u0020SAME\u0020filters\n\u0060Interceptor\u003A\u003Ais_guarded\u0028\u0029\u0060\/\u0060action_patterns\u0028\u0029\u0060\u0020apply\u0020at\u0020runtime\n\u0028\u0060creationell_captcha_interceptor_paths\u0060\u0020\/\u0020\u0060_actions\u0060\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_filtered_interceptor_lists"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Ainject_pattern_covered\u0028\u0029",
+            "name": "inject_pattern_covered",
+            "summary": "Check\u002015\u0020\u2014\u0020whether\u0020a\u0020single\u0020inject\u002Dpath\u0020pattern\u0020has\u0020a\u0020real\u0020counterpart\nin\u0020the\u0020guard\u0020list.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_inject_pattern_covered"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aneutralising_excludes\u0028\u0029",
+            "name": "neutralising_excludes",
+            "summary": "Returns\u0020the\u0020\u0060\u0021\u0060\u002Dexclusion\u0020patterns\u0020of\u0020a\u0020list\u0020that\u0020on\u0020their\u0020own\u0020match\nevery\u0020positive\u0020pattern\u0020of\u0020the\u0020same\u0020list\u0020\u2014\u0020i.e.\u0020that\u0020neutralise\u0020it.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_neutralising_excludes"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Doctor_Command\u003A\u003Aprobe_paths\u0028\u0029",
+            "name": "probe_paths",
+            "summary": "Turns\u0020a\u0020wildcard\u0020pattern\u0020into\u0020concrete\u0020sample\u0020strings\u0020it\u0020covers.",
+            "url": "classes/Creationell-Captcha-CLI-Doctor-Command.html#method_probe_paths"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command",
             "name": "List_Command",
             "summary": "Manages\u0020one\u0020list\u002Dtype\u0020setting\u0020\u2014\u0020IP\u0020block\/allow\u0020list,\u0020UA\u0020block\u0020list\u0020or\u0020the\ninterceptor\u0020path\u0020list.\u0020The\u0020same\u0020class\u0020backs\u0020the\u0020blocklist,\u0020allowlist,\nua\u002Dblocklist\u0020and\u0020paths\u0020command\u0020namespaces.",
@@ -703,18 +1043,28 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "Writes\u0020the\u0020list\u0020back\u0020through\u0020the\u0020settings\u0020sanitiser.",
+            "summary": "Writes\u0020the\u0020list\u0020back\u0020through\u0020the\u0020settings\u0020sanitiser\u0020and\u0020returns\u0020the\u0020list\nas\u0020it\u0020is\u0020stored\u0020afterwards.",
             "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_save"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Areport_collateral_drops\u0028\u0029",
+            "name": "report_collateral_drops",
+            "summary": "Warns\u0020about\u0020entries\u0020that\u0020were\u0020already\u0020stored\u0020before\u0020this\u0020command\u0020ran\u0020and\nare\u0020gone\u0020afterwards\u0020without\u0020having\u0020been\u0020removed\u0020on\u0020purpose.",
+            "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_report_collateral_drops"
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Anormalise\u0028\u0029",
             "name": "normalise",
             "summary": "Validates\u0020and\u0020normalises\u0020one\u0020entry\u003B\u0020returns\u0020null\u0020when\u0020invalid.",
             "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_normalise"
         },                {
-            "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Ais_ip_or_cidr\u0028\u0029",
-            "name": "is_ip_or_cidr",
-            "summary": "Whether\u0020the\u0020value\u0020is\u0020a\u0020valid\u0020IP\u0020address\u0020or\u0020CIDR\u0020range.",
-            "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_is_ip_or_cidr"
+            "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Areject_reason\u0028\u0029",
+            "name": "reject_reason",
+            "summary": "A\u0020human\u002Dreadable\u0020reason\u0020why\u0020normalise\u0028\u0029\u0020refused\u0020this\u0020value.",
+            "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_reject_reason"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003Aprefix_zero_reject_reason\u0028\u0029",
+            "name": "prefix_zero_reject_reason",
+            "summary": "Listenabh\u00E4ngige\u0020Begr\u00FCndung\u0020f\u00FCr\u0020die\u0020Ablehnung\u0020einer\u0020Pr\u00E4fixl\u00E4nge\u002D0\u002DCIDR\n\u0028\u00600.0.0.0\/0\u0060,\u0020\u0060\u003A\u003A\/0\u0060\u0029\u0020\u2014\u0020B\u002DM22.",
+            "url": "classes/Creationell-Captcha-CLI-List-Command.html#method_prefix_zero_reject_reason"
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\List_Command\u003A\u003A\u0024key",
             "name": "key",
@@ -741,6 +1091,21 @@ Search.appendIndex(
             "summary": "Zeigt\u0020einen\u0020einzelnen\u0020Event\u002DLog\u002DEintrag\u0020mit\u0020allen\u0020Spalten.",
             "url": "classes/Creationell-Captcha-CLI-Log-Command.html#method_show"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Log_Command\u003A\u003Aescape_row\u0028\u0029",
+            "name": "escape_row",
+            "summary": "Runs\u0020every\u0020cell\u0020of\u0020an\u0020event\u0020row\u0020through\u0020escape_control_chars\u0028\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_row"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Log_Command\u003A\u003Aescape_control_chars\u0028\u0029",
+            "name": "escape_control_chars",
+            "summary": "Replaces\u0020terminal\u0020control\u0020characters\u0020with\u0020a\u0020printable\u0020escape.",
+            "url": "classes/Creationell-Captcha-CLI-Log-Command.html#method_escape_control_chars"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Log_Command\u003A\u003Aresolve_fields\u0028\u0029",
+            "name": "resolve_fields",
+            "summary": "Splits\u0020a\u0020\u0060\u002D\u002Dfields\u0060\u0020value\u0020and\u0020separates\u0020known\u0020from\u0020unknown\u0020columns.",
+            "url": "classes/Creationell-Captcha-CLI-Log-Command.html#method_resolve_fields"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Log_Command\u003A\u003Aclear\u0028\u0029",
             "name": "clear",
             "summary": "Empties\u0020the\u0020event\u002Dlog\u0020table.",
@@ -766,6 +1131,11 @@ Search.appendIndex(
             "summary": "Prints\u0020one\u0020setting\u0020value.",
             "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_get"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Asensitive_value_notice\u0028\u0029",
+            "name": "sensitive_value_notice",
+            "summary": "Warnt\u0020vor\u0020Klartext\u002DGeheimnissen,\u0020die\u0020eine\u0020Ausgabe\u0020gleich\u0020mitliefert\u0020\u2014\ndieselben\u0020zwei\u0020Felder,\u0020die\u0020\u0060export\u0028\u0029\u0060\u0020schon\u0020benennt\u0020\u0028B\u002DM22\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_sensitive_value_notice"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Aset\u0028\u0029",
             "name": "set",
             "summary": "Sets\u0020one\u0020setting\u0020value.",
@@ -775,6 +1145,11 @@ Search.appendIndex(
             "name": "export",
             "summary": "Exports\u0020all\u0020settings\u0020as\u0020JSON.",
             "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_export"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Awarn_if_inside_webroot\u0028\u0029",
+            "name": "warn_if_inside_webroot",
+            "summary": "Warns\u0020when\u0020the\u0020export\u0020target\u0020lies\u0020inside\u0020the\u0020WordPress\u0020installation\ndirectory\u0020and\u0020would\u0020therefore\u0020likely\u0020be\u0020reachable\u0020over\u0020HTTP.",
+            "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_warn_if_inside_webroot"
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Aimport\u0028\u0029",
             "name": "import",
@@ -791,6 +1166,16 @@ Search.appendIndex(
             "summary": "Resets\u0020configuration\u0020values\u0020to\u0020default\u0020but\u0020keeps\u0020the\u0020lists.",
             "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_load_defaults"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Acount_dropped_list_entries\u0028\u0029",
+            "name": "count_dropped_list_entries",
+            "summary": "Z\u00E4hlt,\u0020wie\u0020viele\u0020Listeneintr\u00E4ge\u0020zwischen\u0020zwei\u0020Settings\u002DSt\u00E4nden\u0020verschwunden\nsind\u0020\u2014\u0020reine\u0020Z\u00E4hllogik,\u0020\u00F6ffentlich\u0020f\u00FCr\u0020den\u0020direkten\u0020Ebene\u002D2\u002DTest\u0020\u0028dieselbe\nBegr\u00FCndung\u0020wie\u0020bei\u0020\u0060sensitive_value_notice\u0028\u0029\u0060\u0020oben\u0029.\u0020Z\u00E4hlt\u0020nur\u0020VERLUSTE\n\u0028ein\u0020Feld\u0020mit\u0020mehr\u0020Eintr\u00E4gen\u0020danach\u0020als\u0020vorher\u0020tr\u00E4gt\u00200\u0020bei,\u0020nicht\u0020negativ\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_count_dropped_list_entries"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Areport_reset_state\u0028\u0029",
+            "name": "report_reset_state",
+            "summary": "Prints\u0020the\u0020success\u0020line\u0020of\u0020\u0060reset\u0060\/\u0060load\u002Ddefaults\u0060\u0020together\u0020with\u0020the\u0020one\nconsequence\u0020that\u0020is\u0020easy\u0020to\u0020overlook\u003A\u0020the\u0020event\u0020log\u0020is\u0020back\u0020to\u0020its\ndefault\u0020\u0028off\u0029.",
+            "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_report_reset_state"
+        },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Astringify\u0028\u0029",
             "name": "stringify",
             "summary": "Converts\u0020a\u0020setting\u0020value\u0020to\u0020a\u0020printable\u0020string.",
@@ -798,8 +1183,13 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003Aparse_bool\u0028\u0029",
             "name": "parse_bool",
-            "summary": "Parses\u0020a\u0020boolean\u002Dish\u0020CLI\u0020string.",
+            "summary": "Parses\u0020a\u0020boolean\u002Dish\u0020CLI\u0020string\u003B\u0020NULL\u0020for\u0020anything\u0020that\u0020is\u0020neither.",
             "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#method_parse_bool"
+        },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Settings_Command\u003A\u003ABOOL_WORDS",
+            "name": "BOOL_WORDS",
+            "summary": "The\u0020words\u0020\u0060parse_bool\u0028\u0029\u0060\u0020accepts,\u0020per\u0020resulting\u0020value.",
+            "url": "classes/Creationell-Captcha-CLI-Settings-Command.html#constant_BOOL_WORDS"
         },                {
             "fqsen": "\\Creationell\\Captcha\\CLI\\Test_Bypass_Command",
             "name": "Test_Bypass_Command",
@@ -811,6 +1201,11 @@ Search.appendIndex(
             "summary": "Simulates\u0020the\u0020bypass\u0020evaluation\u0020with\u0020the\u0020supplied\u0020flag\u0020values.\u0020Flags\u0020are\noptional\u0020\u2014\u0020anything\u0020not\u0020provided\u0020is\u0020treated\u0020as\u0020non\u002Dmatching.",
             "url": "classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method___invoke"
         },                {
+            "fqsen": "\\Creationell\\Captcha\\CLI\\Test_Bypass_Command\u003A\u003Anote_ip_resolution_gap\u0028\u0029",
+            "name": "note_ip_resolution_gap",
+            "summary": "Points\u0020out\u0020that\u0020\u0060\u002D\u002Dip\u0060\u0020skips\u0020the\u0020client\u002DIP\u0020resolution\u0020a\u0020real\u0020request\u0020goes\nthrough\u0020\u2014\u0020but\u0020only\u0020when\u0020the\u0020site\u0020is\u0020actually\u0020configured\u0020to\u0020resolve\u0020a\nforwarded\u0020IP,\u0020because\u0020only\u0020then\u0020can\u0020simulation\u0020and\u0020reality\u0020diverge.",
+            "url": "classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method_note_ip_resolution_gap"
+        },                {
             "fqsen": "\\creationell_captcha_cloudflare_snapshot\u0028\u0029",
             "name": "creationell_captcha_cloudflare_snapshot",
             "summary": "Returns\u0020the\u0020bundled\u0020Cloudflare\u0020snapshot.",
@@ -818,7 +1213,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\creationell_captcha_cloudflare_ranges\u0028\u0029",
             "name": "creationell_captcha_cloudflare_ranges",
-            "summary": "The\u0020active\u0020CF\u0020range\u0020list\u003A\u0020cached\u0020option\u0020\u0028if\u0020fresh\u0029\u0020\u2192\u0020bundled\u0020snapshot.",
+            "summary": "The\u0020active\u0020CF\u0020range\u0020list\u003A\u0020cached\u0020option\u0020\u0028if\u0020fresh\u0020and\u0020valid\u0029\u0020\u2192\u0020bundled\u0020snapshot.",
             "url": "namespaces/default.html#function_creationell_captcha_cloudflare_ranges"
         },                {
             "fqsen": "\\creationell_captcha_refresh_cloudflare_ips_now\u0028\u0029",
@@ -840,6 +1235,11 @@ Search.appendIndex(
             "name": "creationell_captcha_sync_cloudflare_cron",
             "summary": "Ensures\u0020the\u0020daily\u0020refresh\u0020cron\u0020slot\u0020is\u0020in\u0020sync\u0020with\u0020the\u0020auto\u002Drefresh\u0020toggle.",
             "url": "namespaces/default.html#function_creationell_captcha_sync_cloudflare_cron"
+        },                {
+            "fqsen": "\\creationell_captcha_code_challenge_font_usable\u0028\u0029",
+            "name": "creationell_captcha_code_challenge_font_usable",
+            "summary": "Probes\u0020whether\u0020GD\u0020can\u0020actually\u0020render\u0020text\u0020with\u0020the\u0020vendored\u0020TTF\u0020font.",
+            "url": "namespaces/default.html#function_creationell_captcha_code_challenge_font_usable"
         },                {
             "fqsen": "\\creationell_captcha_render_code_image\u0028\u0029",
             "name": "creationell_captcha_render_code_image",
@@ -871,6 +1271,16 @@ Search.appendIndex(
             "summary": "Looks\u0020up\u0020the\u0020code\u0020for\u0020a\u0020token\u0020and\u0020returns\u0020it,\u0020or\u0020null\u0020on\u003A\n\u0020\u0020\u002D\u0020malformed\u0020token\u0020\u0028not\u002032\u0020hex\u0020chars\u0029\n\u0020\u0020\u002D\u0020missing\u0020transient\u0020\u0028expired\u0020or\u0020unknown\u0029",
             "url": "namespaces/default.html#function_creationell_captcha_code_token_verify"
         },                {
+            "fqsen": "\\creationell_captcha_code_fail_key\u0028\u0029",
+            "name": "creationell_captcha_code_fail_key",
+            "summary": "Transient\u0020name\u0020of\u0020the\u0020per\u002Dtoken\u0020failed\u002Dattempt\u0020counter\u0020\u0028CM\u002D3\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_code_fail_key"
+        },                {
+            "fqsen": "\\creationell_captcha_code_token_fail\u0028\u0029",
+            "name": "creationell_captcha_code_token_fail",
+            "summary": "Records\u0020one\u0020wrong\u0020image\u002Dcode\u0020submission\u0020for\u0020a\u0020token\u0020and\u0020invalidates\u0020the\ntoken\u0020once\u0020its\u0020attempt\u0020budget\u0020is\u0020spent.",
+            "url": "namespaces/default.html#function_creationell_captcha_code_token_fail"
+        },                {
             "fqsen": "\\creationell_captcha_rest_code_image\u0028\u0029",
             "name": "creationell_captcha_rest_code_image",
             "summary": "Handles\u0020GET\u0020\/code\u002Dimage\u003Ft\u003D\u003Ctoken\u003E.\u0020Looks\u0020up\u0020the\u0020code\u0020from\u0020the\u0020token\n\u0028server\u002Dside\u0020transient\u0029,\u0020renders\u0020the\u0020PNG,\u0020returns\u0020410\u0020on\u0020token\u0020failure.",
@@ -895,6 +1305,16 @@ Search.appendIndex(
             "name": "creationell_captcha_register_email_buffer",
             "summary": "Wires\u0020up\u0020the\u0020full\u002Dpage\u002Dbuffer\u0020mode\u003A\u0020on\u0020\u0060template_redirect\u0060\u0020for\u0020non\u002Dfeed\nfront\u002Dend\u0020requests\u0020it\u0020enqueues\u0020the\u0020decoder\u0020script\u0020and\u0020starts\u0020an\u0020output\nbuffer\u0020whose\u0020callback\u0020obfuscates\u0020the\u0020page\u0020body\u0020at\u0020flush\u0020time.",
             "url": "namespaces/default.html#function_creationell_captcha_register_email_buffer"
+        },                {
+            "fqsen": "\\creationell_captcha_email_buffer_filter\u0028\u0029",
+            "name": "creationell_captcha_email_buffer_filter",
+            "summary": "The\u0020buffer\u0020callback\u0020itself\u003A\u0020decides\u0020whether\u0020this\u0020response\u0020gets\u0020rewritten\u0020and\nhands\u0020it\u0020to\u0020the\u0020obfuscator\u0020when\u0020it\u0020does.",
+            "url": "namespaces/default.html#function_creationell_captcha_email_buffer_filter"
+        },                {
+            "fqsen": "\\creationell_captcha_response_is_html\u0028\u0029",
+            "name": "creationell_captcha_response_is_html",
+            "summary": "Whether\u0020the\u0020response\u0020being\u0020buffered\u0020is\u0020\u0028still\u0029\u0020an\u0020HTML\u0020document.",
+            "url": "namespaces/default.html#function_creationell_captcha_response_is_html"
         },                {
             "fqsen": "\\creationell_captcha_run_firewall\u0028\u0029",
             "name": "creationell_captcha_run_firewall",
@@ -925,6 +1345,16 @@ Search.appendIndex(
             "name": "creationell_captcha_login_render",
             "summary": "Renders\u0020the\u0020widget\u0020inside\u0020the\u0020login\u0020form.",
             "url": "namespaces/default.html#function_creationell_captcha_login_render"
+        },                {
+            "fqsen": "\\creationell_captcha_login_form_middle\u0028\u0029",
+            "name": "creationell_captcha_login_form_middle",
+            "summary": "Renders\u0020the\u0020widget\u0020inside\u0020\u0060wp_login_form\u0028\u0029\u0060\u002Dbased\u0020forms.",
+            "url": "namespaces/default.html#function_creationell_captcha_login_form_middle"
+        },                {
+            "fqsen": "\\creationell_captcha_login_is_interactive\u0028\u0029",
+            "name": "creationell_captcha_login_is_interactive",
+            "summary": "Whether\u0020the\u0020current\u0020request\u0020is\u0020an\u0020interactive,\u0020browser\u002Dsubmitted\u0020login\nattempt\u0020\u2014\u0020as\u0020opposed\u0020to\u0020XML\u002DRPC,\u0020REST\/Application\u002DPasswords,\u0020AJAX\u0020or\u0020a\nprogrammatic\u0020\u0060wp_signon\u0028\u0029\u0060\u0020call\u0020made\u0020by\u0020other\u0020code.",
+            "url": "namespaces/default.html#function_creationell_captcha_login_is_interactive"
         },                {
             "fqsen": "\\creationell_captcha_login_verify\u0028\u0029",
             "name": "creationell_captcha_login_verify",
@@ -961,10 +1391,85 @@ Search.appendIndex(
             "summary": "Verifies\u0020the\u0020captcha\u0020during\u0020registration.",
             "url": "namespaces/default.html#function_creationell_captcha_registration_verify"
         },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_HARDENING_DISMISS_META",
+            "name": "CREATIONELL_CAPTCHA_HARDENING_DISMISS_META",
+            "summary": "User\u002DMeta\u002DSchl\u00FCssel,\u0020unter\u0020dem\u0020ein\u0020Benutzer\u0020den\u0020Hinweis\u0020wegklickt.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_HARDENING_DISMISS_META"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_HARDENING_DISMISS_ARG",
+            "name": "CREATIONELL_CAPTCHA_HARDENING_DISMISS_ARG",
+            "summary": "Query\u002DParameter\u0020des\u0020Ausblenden\u002DLinks.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_HARDENING_DISMISS_ARG"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_covered_family\u0028\u0029",
+            "name": "creationell_captcha_hardening_covered_family",
+            "summary": "Ermittelt,\u0020WELCHE\u0020Adressfamilie\u0020ein\u0020gespeicherter\u0020Listeneintrag\u0020vollst\u00E4ndig\nabdeckt\u0020und\u0020die\u0020Liste\u0020f\u00FCr\u0020diese\u0020Familie\u0020damit\u0020als\u0020Auswahl\u0020aufhebt.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_covered_family"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_mapped_ipv4_cidr\u0028\u0029",
+            "name": "creationell_captcha_hardening_mapped_ipv4_cidr",
+            "summary": "Erkennt\u0020einen\u0020CIDR\u002DBereich,\u0020der\u0020in\u0020IPv4\u002Dmapped\u0020Schreibweise\u0020notiert\u0020ist\n\u0028\u0060\u003A\u003Affff\u003A0\u003A0\/96\u0060,\u0020\u0060\u003A\u003Affff\u003A203.0.113.0\/120\u0060\u0029,\u0020und\u0020liefert\u0020seine\u0020gew\u00F6hnliche\nIPv4\u002DSchreibweise\u0020zur\u00FCck.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_mapped_ipv4_cidr"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_is_catch_all_pattern\u0028\u0029",
+            "name": "creationell_captcha_hardening_is_catch_all_pattern",
+            "summary": "Pr\u00FCft,\u0020ob\u0020ein\u0020\u0060bypass_ua_allow\u0060\u002DMuster\u0020jeden\u0020Browser\u002DKennzeichner\u0020trifft.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_is_catch_all_pattern"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_matches_every_user_agent\u0028\u0029",
+            "name": "creationell_captcha_hardening_matches_every_user_agent",
+            "summary": "Pr\u00FCft,\u0020ob\u0020ein\u0020\u0060bypass_ua_allow\u0060\u002DMuster\u0020jeden\u0020realistischen\u0020User\u002DAgent\u0020trifft,\nohne\u0020vom\u0020Catch\u002Dall\u002DGuard\u0020aussortiert\u0020zu\u0020werden\u0020\u0028Befund\u0020B\u002DM2\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_matches_every_user_agent"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_scan\u0028\u0029",
+            "name": "creationell_captcha_hardening_scan",
+            "summary": "Durchsucht\u0020einen\u0020Satz\u0020Einstellungen\u0020nach\u0020gef\u00E4hrlicher\u0020Bestandskonfiguration.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_scan"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_findings\u0028\u0029",
+            "name": "creationell_captcha_hardening_findings",
+            "summary": "F\u00FChrt\u0020den\u0020Scan\u0020gegen\u0020die\u0020aktuell\u0020gespeicherten\u0020Einstellungen\u0020aus.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_findings"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_fingerprint\u0028\u0029",
+            "name": "creationell_captcha_hardening_fingerprint",
+            "summary": "Kurzkennung\u0020des\u0020aktuellen\u0020Fundbildes.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_fingerprint"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_dismiss_redirect_target\u0028\u0029",
+            "name": "creationell_captcha_hardening_dismiss_redirect_target",
+            "summary": "Baut\u0020das\u0020Ziel\u0020des\u0020Redirects\u0020nach\u0020dem\u0020Ausblenden\u002DKlick\u003A\u0020dieselbe\u0020Seite\u0020ohne\nden\u0020Ausblenden\u002DParameter\u0020und\u0020ohne\u0020die\u0020Nonce.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_dismiss_redirect_target"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_handle_dismiss\u0028\u0029",
+            "name": "creationell_captcha_hardening_handle_dismiss",
+            "summary": "Nimmt\u0020den\u0020Ausblenden\u002DKlick\u0020entgegen.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_handle_dismiss"
+        },                {
+            "fqsen": "\\creationell_captcha_hardening_render_notice\u0028\u0029",
+            "name": "creationell_captcha_hardening_render_notice",
+            "summary": "Zeigt\u0020die\u0020gefundene\u0020Bestandskonfiguration\u0020als\u0020Admin\u002DHinweis.",
+            "url": "namespaces/default.html#function_creationell_captcha_hardening_render_notice"
+        },                {
             "fqsen": "\\CREATIONELL_CAPTCHA_LOCALE_MAP",
             "name": "CREATIONELL_CAPTCHA_LOCALE_MAP",
             "summary": "Maps\u0020WordPress\u0020locales\u0020to\u0020the\u0020matching\u0020ALTCHA\u0020i18n\u0020locale\u0020bundle.",
             "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_LOCALE_MAP"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_PURPOSE_UA_PASS",
+            "name": "CREATIONELL_CAPTCHA_PURPOSE_UA_PASS",
+            "summary": "Purpose\u0020label\u0020of\u0020the\u0020under\u002Dattack\u0020pass\u002Dcookie\u0020key.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_PURPOSE_UA_CTX",
+            "name": "CREATIONELL_CAPTCHA_PURPOSE_UA_CTX",
+            "summary": "Purpose\u0020label\u0020of\u0020the\u0020under\u002Dattack\u0020code\u002Dchallenge\u0020suppression\u0020token\u0020\u0028\u0060ctx\u0060\u0029.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_UA_CTX_TTL",
+            "name": "CREATIONELL_CAPTCHA_UA_CTX_TTL",
+            "summary": "Lifetime\u0020\u0028seconds\u0029\u0020of\u0020a\u0020\u0060ctx\u0060\u0020suppression\u0020token.\u0020The\u0020interstitial\u0020widget\nfetches\u0020the\u0020challenge\u0020on\u0020load,\u0020i.e.\u0020within\u0020seconds\u0020of\u0020the\u0020503\u0020being\nrendered\u003B\u0020two\u0020minutes\u0020is\u0020generous\u0020for\u0020that\u0020and\u0020replaces\u0020the\u0020\u007E10\u0020minutes\u0020the\nold\u00205\u002Dminute\u002Dbucket\u0020pair\u0020accepted\u0020\u0028BK\u002D4\u0029.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_UA_CTX_TTL"
         },                {
             "fqsen": "\\creationell_captcha_resolve_widget_locale\u0028\u0029",
             "name": "creationell_captcha_resolve_widget_locale",
@@ -1016,6 +1521,41 @@ Search.appendIndex(
             "summary": "The\u0020HMAC\u0020key\u002Dsignature\u0020secret\u0020\u0028enables\u0020the\u0020fast\u0020verification\u0020path\u0029.",
             "url": "namespaces/default.html#function_creationell_captcha_get_hmac_key_secret"
         },                {
+            "fqsen": "\\creationell_captcha_derive_hmac_key\u0028\u0029",
+            "name": "creationell_captcha_derive_hmac_key",
+            "summary": "Derives\u0020a\u0020purpose\u002Dbound\u0020HMAC\u0020key\u0020from\u0020the\u0020plugin\u0027s\u0020base\u0020signature\u0020secret.",
+            "url": "namespaces/default.html#function_creationell_captcha_derive_hmac_key"
+        },                {
+            "fqsen": "\\creationell_captcha_client_ua\u0028\u0029",
+            "name": "creationell_captcha_client_ua",
+            "summary": "The\u0020request\u0027s\u0020User\u002DAgent,\u0020capped\u0020at\u0020256\u0020bytes.\u0020MAC\u0020input\u0020for\u0020the\nunder\u002Dattack\u0020tokens\u0020\u2014\u0020never\u0020rendered,\u0020never\u0020stored.",
+            "url": "namespaces/default.html#function_creationell_captcha_client_ua"
+        },                {
+            "fqsen": "\\creationell_captcha_underattack_pass_binding\u0028\u0029",
+            "name": "creationell_captcha_underattack_pass_binding",
+            "summary": "The\u0020fingerprint\u0020the\u0020under\u002Dattack\u0020pass\u0020cookie\u0020is\u0020bound\u0020to\u0020\u0028BK\u002D3\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_underattack_pass_binding"
+        },                {
+            "fqsen": "\\creationell_captcha_underattack_pass_issue\u0028\u0029",
+            "name": "creationell_captcha_underattack_pass_issue",
+            "summary": "Mints\u0020an\u0020under\u002Dattack\u0020pass\u0020token\u0020for\u0020the\u0020current\u0020visitor.",
+            "url": "namespaces/default.html#function_creationell_captcha_underattack_pass_issue"
+        },                {
+            "fqsen": "\\creationell_captcha_underattack_pass_check\u0028\u0029",
+            "name": "creationell_captcha_underattack_pass_check",
+            "summary": "Verifies\u0020an\u0020under\u002Dattack\u0020pass\u0020token\u0020against\u0020the\u0020CURRENT\u0020visitor.",
+            "url": "namespaces/default.html#function_creationell_captcha_underattack_pass_check"
+        },                {
+            "fqsen": "\\creationell_captcha_underattack_ctx_issue\u0028\u0029",
+            "name": "creationell_captcha_underattack_ctx_issue",
+            "summary": "Mints\u0020a\u0020single\u002Duse\u0020\u0060ctx\u0060\u0020suppression\u0020token\u0020for\u0020one\u0020interstitial\u0020rendering.",
+            "url": "namespaces/default.html#function_creationell_captcha_underattack_ctx_issue"
+        },                {
+            "fqsen": "\\creationell_captcha_underattack_ctx_check\u0028\u0029",
+            "name": "creationell_captcha_underattack_ctx_check",
+            "summary": "Verifies\u0020a\u0020\u0060ctx\u0060\u0020suppression\u0020token\u0020and\u0020consumes\u0020it.",
+            "url": "namespaces/default.html#function_creationell_captcha_underattack_ctx_check"
+        },                {
             "fqsen": "\\creationell_captcha_engine\u0028\u0029",
             "name": "creationell_captcha_engine",
             "summary": "Shared\u0020captcha\u0020engine\u0020instance.",
@@ -1025,6 +1565,11 @@ Search.appendIndex(
             "name": "creationell_captcha_log",
             "summary": "Write\u0020a\u0020message\u0020to\u0020the\u0020debug\u0020log\u0020when\u0020CREATIONELL_CAPTCHA_DEBUG\u0020is\u0020active.",
             "url": "namespaces/default.html#function_creationell_captcha_log"
+        },                {
+            "fqsen": "\\creationell_captcha_normalize_ip\u0028\u0029",
+            "name": "creationell_captcha_normalize_ip",
+            "summary": "Canonicalises\u0020an\u0020IPv4\u002Dmapped\u0020IPv6\u0020address\u0020\u0028\u0060\u003A\u003Affff\u003Aa.b.c.d\u0060\u0029\u0020into\u0020its\u0020plain\nIPv4\u0020spelling.\u0020Every\u0020other\u0020value\u0020\u2014\u0020including\u0020anything\u0020that\u0020is\u0020not\u0020an\u0020IP\u0020at\nall\u0020\u2014\u0020is\u0020handed\u0020back\u0020unchanged.",
+            "url": "namespaces/default.html#function_creationell_captcha_normalize_ip"
         },                {
             "fqsen": "\\creationell_captcha_get_client_ip\u0028\u0029",
             "name": "creationell_captcha_get_client_ip",
@@ -1161,6 +1706,11 @@ Search.appendIndex(
             "summary": "Whether\u0020any\u0020WooCommerce\u0020protection\u0020applies\u0020right\u0020now.",
             "url": "namespaces/default.html#function_creationell_captcha_woocommerce_active"
         },                {
+            "fqsen": "\\creationell_captcha_wc_uses_block_checkout\u0028\u0029",
+            "name": "creationell_captcha_wc_uses_block_checkout",
+            "summary": "Whether\u0020the\u0020currently\u0020configured\u0020WooCommerce\u0020checkout\u0020page\u0020uses\u0020the\u0020Block\nCheckout\u0020\u0028the\u0020\u0060woocommerce\/checkout\u0060\u0020block\u0029\u0020rather\u0020than\u0020the\u0020classic\n\u0060\u005Bwoocommerce_checkout\u005D\u0060\u0020shortcode.",
+            "url": "namespaces/default.html#function_creationell_captcha_wc_uses_block_checkout"
+        },                {
             "fqsen": "\\creationell_captcha_wc_checkout_active\u0028\u0029",
             "name": "creationell_captcha_wc_checkout_active",
             "summary": "Whether\u0020the\u0020WooCommerce\u0020checkout\u0020protection\u0020is\u0020active.",
@@ -1170,6 +1720,11 @@ Search.appendIndex(
             "name": "creationell_captcha_wc_checkout_render",
             "summary": "Renders\u0020the\u0020widget\u0020directly\u0020before\u0020the\u0020Place\u002DOrder\u0020button\u0020on\u0020the\u0020checkout.",
             "url": "namespaces/default.html#function_creationell_captcha_wc_checkout_render"
+        },                {
+            "fqsen": "\\creationell_captcha_wc_checkout_verify_cache\u0028\u0029",
+            "name": "creationell_captcha_wc_checkout_verify_cache",
+            "summary": "Per\u002Drequest\u0020cache\u0020of\u0020the\u0020checkout\u0027s\u0020own\u0020verify\u0020verdict,\u0020keyed\u0020by\u0020the\u0020raw\n\u0060altcha\u0060\u0020payload\u0020currently\u0020in\u0020\u0060\u0024_POST\u0060.",
+            "url": "namespaces/default.html#function_creationell_captcha_wc_checkout_verify_cache"
         },                {
             "fqsen": "\\creationell_captcha_wc_checkout_verify\u0028\u0029",
             "name": "creationell_captcha_wc_checkout_verify",
@@ -1200,6 +1755,16 @@ Search.appendIndex(
             "name": "creationell_captcha_wc_registration_render",
             "summary": "Renders\u0020the\u0020widget\u0020at\u0020the\u0020bottom\u0020of\u0020the\u0020WooCommerce\u0020registration\u0020form.",
             "url": "namespaces/default.html#function_creationell_captcha_wc_registration_render"
+        },                {
+            "fqsen": "\\creationell_captcha_wc_nonce_verifies\u0028\u0029",
+            "name": "creationell_captcha_wc_nonce_verifies",
+            "summary": "Reads\u0020a\u0020nonce\u0020value\u0020the\u0020way\u0020the\u0020given\u0020WooCommerce\u0020field\u0020name\u0028s\u0029\u0020would,\nreplicating\u0020WooCommerce\u0020core\u0027s\u0020own\u0020field\u002Dname\u002Dagnostic\u0020fallback\u003A\u0020the\ndedicated\u0020field\u0020wins\u0020if\u0020present,\u0020otherwise\u0020the\u0020generic\u0020\u0060_wpnonce\u0060\u0020field\u0020is\nused.\u0020WooCommerce\u0027s\u0020own\u0020nonce\u0020checks\u0020do\u0020not\u0020care\u0020WHICH\u0020field\u0020carried\u0020the\nvalue\u0020\u2014\u0020only\u0020whether\u0020the\u0020value\u0020itself\u0020verifies\u0020against\u0020the\u0020action\u0020name.",
+            "url": "namespaces/default.html#function_creationell_captcha_wc_nonce_verifies"
+        },                {
+            "fqsen": "\\creationell_captcha_wc_registration_form_context\u0028\u0029",
+            "name": "creationell_captcha_wc_registration_form_context",
+            "summary": "Whether\u0020the\u0020current\u0020\u0060wc_create_new_customer\u0028\u0029\u0060\u0020call\u0020originates\u0020from\u0020a\ngenuine\u0020WooCommerce\u0020registration\u002D\u0020or\u0020checkout\u002Dform\u0020POST,\u0020as\u0020opposed\u0020to\u0020a\nStore\u002DAPI,\u0020programmatic\u0020or\u0020CLI\u0020call\u0020that\u0020never\u0020had\u0020a\u0020form\u0020\u0028and\u0020therefore\nno\u0020\u0060altcha\u0060\u0020field\u0029\u0020in\u0020the\u0020first\u0020place.",
+            "url": "namespaces/default.html#function_creationell_captcha_wc_registration_form_context"
         },                {
             "fqsen": "\\creationell_captcha_wc_registration_verify\u0028\u0029",
             "name": "creationell_captcha_wc_registration_verify",
@@ -1258,13 +1823,48 @@ Search.appendIndex(
         },                {
             "fqsen": "\\creationell_captcha_deactivate\u0028\u0029",
             "name": "creationell_captcha_deactivate",
-            "summary": "Runs\u0020on\u0020plugin\u0020deactivation\u003A\u0020clears\u0020scheduled\u0020cron\u0020slots\u0020and\u0020lets\u0020every\nmodule\u0020react\u0020via\u0020the\u0020\u0060creationell_captcha_deactivated\u0060\u0020action\u0020hook.",
+            "summary": "Runs\u0020on\u0020plugin\u0020deactivation\u003A\u0020clears\u0020every\u0020cron\u0020slot\u0020the\u0020plugin\u0020owns,\u0020sweeps\nthe\u0020expired\u0020replay\u0020markers\u0020out\u0020of\u0020the\u0020options\u0020table\u0020and\u0020lets\u0020every\u0020module\nreact\u0020via\u0020the\u0020\u0060creationell_captcha_deactivated\u0060\u0020action\u0020hook.",
             "url": "namespaces/default.html#function_creationell_captcha_deactivate"
+        },                {
+            "fqsen": "\\creationell_captcha_deactivate_site\u0028\u0029",
+            "name": "creationell_captcha_deactivate_site",
+            "summary": "The\u0020deactivation\u0020work\u0020for\u0020exactly\u0020one\u0020site\u003A\u0020clears\u0020the\u0020three\u0020cron\u0020slots\u0020this\nplugin\u0020owns\u0020there\u0020and\u0020sweeps\u0020that\u0020site\u0027s\u0020expired\u0020replay\u0020markers.",
+            "url": "namespaces/default.html#function_creationell_captcha_deactivate_site"
+        },                {
+            "fqsen": "\\creationell_captcha_deactivate_network\u0028\u0029",
+            "name": "creationell_captcha_deactivate_network",
+            "summary": "Runs\u0020the\u0020per\u002Dsite\u0020deactivation\u0020work\u0020on\u0020every\u0020site\u0020of\u0020the\u0020network.",
+            "url": "namespaces/default.html#function_creationell_captcha_deactivate_network"
+        },                {
+            "fqsen": "\\creationell_captcha_delete_expired_replay_markers\u0028\u0029",
+            "name": "creationell_captcha_delete_expired_replay_markers",
+            "summary": "Deletes\u0020those\u0020replay\u002Dmarker\u0020options\u0020of\u0020the\u0020current\u0020site\u0020whose\u0020lifetime\u0020has\nalready\u0020run\u0020out.",
+            "url": "namespaces/default.html#function_creationell_captcha_delete_expired_replay_markers"
         },                {
             "fqsen": "\\creationell_captcha_run_rate_limiter\u0028\u0029",
             "name": "creationell_captcha_run_rate_limiter",
             "summary": "Runs\u0020the\u0020per\u002DIP\u0020rate\u0020limiter.\u0020Hooked\u0020on\u0020\u0060init\u0060\u0020at\u0020priority\u00200\u003B\u0020registered\nafter\u0020the\u0020firewall\u0020so\u0020the\u0020firewall\u0020runs\u0020first.",
             "url": "namespaces/default.html#function_creationell_captcha_run_rate_limiter"
+        },                {
+            "fqsen": "\\creationell_captcha_request_path\u0028\u0029",
+            "name": "creationell_captcha_request_path",
+            "summary": "Returns\u0020the\u0020path\u0020portion\u0020of\u0020the\u0020current\u0020request,\u0020the\u0020way\u0020WordPress\u0020core\nderives\u0020it\u0020\u2014\u0020NOT\u0020the\u0020way\u0020a\u0020URL\u0020parser\u0020would.",
+            "url": "namespaces/default.html#function_creationell_captcha_request_path"
+        },                {
+            "fqsen": "\\creationell_captcha_request_target\u0028\u0029",
+            "name": "creationell_captcha_request_target",
+            "summary": "Der\u0020aktuelle\u0020Request\u0020als\u0020relativer\u0020Ziel\u002DURI\u003A\u0020Pfad\u0020aus\n\u0060creationell_captcha_request_path\u0028\u0029\u0060,\u0020Query\u0020aus\u0020derselben\u0020Zeichenkette.",
+            "url": "namespaces/default.html#function_creationell_captcha_request_target"
+        },                {
+            "fqsen": "\\creationell_captcha_current_rest_route\u0028\u0029",
+            "name": "creationell_captcha_current_rest_route",
+            "summary": "Returns\u0020the\u0020REST\u0020route\u0020the\u0020current\u0020request\u0020actually\u0020addresses.",
+            "url": "namespaces/default.html#function_creationell_captcha_current_rest_route"
+        },                {
+            "fqsen": "\\creationell_captcha_normalize_rest_route\u0028\u0029",
+            "name": "creationell_captcha_normalize_rest_route",
+            "summary": "Normalises\u0020a\u0020raw\u0020\u0060rest_route\u0060\u0020value\u0020into\u0020the\u0020plugin\u0027s\u0020canonical\u0020route\u0020form.",
+            "url": "namespaces/default.html#function_creationell_captcha_normalize_rest_route"
         },                {
             "fqsen": "\\creationell_captcha_register_rest_routes\u0028\u0029",
             "name": "creationell_captcha_register_rest_routes",
@@ -1308,13 +1908,28 @@ Search.appendIndex(
         },                {
             "fqsen": "\\creationell_captcha_reset_settings\u0028\u0029",
             "name": "creationell_captcha_reset_settings",
-            "summary": "Full\u0020factory\u0020reset\u003A\u0020writes\u0020the\u0020complete\u0020default\u0020settings\u0020array,\u0020which\u0020also\nempties\u0020every\u0020list.\u0020Secrets,\u0020analytics\u0020counters\u0020and\u0020the\u0020event\u0020log\u0020are\nleft\u0020untouched.",
+            "summary": "Full\u0020factory\u0020reset\u003A\u0020writes\u0020the\u0020complete\u0020default\u0020settings\u0020array,\u0020which\u0020also\nempties\u0020every\u0020list\u0020and\u0020drops\u0020stored\u0020keys\u0020outside\u0020the\u0020current\u0020field\nspecification.\u0020Secrets,\u0020analytics\u0020counters\u0020and\u0020the\u0020event\u0020log\u0020are\nleft\u0020untouched.",
             "url": "namespaces/default.html#function_creationell_captcha_reset_settings"
         },                {
             "fqsen": "\\creationell_captcha_load_default_settings\u0028\u0029",
             "name": "creationell_captcha_load_default_settings",
             "summary": "Resets\u0020every\u0020non\u002Dlist\u0020setting\u0020to\u0020its\u0020default\u0020while\u0020preserving\u0020the\u0020current\nlist\u0020values\u0020\u0028IP\u0020block\/allow,\u0020UA\u0020block,\u0020interceptor\u0020paths\u0029.",
             "url": "namespaces/default.html#function_creationell_captcha_load_default_settings"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_SANITIZE_FORM",
+            "name": "CREATIONELL_CAPTCHA_SANITIZE_FORM",
+            "summary": "Sanitiser\u0020context\u003A\u0020the\u0020settings\u0020form\u0020\u0028\u0060options.php\u0060\u0029.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_FORM"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC",
+            "name": "CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC",
+            "summary": "Sanitiser\u0020context\u003A\u0020programmatischer\u0020Schreibvorgang\u0020\u0028Import,\u0020Werksreset,\n\u201EStandardwerte\u0020laden\u0022,\u0020WP\u002DCLI\u0029.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC"
+        },                {
+            "fqsen": "\\CREATIONELL_CAPTCHA_SANITIZE_RESET",
+            "name": "CREATIONELL_CAPTCHA_SANITIZE_RESET",
+            "summary": "Sanitiser\u0020context\u003A\u0020Werksreset\u0020\u0028\u0060creationell_captcha_reset_settings\u0028\u0029\u0060\u0029.",
+            "url": "namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET"
         },                {
             "fqsen": "\\creationell_captcha_admin_tabs\u0028\u0029",
             "name": "creationell_captcha_admin_tabs",
@@ -1336,10 +1951,50 @@ Search.appendIndex(
             "summary": "Registers\u0020the\u0020plugin\u0020setting,\u0020the\u0020per\u002Dtab\u0020sections\u0020and\u0020the\u0020fields.",
             "url": "namespaces/default.html#function_creationell_captcha_register_settings"
         },                {
+            "fqsen": "\\creationell_captcha_sanitize_context\u0028\u0029",
+            "name": "creationell_captcha_sanitize_context",
+            "summary": "Liest\u0020\u2014\u0020und\u0020setzt\u0020optional\u0020\u2014\u0020den\u0020angehefteten\u0020Sanitizer\u002DKontext.",
+            "url": "namespaces/default.html#function_creationell_captcha_sanitize_context"
+        },                {
+            "fqsen": "\\creationell_captcha_with_sanitize_context\u0028\u0029",
+            "name": "creationell_captcha_with_sanitize_context",
+            "summary": "F\u00FChrt\u0020\u0024callback\u0020aus,\u0020w\u00E4hrend\u0020der\u0020Sanitizer\u002DKontext\u0020auf\u0020\u0024context\u0020festgelegt\u0020ist.",
+            "url": "namespaces/default.html#function_creationell_captcha_with_sanitize_context"
+        },                {
+            "fqsen": "\\creationell_captcha_sanitize_settings_option\u0028\u0029",
+            "name": "creationell_captcha_sanitize_settings_option",
+            "summary": "Einstiegspunkt\u0020des\u0020\u0060sanitize_option_creationell_captcha_settings\u0060\u002DFilters.",
+            "url": "namespaces/default.html#function_creationell_captcha_sanitize_settings_option"
+        },                {
+            "fqsen": "\\creationell_captcha_truncate_setting_text\u0028\u0029",
+            "name": "creationell_captcha_truncate_setting_text",
+            "summary": "K\u00FCrzt\u0020einen\u0020Einstellungswert\u0020auf\u0020h\u00F6chstens\u0020\u0024max_chars\u0020Zeichen\u0020und\u0020garantiert\ng\u00FCltiges\u0020UTF\u002D8.",
+            "url": "namespaces/default.html#function_creationell_captcha_truncate_setting_text"
+        },                {
+            "fqsen": "\\creationell_captcha_truncate_chars\u0028\u0029",
+            "name": "creationell_captcha_truncate_chars",
+            "summary": "K\u00FCrzt\u0020g\u00FCltiges\u0020UTF\u002D8\u0020ohne\u0020mbstring\u0020auf\u0020\u0024max_chars\u0020ZEICHEN.",
+            "url": "namespaces/default.html#function_creationell_captcha_truncate_chars"
+        },                {
+            "fqsen": "\\creationell_captcha_truncate_chars_by_bytes\u0028\u0029",
+            "name": "creationell_captcha_truncate_chars_by_bytes",
+            "summary": "Dritte\u0020und\u0020letzte\u0020K\u00FCrzungsstufe\u003A\u0020z\u00E4hlt\u0020UTF\u002D8\u002DStartbytes.",
+            "url": "namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes"
+        },                {
             "fqsen": "\\creationell_captcha_sanitize_settings\u0028\u0029",
             "name": "creationell_captcha_sanitize_settings",
             "summary": "Sanitises\u0020the\u0020settings\u0020array\u0020before\u0020it\u0020is\u0020stored.",
             "url": "namespaces/default.html#function_creationell_captcha_sanitize_settings"
+        },                {
+            "fqsen": "\\creationell_captcha_sync_event_log_table\u0028\u0029",
+            "name": "creationell_captcha_sync_event_log_table",
+            "summary": "Legt\u0020die\u0020Ereignis\u002DLog\u002DTabelle\u0020an,\u0020sobald\u0020das\u0020Detail\u002DLog\u0020eingeschaltet\nGESPEICHERT\u0020wurde.",
+            "url": "namespaces/default.html#function_creationell_captcha_sync_event_log_table"
+        },                {
+            "fqsen": "\\creationell_captcha_store_settings\u0028\u0029",
+            "name": "creationell_captcha_store_settings",
+            "summary": "Der\u0020eine\u0020Schreibweg\u0020des\u0020Plugins\u0020auf\u0020\u0060creationell_captcha_settings\u0060.",
+            "url": "namespaces/default.html#function_creationell_captcha_store_settings"
         },                {
             "fqsen": "\\creationell_captcha_render_engine_section\u0028\u0029",
             "name": "creationell_captcha_render_engine_section",
@@ -1416,6 +2071,21 @@ Search.appendIndex(
             "summary": "Renders\u0020a\u0020single\u0020settings\u0020field.",
             "url": "namespaces/default.html#function_creationell_captcha_render_field"
         },                {
+            "fqsen": "\\creationell_captcha_field_label\u0028\u0029",
+            "name": "creationell_captcha_field_label",
+            "summary": "Liefert\u0020das\u0020Label\u0020eines\u0020Einstellungsfeldes\u0020\u0028Fallback\u003A\u0020der\u0020Schl\u00FCssel\u0020selbst\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_field_label"
+        },                {
+            "fqsen": "\\creationell_captcha_field_spec\u0028\u0029",
+            "name": "creationell_captcha_field_spec",
+            "summary": "Request\u002Dlokal\u0020gehaltene\u0020Feldspezifikation\u0020f\u00FCr\u0020die\u0020beiden\u0020Label\u002DHelfer.",
+            "url": "namespaces/default.html#function_creationell_captcha_field_spec"
+        },                {
+            "fqsen": "\\creationell_captcha_field_option_label\u0028\u0029",
+            "name": "creationell_captcha_field_option_label",
+            "summary": "Liefert\u0020das\u0020Options\u002DLabel\u0020eines\u0020\u0060select\u0060\u002DFeldes\u0020\u0028Fallback\u003A\u0020der\u0020Rohwert\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_field_option_label"
+        },                {
             "fqsen": "\\creationell_captcha_tools_redirect\u0028\u0029",
             "name": "creationell_captcha_tools_redirect",
             "summary": "Stores\u0020a\u0020one\u002Dshot\u0020admin\u0020notice\u0020and\u0020redirects\u0020back\u0020to\u0020the\u0020Werkzeuge\u0020page.",
@@ -1435,6 +2105,11 @@ Search.appendIndex(
             "name": "creationell_captcha_handle_import_settings",
             "summary": "Handles\u0020the\u0020settings\u002Dimport\u0020upload.",
             "url": "namespaces/default.html#function_creationell_captcha_handle_import_settings"
+        },                {
+            "fqsen": "\\creationell_captcha_collect_settings_error_messages\u0028\u0029",
+            "name": "creationell_captcha_collect_settings_error_messages",
+            "summary": "Collects\u0020the\u0020plugin\u0027s\u0020queued\u0020settings\u002Derror\u0020messages,\u0020de\u002Dduplicated.",
+            "url": "namespaces/default.html#function_creationell_captcha_collect_settings_error_messages"
         },                {
             "fqsen": "\\creationell_captcha_handle_reset_settings\u0028\u0029",
             "name": "creationell_captcha_handle_reset_settings",
@@ -1491,10 +2166,20 @@ Search.appendIndex(
             "summary": "Migrates\u0020the\u0020legacy\u0020\u0060widget_mode\u0060\u0020setting\u0020\u0028Modul\u002011a\u0029\u0020to\u0020the\u0020new\n\u0060widget_display\u0060\u0020\u002B\u0020\u0060widget_auto_trigger\u0060\u0020pair\u0020\u0028Modul\u002014\u0029.\u0020Idempotent\u0020\u2014\u0020if\n\u0060widget_display\u0060\u0020is\u0020already\u0020present\u0020in\u0020the\u0020stored\u0020option,\u0020the\u0020migration\u0020is\nskipped.",
             "url": "namespaces/default.html#function_creationell_captcha_migrate_widget_mode"
         },                {
+            "fqsen": "\\creationell_captcha_store_migrated_settings\u0028\u0029",
+            "name": "creationell_captcha_store_migrated_settings",
+            "summary": "Writes\u0020a\u0020migrated\u0020settings\u0020array\u0020back\u0020\u2014\u0020through\u0020the\u0020sanitiser,\u0020with\u0020the\nwrite\u0020context\u0020pinned.",
+            "url": "namespaces/default.html#function_creationell_captcha_store_migrated_settings"
+        },                {
             "fqsen": "\\creationell_captcha_register_assets\u0028\u0029",
             "name": "creationell_captcha_register_assets",
             "summary": "Registers\u0020the\u0020widget\u0020script\u0020and\u0020\u2014\u0020for\u0020Argon2id\u0020\u2014\u0020its\u0020worker\u0020registration.",
             "url": "namespaces/default.html#function_creationell_captcha_register_assets"
+        },                {
+            "fqsen": "\\creationell_captcha_safe_inline_css\u0028\u0029",
+            "name": "creationell_captcha_safe_inline_css",
+            "summary": "Macht\u0020eine\u0020gespeicherte\u0020CSS\u002DZeichenkette\u0020sicher\u0020f\u00FCr\u0020die\u0020Ausgabe\u0020in\u0020einem\n\u0060\u003Cstyle\u003E\u0060\u002DElement.",
+            "url": "namespaces/default.html#function_creationell_captcha_safe_inline_css"
         },                {
             "fqsen": "\\creationell_captcha_build_widget_markup\u0028\u0029",
             "name": "creationell_captcha_build_widget_markup",
@@ -1530,6 +2215,16 @@ Search.appendIndex(
             "name": "creationell_captcha_widget_shortcode",
             "summary": "Shortcode\u0020handler\u0020for\u0020\u005Bcreationell_captcha\u005D.",
             "url": "namespaces/default.html#function_creationell_captcha_widget_shortcode"
+        },                {
+            "fqsen": "\\creationell_captcha_uninstall_site\u0028\u0029",
+            "name": "creationell_captcha_uninstall_site",
+            "summary": "Removes\u0020every\u0020trace\u0020of\u0020the\u0020plugin\u0020from\u0020the\u0020site\u0020that\u0020is\u0020currently\u0020switched\nto\u003A\u0020options,\u0020replay\u0020markers,\u0020transients,\u0020cron\u0020slots\u0020and\u0020the\u0020event\u002Dlog\u0020table.",
+            "url": "namespaces/default.html#function_creationell_captcha_uninstall_site"
+        },                {
+            "fqsen": "\\creationell_captcha_uninstall_user_meta\u0028\u0029",
+            "name": "creationell_captcha_uninstall_user_meta",
+            "summary": "Removes\u0020the\u0020plugin\u0027s\u0020per\u002Duser\u0020data.",
+            "url": "namespaces/default.html#function_creationell_captcha_uninstall_user_meta"
         },                {
             "fqsen": "\\",
             "name": "\\",

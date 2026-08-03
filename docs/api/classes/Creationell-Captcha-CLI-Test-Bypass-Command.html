@@ -171,6 +171,15 @@
 <dd>Simulates the bypass evaluation with the supplied flag values. Flags are
 optional — anything not provided is treated as non-matching.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method_note_ip_resolution_gap">note_ip_resolution_gap()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Points out that `--ip` skips the client-IP resolution a real request goes
+through — but only when the site is actually configured to resolve a
+forwarded IP, because only then can simulation and reality diverge.</dd>
+
     </dl>
 
 
@@ -199,7 +208,7 @@ optional — anything not provided is treated as non-matching.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-test-bypass-command.php"><a href="files/includes-cli-class-cli-test-bypass-command.html"><abbr title="includes/cli/class-cli-test-bypass-command.php">class-cli-test-bypass-command.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
     </aside>
 
@@ -214,19 +223,34 @@ optional — anything not provided is treated as non-matching.</p>
         </div>
     
         <section class="phpdocumentor-description"><p>Exit code: 0 if the request would be bypassed, 1 otherwise.</p>
+<p>Was dieses Werkzeug tut — und was nicht (CLI-9): Es ist ein
+REGEL-SIMULATOR. Die übergebenen Werte werden unverändert gegen die
+Bypass-Regeln gehalten. Ein echter Request durchläuft vorher
+<code class="prettyprint">creationell_captcha_get_client_ip()</code>, das je nach Proxy-Konfiguration
+eine ANDERE IP ermittelt als die des unmittelbaren Peers. „Kein Bypass&quot;
+ist deshalb eine Aussage über die Regeln bei DIESER Eingabe, kein Nachweis,
+dass ein realer Request nicht durchkommt.</p>
 <h2>OPTIONS</h2>
 <p>[--ip=<ip>]
-: IP address (IPv4 or IPv6) to test against the IP allowlist.</p>
+: IP address (IPv4 or IPv6) to test against the IP allowlist. Wird
+unverändert an die Regelprüfung übergeben — siehe die Anmerkung zur
+Proxy-Auflösung oben. Eine IPv4-mapped Schreibweise (<code class="prettyprint">::ffff:a.b.c.d</code>,
+wie sie REMOTE_ADDR auf manchen Servern liefert) muss NICHT vorab
+umgeschrieben werden: creationell_captcha_ip_in_list() — die einzige
+Engstelle, durch die die Erlaubnisliste läuft — kanonisiert das
+Subjekt seit 1.1.0 selbst, unabhängig vom Aufrufer.</p>
 <p>[--ua=<user-agent>]
 : User-Agent string to test against the UA bypass patterns.</p>
 <p>[--cookie=&lt;name_value&gt;]
 : Cookie pair to test against the cookie bypass list (format: name=value).
-The flag may be repeated. Each value must contain exactly one <code class="prettyprint">=</code> — the
-part before the first <code class="prettyprint">=</code> is the cookie name.</p>
+Mehrere Cookies in EINEM Flag, mit <code class="prettyprint">;</code> getrennt — WP-CLI wertet bei
+mehrfach angegebenem <code class="prettyprint">--cookie</code> nur das LETZTE aus, die früheren
+verschwinden ohne Meldung.</p>
 <h2>EXAMPLES</h2>
 <pre class="prettyprint"><code class="prettyprint">wp creacaptcha test-bypass --ip=203.0.113.4
 wp creacaptcha test-bypass --ua=&quot;Mozilla/5.0&quot;
 wp creacaptcha test-bypass --cookie=&quot;my_pass=abc&quot;
+wp creacaptcha test-bypass --cookie=&quot;my_pass=abc; other=xyz&quot;
 wp creacaptcha test-bypass --ip=203.0.113.4 --ua=&quot;GoogleBot&quot; --cookie=&quot;my_pass=abc&quot;
 </code></pre>
 </section>
@@ -270,6 +294,55 @@ wp creacaptcha test-bypass --ip=203.0.113.4 --ua=&quot;GoogleBot&quot; --cookie=
 
                                     </dd>
                                             </dl>
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_note_ip_resolution_gap">
+        note_ip_resolution_gap()
+        <a href="classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method_note_ip_resolution_gap" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/cli/class-cli-test-bypass-command.php"><a href="files/includes-cli-class-cli-test-bypass-command.html"><abbr title="includes/cli/class-cli-test-bypass-command.php">class-cli-test-bypass-command.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">137</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Points out that `--ip` skips the client-IP resolution a real request goes
+through — but only when the site is actually configured to resolve a
+forwarded IP, because only then can simulation and reality diverge.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">note_ip_resolution_gap</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ip</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$ip</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The value passed as <code class="prettyprint">--ip</code>, or null.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
 
         
     
@@ -391,6 +464,7 @@ wp creacaptcha test-bypass --ip=203.0.113.4 --ua=&quot;GoogleBot&quot; --cookie=
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method___invoke">__invoke()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-CLI-Test-Bypass-Command.html#method_note_ip_resolution_gap">note_ip_resolution_gap()</a></li>
                                     </ul>
             </li>
                     </ul>

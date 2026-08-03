@@ -139,6 +139,13 @@ rotation, two random lines, scattered noise pixels).</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_code_challenge_font_usable">creationell_captcha_code_challenge_font_usable()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Probes whether GD can actually render text with the vendored TTF font.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_render_code_image">creationell_captcha_render_code_image()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -159,6 +166,48 @@ responsible for emitting headers (`Content-Type: image/png`,
 
         </h3>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_code_challenge_font_usable">
+        creationell_captcha_code_challenge_font_usable()
+        <a href="namespaces/default.html#function_creationell_captcha_code_challenge_font_usable" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge-image.php"><a href="files/includes-code-challenge-image.html"><abbr title="includes/code-challenge-image.php">code-challenge-image.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">32</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Probes whether GD can actually render text with the vendored TTF font.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_code_challenge_font_usable</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">is_file()</code> alone is not enough (ZP-2): a corrupted font or one swapped for
+an unrelated/unreadable file still passes that check, but every
+<code class="prettyprint">imagettftext()</code> call against it then silently returns <code class="prettyprint">false</code> and draws
+nothing — the renderer would produce a blank white PNG with no error and
+no log line. This probe draws into a throwaway 1-character canvas and
+reports the real <code class="prettyprint">imagettftext()</code> verdict, so both the renderer and
+<code class="prettyprint">wp creacaptcha doctor</code> (Check „Code-Challenge-Schriftart&quot;) can detect the
+defect before a visitor ever requests <code class="prettyprint">/code-image</code>.</p>
+<p>A corrupted TTF fails identically for every glyph (the failure is a
+freetype parse error on the file, not a missing character), so probing
+with a single throwaway character reflects the file's real state.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_render_code_image">
         creationell_captcha_render_code_image()
         <a href="namespaces/default.html#function_creationell_captcha_render_code_image" class="headerlink"><i class="fas fa-link"></i></a>
@@ -167,7 +216,7 @@ responsible for emitting headers (`Content-Type: image/png`,
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge-image.php"><a href="files/includes-code-challenge-image.html"><abbr title="includes/code-challenge-image.php">code-challenge-image.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">27</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
     </aside>
 
@@ -181,7 +230,9 @@ responsible for emitting headers (`Content-Type: image/png`,
                     <span class="phpdocumentor-signature__name">creationell_captcha_render_code_image</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
         <section class="phpdocumentor-description"><p>Falls back to GD's built-in bitmap font 5 if the vendored TTF is missing
-(logs a one-line warning so the operator sees the degradation).</p>
+OR present but unusable (ZP-2: corrupted/swapped file — <code class="prettyprint">is_file()</code> alone
+cannot see that) — either way logs a one-line warning so the operator sees
+the degradation instead of silently shipping a blank image.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -321,6 +372,7 @@ trimmed implicitly by the width budget).</p>
                             <li class="phpdocumentor-on-this-page-section__title">Functions</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_code_challenge_font_usable">creationell_captcha_code_challenge_font_usable()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_render_code_image">creationell_captcha_render_code_image()</a></li>
                                             </ul>
                 </li>

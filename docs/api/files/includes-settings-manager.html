@@ -180,7 +180,8 @@
                                 &nbsp;: void    </span>
 </dt>
 <dd>Full factory reset: writes the complete default settings array, which also
-empties every list. Secrets, analytics counters and the event log are
+empties every list and drops stored keys outside the current field
+specification. Secrets, analytics counters and the event log are
 left untouched.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
@@ -349,7 +350,7 @@ clamped numbers, bounded lists, unknown keys dropped, missing keys defaulted.</p
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;|<abbr title="\WP_Error">WP_Error</abbr></span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>On success: { imported, version_notice }.</p>
+                <section class="phpdocumentor-description"><p>On success: { imported, version_notice, source_notice }.</p>
 </section>
 
             </section>
@@ -364,12 +365,13 @@ clamped numbers, bounded lists, unknown keys dropped, missing keys defaulted.</p
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-manager.php"><a href="files/includes-settings-manager.html"><abbr title="includes/settings-manager.php">settings-manager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Full factory reset: writes the complete default settings array, which also
-empties every list. Secrets, analytics counters and the event log are
+empties every list and drops stored keys outside the current field
+specification. Secrets, analytics counters and the event log are
 left untouched.</p>
 
     
@@ -392,7 +394,7 @@ left untouched.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-manager.php"><a href="files/includes-settings-manager.html"><abbr title="includes/settings-manager.php">settings-manager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">127</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
     </aside>
 
@@ -404,7 +406,13 @@ list values (IP block/allow, UA block, interceptor paths).</p>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_load_default_settings</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>Die übernommenen Listen laufen dabei durch dieselbe Eingabeprüfung wie ein
+regulärer Speichervorgang (E3a): ein Eintrag, der an den Plugin-Schreibwegen
+vorbei in die Option kam (<code class="prettyprint">wp option update</code>, DB-Restore), überlebte
+„Standardwerte laden&quot; bisher ungeprüft — auch dann, wenn die Prüfung ihn
+heute ablehnt.</p>
+</section>
+
     
     
 

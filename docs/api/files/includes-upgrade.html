@@ -153,6 +153,14 @@
 `widget_display` is already present in the stored option, the migration is
 skipped.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_store_migrated_settings">creationell_captcha_store_migrated_settings()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Writes a migrated settings array back — through the sanitiser, with the
+write context pinned.</dd>
+
     </dl>
 
 
@@ -173,7 +181,7 @@ skipped.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/upgrade.php"><a href="files/includes-upgrade.html"><abbr title="includes/upgrade.php">upgrade.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">21</span>
+    <span class="phpdocumentor-element-found-in__line">22</span>
 
     </aside>
 
@@ -184,9 +192,10 @@ skipped.</dd>
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_maybe_upgrade</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-        <section class="phpdocumentor-description"><p>Hooked on admin_init. When the event-log table already exists it is re-run
-through dbDelta so new columns are added; a missing table is left alone — it
-is created on demand when the event log is switched on.</p>
+        <section class="phpdocumentor-description"><p>Hooked on admin_init and gated twice — see the inline notes on DS-2. When
+the event-log table already exists it is re-run through dbDelta so new
+columns are added; a missing table is created only when
+<code class="prettyprint">analytics_event_log</code> says it should exist (DS-4).</p>
 </section>
 
     
@@ -203,7 +212,7 @@ is created on demand when the event log is switched on.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/upgrade.php"><a href="files/includes-upgrade.html"><abbr title="includes/upgrade.php">upgrade.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
     </aside>
 
@@ -221,11 +230,77 @@ skipped.</p>
 visible → widget_display=standard,  widget_auto_trigger=none
 auto    → widget_display=invisible, widget_auto_trigger=onload
 overlay → widget_display=floating,  widget_auto_trigger=onsubmit</p>
-<p>The legacy <code class="prettyprint">widget_mode</code> key is removed from the option once the new keys
-are in place.</p>
+<p>Den Alt-Schlüssel <code class="prettyprint">widget_mode</code> nimmt die Migration aus dem Wertesatz, den
+sie übergibt; ab Modul 14 wird er nirgends mehr gelesen. Ob er damit aus der
+Option verschwindet, entscheidet der Sanitizer: Er trägt am Ende jeden
+Schlüssel nach, der zwar gespeichert ist, aber nicht in der
+Feldspezifikation steht (Carry-over für den Toggle eines gerade inaktiven
+Formular-Plugins) — und er liest dafür den Stand VOR diesem Schreibvorgang.
+Im wp-admin, wo er zusätzlich als <code class="prettyprint">sanitize_option</code>-Filter hängt, kommt
+<code class="prettyprint">widget_mode</code> deshalb zurück. Folgenlos: keine Codestelle wertet den
+Schlüssel noch aus, und <code class="prettyprint">creationell_captcha_get_settings()</code> merged ohnehin
+über die Defaults. Aus demselben Grund ist der Aufräum-Zweig unten
+(<code class="prettyprint">widget_display</code> vorhanden, <code class="prettyprint">widget_mode</code> noch da) dort ein Schreibvorgang
+ohne Änderung.</p>
 </section>
 
     
+    
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_store_migrated_settings">
+        creationell_captcha_store_migrated_settings()
+        <a href="namespaces/default.html#function_creationell_captcha_store_migrated_settings" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/upgrade.php"><a href="files/includes-upgrade.html"><abbr title="includes/upgrade.php">upgrade.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">168</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Writes a migrated settings array back — through the sanitiser, with the
+write context pinned.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_store_migrated_settings</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>B-M6: Die Migration schrieb den rohen Options-Inhalt zurück. Heute ist das
+folgenlos (der Pfad läuft nur im wp-admin, wo der <code class="prettyprint">sanitize_option</code>-Filter
+hängt, und die gesetzten Werte stammen aus einer Konstantentabelle), aber es
+ist derselbe Bauart-Fehler wie in <code class="prettyprint">settings-manager.php</code>: Ob sanitisiert
+wird, hing am Request-Kontext statt am Aufrufer. Der Kontext ist
+PROGRAMMATIC — der übergebene Wertesatz ist vollständig und bewusst gewählt,
+die <code class="prettyprint">requires</code>-Rückschreibung der Formular-Semantik würde eine vom Sanitizer
+verworfene Eingabe wieder einsetzen.</p>
+<p>Was diese Funktion NICHT leistet: einen Schlüssel aus der Option entfernen.
+Die Nachtrags-Schleife am Ende des Sanitizers setzt jeden gespeicherten
+Schlüssel wieder ein, der nicht in der Feldspezifikation steht — sie liest
+dabei den Stand VOR diesem Schreibvorgang. Ein <code class="prettyprint">unset()</code> hier würde nur in
+einem Request ohne <code class="prettyprint">sanitize_option</code>-Filter wirken und genau die
+Kontextabhängigkeit wiederherstellen, die dieser Fix beseitigt. Der
+Alt-Schlüssel <code class="prettyprint">widget_mode</code> bleibt deshalb gegebenenfalls stehen; er wird
+nirgends mehr gelesen (siehe Docblock der Migration).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Migrierter Wertesatz.</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
     
@@ -347,6 +422,7 @@ are in place.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_maybe_upgrade">creationell_captcha_maybe_upgrade()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_migrate_widget_mode">creationell_captcha_migrate_widget_mode()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_store_migrated_settings">creationell_captcha_store_migrated_settings()</a></li>
                                             </ul>
                 </li>
                     </ul>

@@ -173,6 +173,23 @@ challenge and make the subsequent hook verification fail as a replay.</dd>
     </dl>
 
 
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/Creationell-Captcha-Interceptor.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Creationell-Captcha-Interceptor.html#property_action_patterns">$action_patterns</a>
+    <span>
+                        &nbsp;: array&lt;int, string&gt;|null            </span>
+</dt>
+<dd>Request-local cache of the filtered action patterns. The filter is
+evaluated in exactly one place (self::action_patterns()) and exactly
+once per request, so the bypass step and the guard step can never see
+two different lists — that asymmetry was BK-10.</dd>
+
+    </dl>
 
 <h4 id="toc-methods">
     Methods
@@ -189,6 +206,14 @@ challenge and make the subsequent hook verification fail as a replay.</dd>
 `!`-prefixed entries acting as hard exclusions (allow-list semantics).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_match_request_path">match_request_path()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Matches a request path against the pattern list in BOTH spellings the
+request can have: URL-decoded and as it came off the wire.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_run">run()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -197,12 +222,21 @@ challenge and make the subsequent hook verification fail as a replay.</dd>
 priority 1. Terminates the request when verification fails.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_action_patterns">action_patterns()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>The filtered action-slug patterns — the single evaluation point for
+`creationell_captcha_interceptor_actions` (BK-10). Cached per request so
+the bypass step and the guard step can never disagree, not even with a
+non-deterministic filter callback attached.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_context">context()</a>
     <span>
-                                &nbsp;: array{path: string, method: string, script: string, is_ajax: bool, action: string}    </span>
+                                &nbsp;: array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}    </span>
 </dt>
-<dd>Builds the request context. Adds an `action` field read from
-$_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-based protection.</dd>
+<dd>Builds the request context.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_fail">fail()</a>
@@ -232,7 +266,14 @@ match in either list guards the request.</dd>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Whether the request path points at the REST API.</dd>
+<dd>Whether the current request is served by the WordPress REST API.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_matches_action">matches_action()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether any of the request&#039;s action candidates matches a pattern.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Creationell-Captcha-Interceptor.html#method_should_bypass">should_bypass()</a>
@@ -291,6 +332,54 @@ challenge and make the subsequent hook verification fail as a replay.</p>
             </section>
 
         
+    <section class="phpdocumentor-properties">
+        <h3 class="phpdocumentor-elements__header" id="properties">
+            Properties
+            <a href="classes/Creationell-Captcha-Interceptor.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_action_patterns">
+        $action_patterns
+        <a href="classes/Creationell-Captcha-Interceptor.html#property_action_patterns" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Request-local cache of the filtered action patterns. The filter is
+evaluated in exactly one place (self::action_patterns()) and exactly
+once per request, so the bypass step and the guard step can never see
+two different lists — that asymmetry was BK-10.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;int, string&gt;|null</span>
+    <span class="phpdocumentor-signature__name">$action_patterns</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+            </section>
 
             <section class="phpdocumentor-methods">
         <h3 class="phpdocumentor-elements__header" id="methods">
@@ -312,7 +401,7 @@ challenge and make the subsequent hook verification fail as a replay.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
     </aside>
 
@@ -331,6 +420,11 @@ matches. Order in the list is irrelevant — a single <code class="prettyprint">
 the whole list to false.</p>
 <p>Public and static so the matching can be exercised in isolation; also
 reused for action-name matching (the algorithm is charset-agnostic).</p>
+<p>Matches ONE spelling of a path. Callers that hold a request path use
+self::match_request_path() instead, which runs this against the decoded
+and the raw spelling (BK-5); calling it with a single spelling would
+either lose the percent-encoded patterns of existing configurations or
+the pages core routes through decoding.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -369,6 +463,94 @@ reused for action-name matching (the algorithm is charset-agnostic).</p>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_match_request_path">
+        match_request_path()
+        <a href="classes/Creationell-Captcha-Interceptor.html#method_match_request_path" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">452</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Matches a request path against the pattern list in BOTH spellings the
+request can have: URL-decoded and as it came off the wire.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">match_request_path</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$decoded_path</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$raw_path</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$patterns</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>BK-5 asked for matching on the DECODED path, because core routes
+/%6Bontakt and /kontakt to the same page. Decoding alone, however, would
+have been a one-way replacement, and that silently REMOVES protection on
+updating installations: up to 1.0.2 the matching ran on the raw path, so
+for every page whose slug is not plain ASCII (Cyrillic/Greek/CJK stay
+UTF-8 in a WordPress slug) the percent-encoded pattern was the only
+configuration that ever worked. <code class="prettyprint">interceptor_paths = ['/%C3%BCber-uns*']</code>
+guarding the page <code class="prettyprint">/über-uns</code> matched <code class="prettyprint">POST /%C3%BCber-uns</code> before, and
+would have stopped matching it after a decode-only change — the exact
+silent hole this audit is about, only in the other direction.</p>
+<p>Hence OR, not replace. The OR can only ever guard MORE requests, never
+fewer, so it cannot open a bypass. Its price: an exclusion (<code class="prettyprint">!…</code>) written
+in one spelling no longer suppresses a positive match found in the other
+spelling — e.g. <code class="prettyprint">!/kontakt/admin</code> does not exclude <code class="prettyprint">/kontakt/%61dmin</code>,
+which the raw pass still matches via <code class="prettyprint">/kontakt*</code>. That request is then
+guarded rather than let through, which is fail-closed and exactly the
+1.0.2 behaviour.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$decoded_path</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Path decoded exactly once (see self::context()).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$raw_path</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Path as sent, still percent-encoded.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$patterns</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Wildcard patterns; <code class="prettyprint">!</code>-prefixed = exclude.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_run">
@@ -379,7 +561,7 @@ reused for action-name matching (the algorithm is charset-agnostic).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
     </aside>
 
@@ -407,24 +589,26 @@ priority 1. Terminates the request when verification fails.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_context">
-        context()
-        <a href="classes/Creationell-Captcha-Interceptor.html#method_context" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_action_patterns">
+        action_patterns()
+        <a href="classes/Creationell-Captcha-Interceptor.html#method_action_patterns" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">321</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Builds the request context. Adds an `action` field read from
-$_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-based protection.</p>
+        <p class="phpdocumentor-summary">The filtered action-slug patterns — the single evaluation point for
+`creationell_captcha_interceptor_actions` (BK-10). Cached per request so
+the bypass step and the guard step can never disagree, not even with a
+non-deterministic filter callback attached.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">context</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{path: string, method: string, script: string, is_ajax: bool, action: string}</span></code>
+                    <span class="phpdocumentor-signature__name">action_patterns</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -437,7 +621,52 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{path: string, method: string, script: string, is_ajax: bool, action: string}</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_context">
+        context()
+        <a href="classes/Creationell-Captcha-Interceptor.html#method_context" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">96</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Builds the request context.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">context</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p><code class="prettyprint">action</code> keeps the historic single-value shape (POST preferred) for the
+event payloads; <code class="prettyprint">actions</code> carries BOTH candidate sources, because the
+guard has to consider both — see below. <code class="prettyprint">path</code> is the URL-decoded path,
+<code class="prettyprint">path_raw</code> the wire spelling; the guard matches against both (BK-5, see
+self::match_request_path()).</p>
+</section>
+
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}</span>
             </section>
 
 </article>
@@ -455,7 +684,7 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">520</span>
 
     </aside>
 
@@ -463,7 +692,7 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">fail</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, method: string, script: string, is_ajax: bool}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">fail</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -473,7 +702,7 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, method: string, script: string, is_ajax: bool}</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool}</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Request context.</p>
@@ -502,7 +731,7 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">182</span>
 
     </aside>
 
@@ -541,7 +770,7 @@ $_POST[&#039;action&#039;] (preferred) or $_GET[&#039;action&#039;] for action-b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">257</span>
+    <span class="phpdocumentor-element-found-in__line">386</span>
 
     </aside>
 
@@ -551,7 +780,7 @@ match in either list guards the request.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">is_guarded</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, method: string, script: string, is_ajax: bool, action: string}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">is_guarded</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -561,7 +790,7 @@ match in either list guards the request.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, method: string, script: string, is_ajax: bool, action: string}</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Request context.</p>
@@ -594,28 +823,94 @@ match in either list guards the request.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">234</span>
+    <span class="phpdocumentor-element-found-in__line">309</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Whether the request path points at the REST API.</p>
+        <p class="phpdocumentor-summary">Whether the current request is served by the WordPress REST API.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">is_rest_request</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">is_rest_request</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
+        <section class="phpdocumentor-description"><p>The REST_REQUEST constant is not yet defined at <code class="prettyprint">init</code> priority 1 — core
+only defines it inside rest_api_loaded(), which runs on <code class="prettyprint">parse_request</code>,
+i.e. after <code class="prettyprint">init</code>. That is still true, so the constant remains unusable
+here and the request has to be identified from its own shape.</p>
+<p>BK-1: the previous implementation did that with a bare
+<code class="prettyprint">isset( $_GET['rest_route'] )</code> — value-independent, so a trailing
+<code class="prettyprint">?rest_route=</code> on ANY request switched the whole interceptor off while
+core, seeing an empty value, bailed out of rest_api_loaded() and served
+the page normally. The decision now lives in
+creationell_captcha_current_rest_route(), which evaluates the VALUE and
+the serving entry point exactly the way core does.</p>
+</section>
+
     
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_matches_action">
+        matches_action()
+        <a href="classes/Creationell-Captcha-Interceptor.html#method_matches_action" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">362</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether any of the request&#039;s action candidates matches a pattern.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">matches_action</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{action: string, actions: array<int,string>}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$patterns</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>BK-11: a request counts as protected when EITHER $_POST['action'] or
+$_GET['action'] hits a guarded pattern, regardless of which one core's
+$_REQUEST-based dispatcher would pick under the active <code class="prettyprint">request_order</code>.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$path</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$context</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{action: string, actions: array<int,string>}</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Request context.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$patterns</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, string&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Wildcard patterns.</p>
+</section>
+
             </dd>
             </dl>
 
@@ -643,7 +938,7 @@ match in either list guards the request.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-interceptor.php"><a href="files/includes-class-interceptor.html"><abbr title="includes/class-interceptor.php">class-interceptor.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">205</span>
 
     </aside>
 
@@ -654,7 +949,7 @@ can be guarded.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">should_bypass</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, method: string, script: string, is_ajax: bool, action: string}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">should_bypass</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -664,7 +959,7 @@ can be guarded.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, method: string, script: string, is_ajax: bool, action: string}</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{path: string, path_raw: string, method: string, script: string, is_ajax: bool, action: string, actions: array<int,string>}</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Request context.</p>
@@ -791,7 +1086,8 @@ can be guarded.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                         <li><a href="classes/Creationell-Captcha-Interceptor.html#toc-constants">Constants</a></li>
-                                                                                <li><a href="classes/Creationell-Captcha-Interceptor.html#toc-methods">Methods</a></li>
+                                                            <li><a href="classes/Creationell-Captcha-Interceptor.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/Creationell-Captcha-Interceptor.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
@@ -801,17 +1097,26 @@ can be guarded.</p>
                                             </ul>
                 </li>
             
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#property_action_patterns">$action_patterns</a></li>
+                                            </ul>
+                </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_match_path">match_path()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_match_request_path">match_request_path()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_run">run()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_action_patterns">action_patterns()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_context">context()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_fail">fail()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_is_ajax_request">is_ajax_request()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_is_guarded">is_guarded()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_is_rest_request">is_rest_request()</a></li>
+                                            <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_matches_action">matches_action()</a></li>
                                             <li class=""><a href="classes/Creationell-Captcha-Interceptor.html#method_should_bypass">should_bypass()</a></li>
                                     </ul>
             </li>

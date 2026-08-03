@@ -126,6 +126,20 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="files/includes-analytics-export.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS">CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS</a>
+    <span>
+        &nbsp;= 50000                            </span>
+</dt>
+<dd>The default upper bound on rows in a single CSV export.</dd>
+
+    </dl>
 
 
 
@@ -154,6 +168,44 @@
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="files/includes-analytics-export.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS">
+        CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/analytics-export.php"><a href="files/includes-analytics-export.html"><abbr title="includes/analytics-export.php">analytics-export.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">48</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The default upper bound on rows in a single CSV export.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS</span>
+    = <span class="phpdocumentor-signature__default-value">50000</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+            </section>
 
             <section class="phpdocumentor-functions">
         <h3 class="phpdocumentor-elements__header" id="functions">
@@ -170,7 +222,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/analytics-export.php"><a href="files/includes-analytics-export.html"><abbr title="includes/analytics-export.php">analytics-export.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
     </aside>
 
@@ -182,8 +234,19 @@
                     <span class="phpdocumentor-signature__name">creationell_captcha_csv_cell</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
         <section class="phpdocumentor-description"><p>A value beginning with =, +, - or @ can be executed as a formula by Excel or
-LibreOffice; the path column carries attacker-controlled request URIs. A
-leading single quote forces the spreadsheet to treat the value as text.</p>
+LibreOffice; a leading single quote forces the spreadsheet to treat the value
+as text. The <code class="prettyprint">path</code>, <code class="prettyprint">user_agent</code>, <code class="prettyprint">referrer</code>, <code class="prettyprint">verification_data</code> and
+<code class="prettyprint">request_body</code> columns all carry bytes an anonymous sender chose.</p>
+<p>B-M10: TAB and CR belong in the same list. Both are stripped as leading
+whitespace while the cell is parsed, so <code class="prettyprint">\treq(...)</code> and <code class="prettyprint">\r=1+1</code> reach the
+formula parser as if the control character were not there — the value is
+then executed exactly like the four printable starters above. OWASP names
+them alongside; they were the two the original list missed.</p>
+<p>NOT covered, deliberately: a value whose formula starter sits behind other
+text, and a cell that is dangerous only inside a quoted field. The first is
+not a formula for any spreadsheet, the second is handled by fputcsv()'s
+quoting. What this function promises is exactly &quot;the first character cannot
+start a formula&quot;.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -216,7 +279,7 @@ leading single quote forces the spreadsheet to treat the value as text.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/analytics-export.php"><a href="files/includes-analytics-export.html"><abbr title="includes/analytics-export.php">analytics-export.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
     </aside>
 
@@ -230,6 +293,10 @@ leading single quote forces the spreadsheet to treat the value as text.</p>
         <section class="phpdocumentor-description"><p>Hooked to admin-post.php. Requires the <code class="prettyprint">manage_options</code> capability and a
 valid nonce. The filter (search, event type, date range) is read from the
 request via the shared parser, so the export mirrors the on-screen filter.</p>
+<p>Every reason to refuse is checked BEFORE the first byte goes out. Once the
+Content-Disposition header and the BOM are on the wire the response is
+committed to being a successful download, and anything that goes wrong
+afterwards reaches the admin as a file that looks complete (AF-10/DS-9).</p>
 </section>
 
     
@@ -344,10 +411,17 @@ request via the shared parser, so the export mirrors the on-screen filter.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                                                                                                                        <li><a href="files/includes-analytics-export.html#toc-functions">Functions</a></li>
+                                                                                                                                                                    <li><a href="files/includes-analytics-export.html#toc-constants">Constants</a></li>
+                                                                <li><a href="files/includes-analytics-export.html#toc-functions">Functions</a></li>
                                     </ul>
             </li>
 
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS">CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Functions</li>
                 <li>
