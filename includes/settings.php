@@ -375,7 +375,7 @@ function creationell_captcha_settings_fields(): array {
             'label'   => __( 'Passwort-Reset schützen', 'creationell-captcha' ),
             'type'    => 'checkbox',
             'section' => 'creationell_captcha_core_forms',
-            'help'    => __( 'Schützt /wp-login.php?action=lostpassword. Bei aktivem WooCommerce wird auch die Woo-„Passwort vergessen"-Seite mit abgedeckt — die WooCommerce-Lost-Password-Option ist nur für das Widget-Rendering zuständig, die Server-Verifikation läuft hier.', 'creationell-captcha' ),
+            'help'    => __( 'Schützt /wp-login.php?action=lostpassword. Bei aktivem WooCommerce wird auch die Woo-„Passwort vergessen"-Seite mit abgedeckt — die WooCommerce-Lost-Password-Option ist nur für das Widget-Rendering zuständig, die Server-Verifikation läuft hier. Nicht betroffen sind Resets, die im Backend von einem Konto mit Benutzerverwaltungsrecht ausgelöst werden (Knopf im Benutzerprofil, Massenaktion in der Benutzerliste), sowie Aufrufe über WP-CLI, Cron, XML-RPC und die REST-Schnittstelle — dort wird nie eine Sicherheitsabfrage angezeigt, die sich lösen ließe.', 'creationell-captcha' ),
         ],
         'skip_logged_in'         => [
             'label'   => __( 'Kommentar-Captcha für angemeldete Nutzer überspringen', 'creationell-captcha' ),

@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.1.1  
+**Version:** 1.1.2  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.1  
+**Stable tag:** 1.1.2  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.1'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.2'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -778,6 +778,33 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.1.2
+
+Fehlerbehebung: Der Passwort-Reset, den eine Administratorin oder ein
+Administrator im Backend für ein Benutzerkonto auslöst, funktioniert wieder.
+
+- Der Knopf „Link zum Zurücksetzen senden" im Benutzerprofil und die
+  Massenaktion „Passwort zurücksetzen senden" in der Benutzerliste brachen bei
+  eingeschaltetem Passwort-Reset-Schutz mit der Meldung „Die Sicherheitsabfrage
+  wurde nicht bestanden" ab, und es wurde keine E-Mail versendet. Ursache: Die
+  Prüfung hing an einer WordPress-Schnittstelle, die nicht nur das öffentliche
+  „Passwort vergessen"-Formular auslöst, sondern auch jeden administrativen und
+  programmatischen Reset — dort ist aber nie eine Sicherheitsabfrage angezeigt
+  worden, die man hätte lösen können.
+- Ausgenommen sind ab jetzt genau die Aufrufe, die nachweislich nicht aus dem
+  öffentlichen Formular stammen: administrative Resets im Backend durch Konten
+  mit dem Recht zur Benutzerverwaltung sowie Aufrufe über die Kommandozeile,
+  über Cron, über XML-RPC und über die REST-Schnittstelle. Die Ausnahme hängt am
+  tatsächlichen Recht, nicht bloß am Backend-Kontext — ein unangemeldeter
+  Aufruf kann sie deshalb nicht für sich beanspruchen.
+- Am öffentlichen Formular ändert sich nichts: Es verlangt die
+  Sicherheitsabfrage weiterhin, ebenso die WooCommerce-Seite „Passwort
+  vergessen". Auch für angemeldete Administratoren, die das öffentliche
+  Formular benutzen, bleibt die Abfrage bestehen.
+
+Das Update braucht keine Datenbank-Migration, es gibt keine neuen
+Einstellungen, und an gespeicherten Konfigurationen ändert sich nichts.
 
 ### 1.1.1
 
