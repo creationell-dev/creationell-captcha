@@ -324,7 +324,7 @@ old 5-minute-bucket pair accepted (BK-4).</dd>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_VERSION">CREATIONELL_CAPTCHA_VERSION</a>
     <span>
-        &nbsp;= &#039;1.1.1&#039;                            </span>
+        &nbsp;= &#039;1.1.2&#039;                            </span>
 </dt>
 
     </dl>
@@ -777,6 +777,20 @@ programmatic `wp_signon()` call made by other code.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Renders the widget inside the lost-password form.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_password_reset_exempt_reason">creationell_captcha_password_reset_exempt_reason()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
+<dd>Why the current request is not a public lost-password form submission.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_password_reset_exempt_label">creationell_captcha_password_reset_exempt_label()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Human-readable label for an exemption reason, for the event log.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_password_reset_verify">creationell_captcha_password_reset_verify()</a>
@@ -2661,7 +2675,7 @@ old 5-minute-bucket pair accepted (BK-4).</p>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;1.1.1&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;1.1.2&#039;</span>
 </code>
 
 
@@ -5034,6 +5048,99 @@ its own toggle/verification pair (<code class="prettyprint">protect_wc_login</co
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_password_reset_exempt_reason">
+        creationell_captcha_password_reset_exempt_reason()
+        <a href="namespaces/default.html#function_creationell_captcha_password_reset_exempt_reason" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/password-reset.php"><a href="files/includes-forms-password-reset.html"><abbr title="includes/forms/password-reset.php">password-reset.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Why the current request is not a public lost-password form submission.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_password_reset_exempt_reason</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">lostpassword_post</code> is NOT a form hook. WordPress core fires it inside
+<code class="prettyprint">retrieve_password()</code> (wp-includes/user.php), and that function is also the
+back end of every administrative and programmatic reset:
+<code class="prettyprint">wp_ajax_send_password_reset()</code> behind the &quot;Send reset link&quot; button on
+user-edit.php, the &quot;Send password reset&quot; bulk action in wp-admin/users.php,
+and any WP-CLI or third-party plugin call. None of those ever renders our
+widget, so demanding a solved challenge there rejected the request with
+&quot;Die Sicherheitsabfrage wurde nicht bestanden&quot; and no mail was ever sent —
+<code class="prettyprint">retrieve_password()</code> bails out before dispatch once <code class="prettyprint">$errors</code> is non-empty.</p>
+<p>Returns the reason rather than a bare bool for two reasons: the caller logs
+it on the <code class="prettyprint">verified</code> event exactly like a bypass reason, and every branch
+stays individually observable in the regression test. Under the CLI SAPI a
+bool predicate could only ever show its CLI branch — which is why the
+administrative branch is checked FIRST here, before the non-interactive
+ones. In production the order is immaterial: WP-CLI has neither <code class="prettyprint">is_admin()</code>
+nor a current user, so it can never take the administrative branch.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Exemption reason, or null for a genuine form submission.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_password_reset_exempt_label">
+        creationell_captcha_password_reset_exempt_label()
+        <a href="namespaces/default.html#function_creationell_captcha_password_reset_exempt_label" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/password-reset.php"><a href="files/includes-forms-password-reset.html"><abbr title="includes/forms/password-reset.php">password-reset.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">109</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Human-readable label for an exemption reason, for the event log.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_password_reset_exempt_label</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$reason</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$reason</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Reason key from creationell_captcha_password_reset_exempt_reason().</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_password_reset_verify">
         creationell_captcha_password_reset_verify()
         <a href="namespaces/default.html#function_creationell_captcha_password_reset_verify" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5042,7 +5149,7 @@ its own toggle/verification pair (<code class="prettyprint">protect_wc_login</co
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/forms/password-reset.php"><a href="files/includes-forms-password-reset.html"><abbr title="includes/forms/password-reset.php">password-reset.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
     </aside>
 

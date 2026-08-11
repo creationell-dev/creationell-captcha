@@ -1371,6 +1371,16 @@ Search.appendIndex(
             "summary": "Renders\u0020the\u0020widget\u0020inside\u0020the\u0020lost\u002Dpassword\u0020form.",
             "url": "namespaces/default.html#function_creationell_captcha_password_reset_render"
         },                {
+            "fqsen": "\\creationell_captcha_password_reset_exempt_reason\u0028\u0029",
+            "name": "creationell_captcha_password_reset_exempt_reason",
+            "summary": "Why\u0020the\u0020current\u0020request\u0020is\u0020not\u0020a\u0020public\u0020lost\u002Dpassword\u0020form\u0020submission.",
+            "url": "namespaces/default.html#function_creationell_captcha_password_reset_exempt_reason"
+        },                {
+            "fqsen": "\\creationell_captcha_password_reset_exempt_label\u0028\u0029",
+            "name": "creationell_captcha_password_reset_exempt_label",
+            "summary": "Human\u002Dreadable\u0020label\u0020for\u0020an\u0020exemption\u0020reason,\u0020for\u0020the\u0020event\u0020log.",
+            "url": "namespaces/default.html#function_creationell_captcha_password_reset_exempt_label"
+        },                {
             "fqsen": "\\creationell_captcha_password_reset_verify\u0028\u0029",
             "name": "creationell_captcha_password_reset_verify",
             "summary": "Verifies\u0020the\u0020captcha\u0020during\u0020a\u0020password\u002Dreset\u0020request.",
