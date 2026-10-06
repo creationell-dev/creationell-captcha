@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.2.0  
+**Version:** 1.2.1  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.2.0  
+**Stable tag:** 1.2.1  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.2.0'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.2.1'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -779,6 +779,17 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.2.1
+
+Kleine Korrekturen zu 1.2.0, keine neuen Einstellungen, keine Migration.
+
+- Liefert ein anderes Plugin über den Filter `creationell_captcha_argon2id_memory_budget`
+  keinen Zahlenwert (etwa durch einen fehlerhaften Callback), gilt jetzt der Standard von
+  512 MiB. Bisher fiel die Abfrage dann still auf einen einzigen Worker zurück und wurde
+  deutlich langsamer.
+- Hilfetexte präzisiert: Das Speicherbudget von 512 MiB ist ein Standardwert, und die
+  Zeitangaben der Einstellung „Schwierigkeit" nennen jetzt auch den Argon2id-Wert.
 
 ### 1.2.0
 
