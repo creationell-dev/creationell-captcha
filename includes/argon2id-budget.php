@@ -63,9 +63,14 @@ function creationell_captcha_argon2id_memory_budget(): int {
      *
      * @since 1.2.0
      *
+     * A non-numeric return value (e.g. a callback without `return`) falls
+     * back to the default 512 instead of silently forcing one worker.
+     *
      * @param int $budget Budget in MiB. Default 512.
      */
-    return max( 0, (int) apply_filters( 'creationell_captcha_argon2id_memory_budget', 512 ) );
+    $budget = apply_filters( 'creationell_captcha_argon2id_memory_budget', 512 );
+
+    return is_numeric( $budget ) ? max( 0, (int) $budget ) : 512;
 }
 
 /**

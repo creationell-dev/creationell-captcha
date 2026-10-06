@@ -141,7 +141,7 @@ function creationell_captcha_settings_fields(): array {
                 'medium' => __( 'Mittel', 'creationell-captcha' ),
                 'high'   => __( 'Hoch', 'creationell-captcha' ),
             ],
-            'help'    => __( 'Steuert den Rechenaufwand für die Sicherheitsabfrage. „Niedrig" ≈ ~0,1 s auf einem Mittelklasse-Handy, „Mittel" ≈ ~0,3–0,5 s, „Hoch" ≈ ~1–2 s. Höhere Stufen erhöhen den Aufwand für Bot-Farmen, verzögern aber jeden echten Submit. „Mittel" ist der empfohlene Default.', 'creationell-captcha' ),
+            'help'    => __( 'Steuert den Rechenaufwand für die Sicherheitsabfrage. „Niedrig" ≈ ~0,1 s auf einem Mittelklasse-Handy, „Mittel" ≈ ~0,3–0,5 s, „Hoch" ≈ ~1–2 s. Höhere Stufen erhöhen den Aufwand für Bot-Farmen, verzögern aber jeden echten Submit. „Mittel" ist der empfohlene Default. Die Zeiten gelten für PBKDF2; mit Argon2id (32 MiB) dauert „Mittel" auf einem Desktop mit 8 Threads etwa 3 s.', 'creationell-captcha' ),
         ],
         'argon2id_memory'        => [
             'label'   => __( 'Argon2id-Speicher (MiB)', 'creationell-captcha' ),
@@ -149,7 +149,7 @@ function creationell_captcha_settings_fields(): array {
             'section' => 'creationell_captcha_engine',
             'min'     => 8,
             'max'     => 256,
-            'help'    => __( 'Nur wirksam, wenn als Algorithmus Argon2id gewählt ist. Speicher je Rechenvorgang im Browser des Besuchers. Der Browser rechnet mit mehreren Workern parallel (höchstens so viele, wie das Gerät Kerne hat), insgesamt aber nie mit mehr als 512 MiB: Bei höheren Werten begrenzt das Plugin die Zahl der Worker, die Sicherheitsabfrage dauert dann deutlich länger. Empfohlen: 32–64 MiB. Gemessen auf einem Desktop mit 8 Threads, Schwierigkeit „Mittel", im Mittel: 32 MiB ≈ 3 s, 256 MiB ≈ 45 s.', 'creationell-captcha' ),
+            'help'    => __( 'Nur wirksam, wenn als Algorithmus Argon2id gewählt ist. Speicher je Rechenvorgang im Browser des Besuchers. Der Browser rechnet mit mehreren Workern parallel (höchstens so viele, wie das Gerät Kerne hat), insgesamt aber standardmäßig nie mit mehr als 512 MiB: Bei höheren Werten begrenzt das Plugin die Zahl der Worker, die Sicherheitsabfrage dauert dann deutlich länger. Empfohlen: 32–64 MiB. Gemessen auf einem Desktop mit 8 Threads, Schwierigkeit „Mittel", im Mittel: 32 MiB ≈ 3 s, 256 MiB ≈ 45 s.', 'creationell-captcha' ),
         ],
         'challenge_expiry'       => [
             'label'   => __( 'Challenge-Gültigkeit (Sekunden)', 'creationell-captcha' ),
