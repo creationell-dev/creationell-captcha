@@ -349,8 +349,11 @@ function creationell_captcha_rest_code_verify( WP_REST_Request $request ): WP_RE
         // Payload unbrauchbar zu machen. Kein zusätzlicher „+1 s"-Ausgleich
         // nötig (anders als beim Sweep in Bündel 3): `verify_structural()`
         // ruft dieselbe Bibliotheksprüfung auf, die eine bereits abgelaufene
-        // Challenge (`time() > expiresAt`) schon vorher mit 410 abweist — bei
+        // Challenge (`microtime(true) > expiresAt`, seit altcha-org/altcha
+        // v2.3.0 sekundenbruchteilgenau) schon vorher mit 410 abweist — bei
         // Erreichen dieser Zeile ist `expiresAt - time()` also nie negativ.
+        // Ein nicht-ganzzahliges `expiresAt` kommt hier nicht an:
+        // prepare_payload() lehnt es seit Modul 30 ab.
         $expires_at = isset( $data['challenge']['parameters']['expiresAt'] )
             && is_int( $data['challenge']['parameters']['expiresAt'] )
                 ? $data['challenge']['parameters']['expiresAt']

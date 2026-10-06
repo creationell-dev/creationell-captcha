@@ -51,7 +51,9 @@ function creationell_captcha_register_assets(): void {
 
     $settings = creationell_captcha_get_settings();
     if ( 'argon2id' === ( $settings['algorithm'] ?? 'pbkdf2' ) && creationell_captcha_sodium_available() ) {
-        $worker_url = CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js';
+        // ?ver= so a vendoring update gets a new cache key here as well — the
+        // worker URL is not enqueued, so WordPress adds none on its own.
+        $worker_url = add_query_arg( 'ver', CREATIONELL_CAPTCHA_VERSION, CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js' );
         $inline     = sprintf(
             'if(window.$altcha&&window.$altcha.algorithms){window.$altcha.algorithms.set("ARGON2ID",function(){return new Worker(%s);});}',
             wp_json_encode( $worker_url )

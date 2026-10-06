@@ -282,17 +282,17 @@ jobs:
           with open(f"gh-pages-json/plugin_{os.environ.get('PLUGIN_SLUG')}.json", "w", encoding="utf-8") as f:
               json.dump(plugin, f, indent=2, ensure_ascii=False)
 
-      # 10. Generate PHPDoc API documentation (gepinnt auf v3.9.1 + Prüfsumme)
+      # 10. Generate PHPDoc API documentation (gepinnt auf v3.10.0 + Prüfsumme)
       #
       # Ein Release-Tag auf GitHub lässt sich umhängen und ein Release-Asset
       # ersetzen; der phar wird hier ausgeführt. Deshalb Version UND SHA-256
       # gepinnt (Wert = der von der GitHub-API gemeldete Asset-Digest für
-      # v3.9.1). Beim Anheben der Version die Prüfsumme miterneuern —
+      # v3.10.0). Beim Anheben der Version die Prüfsumme miterneuern —
       # Verfahren in DEVELOPMENT.md, Abschnitt 7.
       - name: Generate PHPDoc API documentation
         run: |
-          PHPDOC_VERSION=v3.9.1
-          PHPDOC_SHA256=ef5509af790c8e56d11fff8162f12c7c19473b9af6e79b0fb9a62aff26da2ea5
+          PHPDOC_VERSION=v3.10.0
+          PHPDOC_SHA256=fe1e7c23ba3329aa6f19ac3c807446159a431a195ec5d9163b0c281a15105207
           wget -q "https://github.com/phpDocumentor/phpDocumentor/releases/download/${PHPDOC_VERSION}/phpDocumentor.phar" -O phpDocumentor.phar
           echo "$PHPDOC_SHA256  phpDocumentor.phar" | sha256sum -c -
           chmod +x phpDocumentor.phar

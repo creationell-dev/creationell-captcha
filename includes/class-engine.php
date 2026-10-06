@@ -306,15 +306,14 @@ class Engine {
         // (lib/altcha-org/altcha/src/Altcha.php, verifySolution(), block
         // "Verify challenge signature"), and it does so before deriving.
         //
-        // The guard stays regardless, for two reasons that outlive the version
-        // bump: the library only runs that block when an HMAC signature secret
-        // is configured — with none set it skips straight to derivation, which
-        // is exactly what the fail-closed branch below catches — and a
-        // dependency update must never be able to silently remove a security
-        // property of this plugin. Defence in depth, not redundancy by
-        // accident. Measured in Modul 28; see the note in
+        // The guard stays regardless: a dependency update must never be able
+        // to silently remove a security property of this plugin. Since v2.3.0
+        // the library also rejects every payload when no (or an empty)
+        // signature secret is configured — there is no unsigned mode any more —
+        // so this guard and the fail-closed branch below are now defence in
+        // depth on top of the library, not the only line. See the note in
         // tests/test-engine-signature-caps.php on what this means for the
-        // proof power of that suite.
+        // proof power of that suite (Modul 28, revised in Modul 30).
         $signature = isset( $data['challenge']['signature'] ) && is_string( $data['challenge']['signature'] )
             ? $data['challenge']['signature']
             : '';
@@ -322,10 +321,13 @@ class Engine {
             return null;
         }
 
-        // Fail-closed: with an empty HMAC secret the library would verify every
-        // signature against the empty key, i.e. anyone who knows the install
-        // has no secret can forge one. Never "accept without signature" — a
-        // broken install must reject, not wave everything through.
+        // Fail-closed: up to altcha-org/altcha v2.1.0 an empty HMAC secret made
+        // the library verify every signature against the empty key, i.e.
+        // anyone who knows the install has no secret could forge one. v2.3.0
+        // treats an empty secret as unset and rejects on its own; this branch
+        // keeps the guarantee independent of the library version and logs the
+        // cause. Never "accept without signature" — a broken install must
+        // reject, not wave everything through.
         if ( '' === creationell_captcha_get_hmac_secret() ) {
             creationell_captcha_log( $context . ': HMAC signature secret missing — rejecting fail-closed.' );
             return null;
@@ -341,6 +343,22 @@ class Engine {
             : '';
 
         if ( ! $this->params_within_caps( $params_raw, $counter, $context ) ) {
+            return null;
+        }
+
+        // expiresAt must be exactly the shape create_challenge() issues: a
+        // positive int. Since altcha-org/altcha v2.3.0 the library also accepts
+        // a float here, and its canonical JSON writes an integral float the way
+        // JS does — `1791290678.0` signs as `1791290678`. A client could
+        // therefore re-encode the signed value as a float without breaking the
+        // signature, and replay_marker_lifetime(), which reads only ints, would
+        // fall back to the CURRENT challenge_expiry setting — the CM-9 side
+        // door that 1.1.0 closed. Rejecting every other shape here keeps "the
+        // value the signature covers" and "the value the marker is sized from"
+        // one and the same, independent of how a future library version
+        // normalises it.
+        if ( ! isset( $params_raw['expiresAt'] ) || ! is_int( $params_raw['expiresAt'] ) || $params_raw['expiresAt'] <= 0 ) {
+            creationell_captcha_log( $context . ': expiresAt missing or not a positive integer — rejected.' );
             return null;
         }
 
@@ -529,12 +547,14 @@ class Engine {
      *    signature against this site's HMAC secret. A signature is mandatory
      *    since CM-2 (prepare_payload), and the empty-secret case fails closed
      *    there as well;
-     *  - the extraction mirrors `ChallengeParameters::fromArray()` one-to-one
-     *    (`isset()` + `is_int()`, see lib/altcha-org/altcha/src/ChallengeParameters.php),
-     *    so this method reads exactly the value the signature was verified
-     *    against. Anything the library would normalise differently — a string,
-     *    a float, a missing key — changes the canonical JSON and thus kills the
-     *    signature one step earlier;
+     *  - prepare_payload() admits only a positive int `expiresAt`, so this
+     *    method reads exactly the value the signature was verified against.
+     *    Until altcha-org/altcha v2.1.0 the library's own extraction
+     *    (`ChallengeParameters::fromArray()`, `isset()` + `is_int()`) already
+     *    guaranteed that: a string, a float or a missing key changed the
+     *    canonical JSON and killed the signature. Since v2.3.0 the library
+     *    accepts an integral float with an UNCHANGED signature, which is why
+     *    the check now lives in prepare_payload() instead of being inherited;
      *  - inflating the number is therefore not "a longer marker", it is an
      *    unverifiable payload. And a longer marker would only ever REDUCE what
      *    an attacker can do.
@@ -548,17 +568,18 @@ class Engine {
             : 0;
 
         if ( $expires_at > 0 ) {
-            // `+ 1` because the two comparisons do not share a boundary: the
-            // library treats a challenge as expired only once
-            // `time() > expiresAt` (Altcha::verifySolution), i.e. it still
-            // verifies AT expiresAt, while the sweep drops a marker already at
-            // `option_value <= time()`. Without the extra second the very last
-            // redeemable second of a challenge would stand unguarded.
+            // `+ 1` is a safety margin between two comparisons that do not
+            // share a boundary: since altcha-org/altcha v2.3.0 the library
+            // rejects as soon as `microtime(true) > expiresAt` (sub-second;
+            // up to v2.1.0 it was `time() > expiresAt`, i.e. still valid AT
+            // expiresAt), while the sweep drops a marker already at
+            // `option_value <= time()`. With the extra second the marker
+            // outlives the last redeemable instant under both rules.
             $lifetime = $expires_at - time() + 1;
         } else {
-            // A challenge without `expiresAt` cannot come from this plugin —
-            // create_challenge() always sets it, and a payload that drops the
-            // key does not survive the signature check above. Kept as a
+            // A challenge without a positive int `expiresAt` cannot come from
+            // this plugin — create_challenge() always sets it, and
+            // prepare_payload() rejects every other shape. Kept as a
             // fail-safe fallback, and deliberately the pre-1.1.0 value: if this
             // branch is ever reached, the marker is no shorter than it used to be.
             $lifetime = (int) ( creationell_captcha_get_settings()['challenge_expiry'] ?? 300 );

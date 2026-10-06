@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.1.2  
+**Version:** 1.1.3  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.2  
+**Stable tag:** 1.1.3  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.2'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.3'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -778,6 +778,55 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.1.3
+
+Wartungs-Release: Die mitgelieferten Fremdbestandteile stehen wieder auf dem
+aktuellen Stand, und das Plugin ist mit WordPress 7.1.2 geprüft. Es gibt keine
+neuen Einstellungen und keine Datenbank-Migration, an gespeicherten
+Konfigurationen ändert sich nichts.
+
+**Bitte beachten:** Sicherheitsabfragen, die ein Besucher vor dem Update
+geladen, aber noch nicht abgeschickt hat, werden nach dem Update einmalig
+abgelehnt — längstens für die eingestellte Gültigkeitsdauer der Abfrage
+(Standard: 5 Minuten). Ein Neuladen der Seite genügt. Ursache ist eine
+geänderte interne Signatur der neuen Bibliotheksversion. Dasselbe gilt künftig,
+wenn nur das HMAC-Key-Secret (`CREATIONELL_CAPTCHA_HMAC_KEY_SECRET`) gewechselt
+wird: Laufende Abfragen werden dann sofort ungültig.
+
+- Das mitgelieferte Captcha-Widget wurde von 3.2.1 auf 3.3.0 gehoben. Die
+  Änderungen betreffen das `theme`-Attribut, `rel="noopener"` an externen
+  Links, einen Fehler beim Abspielen der Audio-Abfrage sowie die
+  Schlüsselableitung für Verfahren und Parameter, die das Plugin nicht
+  verwendet. Die vom Plugin ausgestellten Verfahren (PBKDF2/SHA-256 und
+  Argon2id) arbeiten unverändert. Der Umfang der mitgelieferten Sprachen ist
+  unverändert.
+- Die zugrundeliegende Proof-of-Work-Bibliothek wurde von 2.1.0 auf 2.3.0
+  gehoben. Sie prüft strenger: Ohne Signatur-Secret wird nichts mehr
+  verifiziert, der Ablaufzeitpunkt wird sekundenbruchteilgenau geprüft, und die
+  Signatur folgt jetzt byte-genau der JavaScript-Referenzimplementierung.
+- Härtung: Eine Sicherheitsabfrage wird nur noch angenommen, wenn ihr
+  Ablaufzeitpunkt genau in der Form vorliegt, in der das Plugin ihn ausstellt.
+  Die neue Bibliotheksversion akzeptiert auch eine andere Schreibweise desselben
+  Zeitpunkts; zusammen mit einer nachträglich verkürzten Gültigkeitsdauer hätte
+  sich eine gelöste Abfrage dann unter Umständen mehr als einmal einlösen
+  lassen. Die Prüfung ist Teil dieses Updates — kein ausgeliefertes Release war
+  betroffen.
+- Wenn das Plugin eine Abfrage nachträglich erweitert (Bild-Code-Stufe,
+  Under-Attack-Modus) und neu signiert, nutzt es dafür jetzt direkt die
+  Signaturfunktion der Bibliothek statt einer eigenen Nachbildung. Damit kann
+  ein künftiges Bibliotheks-Update Signieren und Prüfen nicht mehr
+  auseinanderbringen.
+- Das Widget-Skript der Under-Attack-Seite und der Argon2id-Worker werden jetzt
+  mit Versionsparameter geladen. Nach einem Update holen Browser und Caches
+  damit zuverlässig die neue Widget-Version.
+- WordPress 7.1.2: Geprüft gegen die Änderungen von 7.0 auf 7.1.2 sowie im
+  laufenden Betrieb (WordPress-Kernformulare, Kommentare, Contact Form 7,
+  Forminator, WPForms, WooCommerce, Bild-Code-Stufe, Under-Attack-Modus). Es
+  waren keine Anpassungen nötig; „Tested up to" bleibt bei 7.1.
+- Es lag zu keinem Zeitpunkt eine bekannte Schwachstelle vor: Für keinen der
+  mitgelieferten Bestandteile war die ausgelieferte Version von einer
+  veröffentlichten Sicherheitsmeldung betroffen.
 
 ### 1.1.2
 

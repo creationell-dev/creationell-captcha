@@ -210,45 +210,24 @@ function creationell_captcha_rest_challenge( WP_REST_Request $request ): WP_REST
 }
 
 /**
- * Canonical-JSON serialisation of ALTCHA challenge parameters, byte-
- * identical to `altcha-lib-php`'s `ChallengeParameters::toCanonicalJson()`
- * (= ksort top-level + recursive ksort on assoc sub-arrays, JSON-encoded
- * with UNESCAPED_SLASHES | UNESCAPED_UNICODE, null keys dropped).
+ * Canonical-JSON serialisation of ALTCHA challenge parameters for the re-sign
+ * step in the /challenge handler (after parameters.data gained `ccode` or the
+ * under-attack marker).
  *
- * Needed for the re-sign step in Modul 15's /challenge handler after we
- * mutate parameters.data.ccode.
+ * Delegates to the vendor library's own `ChallengeParameters::toCanonicalJson()`
+ * — the very function `Altcha::verifySolution()` later checks the signature
+ * against. Until Modul 29 this was a hand-written copy of the library's old
+ * algorithm (ksort + recursive ksort + json_encode). altcha-org/altcha v2.3.0
+ * replaced that with a JS-compatible canonicalisation (UTF-16 key order, JS
+ * number format, list-shaped `data` as an object); for the inputs this plugin
+ * produces the copy still matched, but the next library change could silently
+ * have split "what we sign" from "what gets verified".
  *
  * @param array<string, mixed> $params Parameter array from `create_challenge()`.
+ * @throws \JsonException When `data` contains invalid UTF-8 — never the case
+ *                        for the server-generated values this plugin puts there.
  */
 function creationell_captcha_canonical_params_json( array $params ): string {
-    $clean = [];
-    foreach ( $params as $k => $v ) {
-        if ( null === $v ) {
-            continue;
-        }
-        $clean[ $k ] = $v;
-    }
-    ksort( $clean );
-    creationell_captcha_canonical_sort_recursive( $clean );
-
-    return (string) wp_json_encode(
-        $clean,
-        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    );
-}
-
-/**
- * Recursive helper used by `canonical_params_json` — mirrors the lib's
- * `sortRecursive`. List arrays (sequential integer keys) keep their order;
- * associative arrays get `ksort`-ed in place.
- *
- * @param array<mixed> $data
- */
-function creationell_captcha_canonical_sort_recursive( array &$data ): void {
-    foreach ( $data as &$value ) {
-        if ( is_array( $value ) && ! array_is_list( $value ) ) {
-            ksort( $value );
-            creationell_captcha_canonical_sort_recursive( $value );
-        }
-    }
+    return \Creationell\Captcha\Vendor\AltchaOrg\Altcha\ChallengeParameters::fromArray( $params )
+        ->toCanonicalJson();
 }

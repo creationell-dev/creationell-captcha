@@ -293,7 +293,10 @@ class UnderAttack {
         // would have become a protocol-relative form action on an auto-
         // submitting page.
         $action     = $this->request_target();
-        $widget_src = CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha.min.js';
+        // ?ver= like every enqueued asset: the interstitial prints a plain
+        // <script src>, and without a version query a cached copy of the
+        // previous widget bundle would outlive a vendoring update.
+        $widget_src = add_query_arg( 'ver', CREATIONELL_CAPTCHA_VERSION, CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha.min.js' );
 
         // ?ctx=<token> signals the /challenge handler to skip the code-
         // challenge attachment — the interstitial widget is invisible and
@@ -378,7 +381,7 @@ class UnderAttack {
             return '';
         }
 
-        $worker_url = CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js';
+        $worker_url = add_query_arg( 'ver', CREATIONELL_CAPTCHA_VERSION, CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js' );
 
         return sprintf(
             'if(window.$altcha&&window.$altcha.algorithms){window.$altcha.algorithms.set("ARGON2ID",function(){return new Worker(%s);});}',
