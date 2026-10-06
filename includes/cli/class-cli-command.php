@@ -89,6 +89,7 @@ class Command {
                     ? ( extension_loaded( 'gd' ) ? 'an' : 'inaktiv (kein GD)' )
                     : 'aus',
             ],
+            [ 'feld' => 'Argon2id-Worker', 'wert' => creationell_captcha_argon2id_workers_summary() ],
             [ 'feld' => 'Proxy-Modus (hinter Reverse-Proxy/CDN)', 'wert' => $on( $settings['firewall_behind_proxy'] ) ],
             [
                 'feld' => 'CF-Trust / CF-Auto-Refresh',

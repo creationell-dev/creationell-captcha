@@ -336,7 +336,9 @@ class UnderAttack {
             $challenge_url = add_query_arg( 'ctx', $ctx_token, $challenge_url );
         }
         $field         = self::FIELD;
-        $worker_inline = $this->argon2id_worker_snippet();
+        // Argon2id worker registration + memory-budget cap, printed in <head>
+        // right after the widget bundle (includes/argon2id-budget.php).
+        $worker_inline = creationell_captcha_argon2id_worker_script();
 
         // Customisation values from the appearance section (Modul 21).
         // Texts fall back to the i18n default when the admin field is empty;
@@ -369,23 +371,5 @@ class UnderAttack {
 
         require CREATIONELL_CAPTCHA_PLUGIN_PATH . 'includes/under-attack-interstitial.php';
         exit;
-    }
-
-    /**
-     * Returns the inline Argon2id worker-registration script, or '' when the
-     * Argon2id algorithm is not in use.
-     */
-    private function argon2id_worker_snippet(): string {
-        $settings = creationell_captcha_get_settings();
-        if ( 'argon2id' !== ( $settings['algorithm'] ?? 'pbkdf2' ) || ! creationell_captcha_sodium_available() ) {
-            return '';
-        }
-
-        $worker_url = add_query_arg( 'ver', CREATIONELL_CAPTCHA_VERSION, CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js' );
-
-        return sprintf(
-            'if(window.$altcha&&window.$altcha.algorithms){window.$altcha.algorithms.set("ARGON2ID",function(){return new Worker(%s);});}',
-            wp_json_encode( $worker_url )
-        );
     }
 }

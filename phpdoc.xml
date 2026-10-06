@@ -7,7 +7,7 @@
     <paths>
         <output>docs/api</output>
     </paths>
-    <version number="1.1.3">
+    <version number="1.2.0">
         <api>
             <source dsn=".">
                 <path>creationell-captcha.php</path>

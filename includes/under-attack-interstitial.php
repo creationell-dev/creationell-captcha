@@ -8,7 +8,8 @@
  *   string                $widget_src    URL of the bundled ALTCHA widget script.
  *   string                $challenge_url The challenge REST endpoint URL.
  *   string                $field         Hidden-field name for the solved challenge.
- *   string                $worker_inline Inline Argon2id worker-registration JS (or '').
+ *   string                $worker_inline Inline Argon2id JS: worker registration + memory-budget
+ *                                        cap on the solver workers (or '').
  *   array<string, string> $texts         Four interstitial strings: title, heading, message, noscript.
  *   array<string, string> $colors        Two hex colour strings: background, text (each may be '').
  *   string                $user_css      Custom CSS appended after the default <style> block (or '').

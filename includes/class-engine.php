@@ -113,9 +113,9 @@ class Engine {
         ];
 
         if ( 'argon2id' === $algo_key ) {
-            $memory_mib         = (int) ( $settings['argon2id_memory'] ?? 32 );
-            $memory_mib         = max( 8, min( 256, $memory_mib ) );
-            $args['memoryCost'] = $memory_mib * 1024; // Library expects KiB.
+            // Same clamped value the browser worker budget divides by
+            // (includes/argon2id-budget.php) — one source for both.
+            $args['memoryCost'] = creationell_captcha_argon2id_memory_mib() * 1024; // Library expects KiB.
         }
 
         $challenge = $this->altcha()->createChallenge( new CreateChallengeOptions( ...$args ) );

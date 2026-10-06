@@ -49,15 +49,11 @@ function creationell_captcha_register_assets(): void {
         CREATIONELL_CAPTCHA_VERSION
     );
 
-    $settings = creationell_captcha_get_settings();
-    if ( 'argon2id' === ( $settings['algorithm'] ?? 'pbkdf2' ) && creationell_captcha_sodium_available() ) {
-        // ?ver= so a vendoring update gets a new cache key here as well — the
-        // worker URL is not enqueued, so WordPress adds none on its own.
-        $worker_url = add_query_arg( 'ver', CREATIONELL_CAPTCHA_VERSION, CREATIONELL_CAPTCHA_PLUGIN_URL . 'assets/js/altcha-argon2id.worker.js' );
-        $inline     = sprintf(
-            'if(window.$altcha&&window.$altcha.algorithms){window.$altcha.algorithms.set("ARGON2ID",function(){return new Worker(%s);});}',
-            wp_json_encode( $worker_url )
-        );
+    // Argon2id worker registration plus the memory-budget cap on the solver
+    // workers (includes/argon2id-budget.php). 'after' = right behind the
+    // widget bundle, before any widget on the page starts solving.
+    $inline = creationell_captcha_argon2id_worker_script();
+    if ( '' !== $inline ) {
         wp_add_inline_script( 'creationell-captcha-altcha', $inline, 'after' );
     }
 }
@@ -187,6 +183,11 @@ function creationell_captcha_build_widget_markup(): string {
     //
     // Source: npm package `altcha@3.0.10`, dist/main/altcha.umd.cjs lines
     // 7344-7354 — the customElements.define() prop dictionary.
+    //
+    // `workers` is deliberately NOT set here: as an attribute it is a fixed
+    // count that replaces the widget's CPU/memory heuristic. The Argon2id
+    // memory budget caps it via $altcha.defaults instead — see
+    // creationell_captcha_argon2id_worker_script().
     $attrs = [
         'challenge' => esc_url( rest_url( 'creationell-captcha/v1/challenge' ) ),
         'name'      => 'altcha',
