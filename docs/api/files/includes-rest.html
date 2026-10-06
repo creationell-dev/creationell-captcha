@@ -6,7 +6,10 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -157,19 +160,9 @@ is gated by the `log_challenge` per-type toggle from Modul 11c.</dd>
     <span>
                                 &nbsp;: string    </span>
 </dt>
-<dd>Canonical-JSON serialisation of ALTCHA challenge parameters, byte-
-identical to `altcha-lib-php`&#039;s `ChallengeParameters::toCanonicalJson()`
-(= ksort top-level + recursive ksort on assoc sub-arrays, JSON-encoded
-with UNESCAPED_SLASHES | UNESCAPED_UNICODE, null keys dropped).</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -function -">
-    <a class="" href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive">creationell_captcha_canonical_sort_recursive()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Recursive helper used by `canonical_params_json` — mirrors the lib&#039;s
-`sortRecursive`. List arrays (sequential integer keys) keep their order;
-associative arrays get `ksort`-ed in place.</dd>
+<dd>Canonical-JSON serialisation of ALTCHA challenge parameters for the re-sign
+step in the /challenge handler (after parameters.data gained `ccode` or the
+under-attack marker).</dd>
 
     </dl>
 
@@ -280,22 +273,27 @@ form — see Engine::verify().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">230</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Canonical-JSON serialisation of ALTCHA challenge parameters, byte-
-identical to `altcha-lib-php`&#039;s `ChallengeParameters::toCanonicalJson()`
-(= ksort top-level + recursive ksort on assoc sub-arrays, JSON-encoded
-with UNESCAPED_SLASHES | UNESCAPED_UNICODE, null keys dropped).</p>
+        <p class="phpdocumentor-summary">Canonical-JSON serialisation of ALTCHA challenge parameters for the re-sign
+step in the /challenge handler (after parameters.data gained `ccode` or the
+under-attack marker).</p>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_canonical_params_json</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
-        <section class="phpdocumentor-description"><p>Needed for the re-sign step in Modul 15's /challenge handler after we
-mutate parameters.data.ccode.</p>
+        <section class="phpdocumentor-description"><p>Delegates to the vendor library's own <code class="prettyprint">ChallengeParameters::toCanonicalJson()</code>
+— the very function <code class="prettyprint">Altcha::verifySolution()</code> later checks the signature
+against. Until Modul 29 this was a hand-written copy of the library's old
+algorithm (ksort + recursive ksort + json_encode). altcha-org/altcha v2.3.0
+replaced that with a JS-compatible canonicalisation (UTF-16 key order, JS
+number format, list-shaped <code class="prettyprint">data</code> as an object); for the inputs this plugin
+produces the copy still matched, but the next library change could silently
+have split &quot;what we sign&quot; from &quot;what gets verified&quot;.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -312,6 +310,23 @@ mutate parameters.data.ccode.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_canonical_params_json_tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_canonical_params_json_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\JsonException">JsonException</abbr></span>
+                                                                                        <section class="phpdocumentor-description"><p>When <code class="prettyprint">data</code> contains invalid UTF-8 — never the case
+for the server-generated values this plugin puts there.</p>
+</section>
+
+                                    </dd>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -319,140 +334,9 @@ mutate parameters.data.ccode.</p>
             </section>
 
 </article>
-                    <article class="phpdocumentor-element -function - ">
-    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_canonical_sort_recursive">
-        creationell_captcha_canonical_sort_recursive()
-        <a href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">247</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Recursive helper used by `canonical_params_json` — mirrors the lib&#039;s
-`sortRecursive`. List arrays (sequential integer keys) keep their order;
-associative arrays get `ksort`-ed in place.</p>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_canonical_sort_recursive</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$data</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-    
-</article>
             </section>
 
-        <div class="phpdocumentor-modal" id="source-view">
-    <div class="phpdocumentor-modal-bg" data-exit-button></div>
-    <div class="phpdocumentor-modal-container">
-        <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/includes/rest.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
-        </div>
-        <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
-    </div>
-</div>
-
-    <script type="text/javascript">
-        (function () {
-            function loadExternalCodeSnippet(el, url, line) {
-                Array.prototype.slice.call(el.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                    const src = url || pre.getAttribute('data-src').replace(/\\/g, '/');
-                    const language = 'php';
-
-                    const code = document.createElement('code');
-                    code.className = 'language-' + language;
-                    pre.textContent = '';
-                    pre.setAttribute('data-line', line)
-                    code.textContent = 'Loading…';
-                    pre.appendChild(code);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('GET', src, true);
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState !== 4) {
-                            return;
-                        }
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-                            Prism.highlightElement(code);
-                            d=document.getElementsByClassName("line-numbers");
-                            d[0].scrollTop = d[0].children[1].offsetTop;
-                            return;
-                        }
-
-                        if (xhr.status === 404) {
-                            code.textContent = '✖ Error: File could not be found';
-                            return;
-                        }
-
-                        if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                            return;
-                        }
-
-                        code.textContent = '✖ Error: An unknown error occurred';
-                    };
-
-                    xhr.send(null);
-                });
-            }
-
-            const modalButtons = document.querySelectorAll("[data-modal]");
-            const openedAsLocalFile = window.location.protocol === 'file:';
-            if (modalButtons.length > 0 && openedAsLocalFile) {
-                console.warn(
-                    'Viewing the source code is unavailable because you are opening this page from the file:// scheme; ' +
-                    'browsers block XHR requests when a page is opened this way'
-                );
-            }
-
-            modalButtons.forEach(function (trigger) {
-                if (openedAsLocalFile) {
-                    trigger.setAttribute("hidden", "hidden");
-                }
-
-                trigger.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    const modal = document.getElementById(trigger.dataset.modal);
-                    if (!modal) {
-                        console.error(`Modal with id "${trigger.dataset.modal}" could not be found`);
-                        return;
-                    }
-                    modal.classList.add("phpdocumentor-modal__open");
-
-                    loadExternalCodeSnippet(modal, trigger.dataset.src || null, trigger.dataset.line)
-                    const exits = modal.querySelectorAll("[data-exit-button]");
-                    exits.forEach(function (exit) {
-                        exit.addEventListener("click", function (event) {
-                            event.preventDefault();
-                            modal.classList.remove("phpdocumentor-modal__open");
-                        });
-                    });
-                });
-            });
-        })();
-    </script>
-
+        
     </article>
                                 </section>
                 <section class="phpdocumentor-on-this-page__sidebar">
@@ -473,7 +357,6 @@ associative arrays get `ksort`-ed in place.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_canonical_params_json">creationell_captcha_canonical_params_json()</a></li>
-                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive">creationell_captcha_canonical_sort_recursive()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_register_rest_routes">creationell_captcha_register_rest_routes()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_rest_challenge">creationell_captcha_rest_challenge()</a></li>
                                             </ul>

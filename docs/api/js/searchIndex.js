@@ -1888,13 +1888,8 @@ Search.appendIndex(
         },                {
             "fqsen": "\\creationell_captcha_canonical_params_json\u0028\u0029",
             "name": "creationell_captcha_canonical_params_json",
-            "summary": "Canonical\u002DJSON\u0020serialisation\u0020of\u0020ALTCHA\u0020challenge\u0020parameters,\u0020byte\u002D\nidentical\u0020to\u0020\u0060altcha\u002Dlib\u002Dphp\u0060\u0027s\u0020\u0060ChallengeParameters\u003A\u003AtoCanonicalJson\u0028\u0029\u0060\n\u0028\u003D\u0020ksort\u0020top\u002Dlevel\u0020\u002B\u0020recursive\u0020ksort\u0020on\u0020assoc\u0020sub\u002Darrays,\u0020JSON\u002Dencoded\nwith\u0020UNESCAPED_SLASHES\u0020\u007C\u0020UNESCAPED_UNICODE,\u0020null\u0020keys\u0020dropped\u0029.",
+            "summary": "Canonical\u002DJSON\u0020serialisation\u0020of\u0020ALTCHA\u0020challenge\u0020parameters\u0020for\u0020the\u0020re\u002Dsign\nstep\u0020in\u0020the\u0020\/challenge\u0020handler\u0020\u0028after\u0020parameters.data\u0020gained\u0020\u0060ccode\u0060\u0020or\u0020the\nunder\u002Dattack\u0020marker\u0029.",
             "url": "namespaces/default.html#function_creationell_captcha_canonical_params_json"
-        },                {
-            "fqsen": "\\creationell_captcha_canonical_sort_recursive\u0028\u0029",
-            "name": "creationell_captcha_canonical_sort_recursive",
-            "summary": "Recursive\u0020helper\u0020used\u0020by\u0020\u0060canonical_params_json\u0060\u0020\u2014\u0020mirrors\u0020the\u0020lib\u0027s\n\u0060sortRecursive\u0060.\u0020List\u0020arrays\u0020\u0028sequential\u0020integer\u0020keys\u0029\u0020keep\u0020their\u0020order\u003B\nassociative\u0020arrays\u0020get\u0020\u0060ksort\u0060\u002Ded\u0020in\u0020place.",
-            "url": "namespaces/default.html#function_creationell_captcha_canonical_sort_recursive"
         },                {
             "fqsen": "\\CREATIONELL_CAPTCHA_EXPORT_SCHEMA",
             "name": "CREATIONELL_CAPTCHA_EXPORT_SCHEMA",

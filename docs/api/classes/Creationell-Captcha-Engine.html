@@ -6,7 +6,10 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -162,21 +165,21 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_HOOK">CLEANUP_HOOK</a>
     <span>
-        &nbsp;= &#039;creationell_captcha_cleanup_replay_markers&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;creationell_captcha_cleanup_replay_markers&#039;                            </span>
 </dt>
 <dd>Cron hook that sweeps expired replay markers out of the options table.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_REPLAY_PREFIX">REPLAY_PREFIX</a>
     <span>
-        &nbsp;= &#039;creationell_captcha_used_&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;creationell_captcha_used_&#039;                            </span>
 </dt>
 <dd>Option-name prefix of the single-use replay markers claimed by verify().</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_UA_GATE_PARAM">UA_GATE_PARAM</a>
     <span>
-        &nbsp;= &#039;uagate&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;uagate&#039;                            </span>
 </dt>
 <dd>Key inside `challenge.parameters.data` that marks a challenge as
 &quot;issued for the under-attack gate only&quot;.</dd>
@@ -184,14 +187,14 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CLEANUP_INTERVAL">CLEANUP_INTERVAL</a>
     <span>
-        &nbsp;= 900                            </span>
+        &nbsp;: mixed&nbsp;= 900                            </span>
 </dt>
 <dd>Seconds between two replay-marker sweeps while markers still exist.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_CODE_PASS_PREFIX">CODE_PASS_PREFIX</a>
     <span>
-        &nbsp;= &#039;creationell_captcha_ccpass_&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;creationell_captcha_ccpass_&#039;                            </span>
 </dt>
 <dd>Transient-name prefix of the &quot;image-code stage passed&quot; markers that the
 `/code-verify` handler writes (see includes/code-challenge.php).</dd>
@@ -199,7 +202,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/Creationell-Captcha-Engine.html#constant_PRESETS">PRESETS</a>
     <span>
-        &nbsp;= [&#039;pbkdf2&#039; =&gt; [&#039;low&#039; =&gt; [&#039;cost&#039; =&gt; 3000, &#039;min&#039; =&gt; 5, &#039;max&#039; =&gt; 30], &#039;medium&#039; =&gt; [&#039;cost&#039; =&gt; 6000, &#039;min&#039; =&gt; 10, &#039;max&#039; =&gt; 60], &#039;high&#039; =&gt; [&#039;cost&#039; =&gt; 15000, &#039;min&#039; =&gt; 20, &#039;max&#039; =&gt; 120]], &#039;argon2id&#039; =&gt; [&#039;low&#039; =&gt; [&#039;cost&#039; =&gt; 1, &#039;min&#039; =&gt; 5, &#039;max&#039; =&gt; 40], &#039;medium&#039; =&gt; [&#039;cost&#039; =&gt; 2, &#039;min&#039; =&gt; 10, &#039;max&#039; =&gt; 80], &#039;high&#039; =&gt; [&#039;cost&#039; =&gt; 3, &#039;min&#039; =&gt; 20, &#039;max&#039; =&gt; 160]]]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;pbkdf2&#039; =&gt; [&#039;low&#039; =&gt; [&#039;cost&#039; =&gt; 3000, &#039;min&#039; =...                            </span>
 </dt>
 <dd>Difficulty presets per algorithm: PoW cost + counter range [min, max].</dd>
 
@@ -575,7 +578,7 @@ in params_within_caps(): the plugin never issues anything above them.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">657</span>
+    <span class="phpdocumentor-element-found-in__line">678</span>
 
     </aside>
 
@@ -845,7 +848,7 @@ the form is finally submitted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">687</span>
+    <span class="phpdocumentor-element-found-in__line">708</span>
 
     </aside>
 
@@ -884,7 +887,7 @@ the form is finally submitted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">710</span>
+    <span class="phpdocumentor-element-found-in__line">731</span>
 
     </aside>
 
@@ -933,7 +936,7 @@ the form is finally submitted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">695</span>
+    <span class="phpdocumentor-element-found-in__line">716</span>
 
     </aside>
 
@@ -973,7 +976,7 @@ selected but ext-sodium is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">728</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
     </aside>
 
@@ -1012,7 +1015,7 @@ selected but ext-sodium is unavailable.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">582</span>
+    <span class="phpdocumentor-element-found-in__line">603</span>
 
     </aside>
 
@@ -1073,7 +1076,7 @@ true for exactly one caller, false for every other.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">719</span>
+    <span class="phpdocumentor-element-found-in__line">740</span>
 
     </aside>
 
@@ -1124,7 +1127,7 @@ true for exactly one caller, false for every other.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">375</span>
+    <span class="phpdocumentor-element-found-in__line">393</span>
 
     </aside>
 
@@ -1270,7 +1273,7 @@ BEFORE the vendor library is allowed to derive a single key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">545</span>
+    <span class="phpdocumentor-element-found-in__line">565</span>
 
     </aside>
 
@@ -1301,12 +1304,14 @@ reaches this method only after run_verify_solution() has checked that
 signature against this site's HMAC secret. A signature is mandatory
 since CM-2 (prepare_payload), and the empty-secret case fails closed
 there as well;</li>
-<li>the extraction mirrors <code class="prettyprint">ChallengeParameters::fromArray()</code> one-to-one
-(<code class="prettyprint">isset()</code> + <code class="prettyprint">is_int()</code>, see lib/altcha-org/altcha/src/ChallengeParameters.php),
-so this method reads exactly the value the signature was verified
-against. Anything the library would normalise differently — a string,
-a float, a missing key — changes the canonical JSON and thus kills the
-signature one step earlier;</li>
+<li>prepare_payload() admits only a positive int <code class="prettyprint">expiresAt</code>, so this
+method reads exactly the value the signature was verified against.
+Until altcha-org/altcha v2.1.0 the library's own extraction
+(<code class="prettyprint">ChallengeParameters::fromArray()</code>, <code class="prettyprint">isset()</code> + <code class="prettyprint">is_int()</code>) already
+guaranteed that: a string, a float or a missing key changed the
+canonical JSON and killed the signature. Since v2.3.0 the library
+accepts an integral float with an UNCHANGED signature, which is why
+the check now lives in prepare_payload() instead of being inherited;</li>
 <li>inflating the number is therefore not &quot;a longer marker&quot;, it is an
 unverifiable payload. And a longer marker would only ever REDUCE what
 an attacker can do.</li>
@@ -1354,7 +1359,7 @@ an attacker can do.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">490</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
     </aside>
 
@@ -1414,7 +1419,7 @@ an attacker can do.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/class-engine.php"><a href="files/includes-class-engine.html"><abbr title="includes/class-engine.php">class-engine.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">633</span>
+    <span class="phpdocumentor-element-found-in__line">654</span>
 
     </aside>
 
@@ -1452,100 +1457,7 @@ sweep is their ONLY cleanup path and must not be optional.</p>
 </article>
             </section>
 
-        <div class="phpdocumentor-modal" id="source-view">
-    <div class="phpdocumentor-modal-bg" data-exit-button></div>
-    <div class="phpdocumentor-modal-container">
-        <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/includes/class-engine.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
-        </div>
-        <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
-    </div>
-</div>
-
-    <script type="text/javascript">
-        (function () {
-            function loadExternalCodeSnippet(el, url, line) {
-                Array.prototype.slice.call(el.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                    const src = url || pre.getAttribute('data-src').replace(/\\/g, '/');
-                    const language = 'php';
-
-                    const code = document.createElement('code');
-                    code.className = 'language-' + language;
-                    pre.textContent = '';
-                    pre.setAttribute('data-line', line)
-                    code.textContent = 'Loading…';
-                    pre.appendChild(code);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('GET', src, true);
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState !== 4) {
-                            return;
-                        }
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-                            Prism.highlightElement(code);
-                            d=document.getElementsByClassName("line-numbers");
-                            d[0].scrollTop = d[0].children[1].offsetTop;
-                            return;
-                        }
-
-                        if (xhr.status === 404) {
-                            code.textContent = '✖ Error: File could not be found';
-                            return;
-                        }
-
-                        if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                            return;
-                        }
-
-                        code.textContent = '✖ Error: An unknown error occurred';
-                    };
-
-                    xhr.send(null);
-                });
-            }
-
-            const modalButtons = document.querySelectorAll("[data-modal]");
-            const openedAsLocalFile = window.location.protocol === 'file:';
-            if (modalButtons.length > 0 && openedAsLocalFile) {
-                console.warn(
-                    'Viewing the source code is unavailable because you are opening this page from the file:// scheme; ' +
-                    'browsers block XHR requests when a page is opened this way'
-                );
-            }
-
-            modalButtons.forEach(function (trigger) {
-                if (openedAsLocalFile) {
-                    trigger.setAttribute("hidden", "hidden");
-                }
-
-                trigger.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    const modal = document.getElementById(trigger.dataset.modal);
-                    if (!modal) {
-                        console.error(`Modal with id "${trigger.dataset.modal}" could not be found`);
-                        return;
-                    }
-                    modal.classList.add("phpdocumentor-modal__open");
-
-                    loadExternalCodeSnippet(modal, trigger.dataset.src || null, trigger.dataset.line)
-                    const exits = modal.querySelectorAll("[data-exit-button]");
-                    exits.forEach(function (exit) {
-                        exit.addEventListener("click", function (event) {
-                            event.preventDefault();
-                            modal.classList.remove("phpdocumentor-modal__open");
-                        });
-                    });
-                });
-            });
-        })();
-    </script>
-
+        
     </article>
                                 </section>
                 <section class="phpdocumentor-on-this-page__sidebar">

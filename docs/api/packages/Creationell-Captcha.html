@@ -6,7 +6,10 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -156,122 +159,63 @@ ua-blocklist and paths command namespaces.</dd>            <dt class="phpdocumen
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS">CREATIONELL_CAPTCHA_EXPORT_MAX_ROWS</a>
     <span>
-        &nbsp;= 50000                            </span>
+        &nbsp;: mixed&nbsp;= 50000                            </span>
 </dt>
 <dd>The default upper bound on rows in a single CSV export.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_EXPORT_SCHEMA">CREATIONELL_CAPTCHA_EXPORT_SCHEMA</a>
     <span>
-        &nbsp;= 1                            </span>
+        &nbsp;: mixed&nbsp;= 1                            </span>
 </dt>
 <dd>Schema version of the settings-export format.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_HARDENING_DISMISS_ARG">CREATIONELL_CAPTCHA_HARDENING_DISMISS_ARG</a>
     <span>
-        &nbsp;= &#039;creationell_captcha_hardening_dismiss&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;creationell_captcha_hardening_dismiss&#039;                            </span>
 </dt>
 <dd>Query-Parameter des Ausblenden-Links.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_HARDENING_DISMISS_META">CREATIONELL_CAPTCHA_HARDENING_DISMISS_META</a>
     <span>
-        &nbsp;= &#039;creationell_captcha_hardening_dismissed&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;creationell_captcha_hardening_dismissed&#039;                            </span>
 </dt>
 <dd>User-Meta-Schlüssel, unter dem ein Benutzer den Hinweis wegklickt.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_LOCALE_MAP">CREATIONELL_CAPTCHA_LOCALE_MAP</a>
     <span>
-        &nbsp;= [
-    // Deutsch
-    &#039;de_DE&#039; =&gt; &#039;de&#039;,
-    &#039;de_DE_formal&#039; =&gt; &#039;de&#039;,
-    &#039;de_AT&#039; =&gt; &#039;de&#039;,
-    &#039;de_CH&#039; =&gt; &#039;de&#039;,
-    &#039;de_CH_informal&#039; =&gt; &#039;de&#039;,
-    // Englisch
-    &#039;en_US&#039; =&gt; &#039;en&#039;,
-    &#039;en_GB&#039; =&gt; &#039;en&#039;,
-    &#039;en_AU&#039; =&gt; &#039;en&#039;,
-    &#039;en_CA&#039; =&gt; &#039;en&#039;,
-    &#039;en_NZ&#039; =&gt; &#039;en&#039;,
-    &#039;en_ZA&#039; =&gt; &#039;en&#039;,
-    // Französisch
-    &#039;fr_FR&#039; =&gt; &#039;fr-fr&#039;,
-    &#039;fr_BE&#039; =&gt; &#039;fr-fr&#039;,
-    &#039;fr_LU&#039; =&gt; &#039;fr-fr&#039;,
-    &#039;fr_CH&#039; =&gt; &#039;fr-fr&#039;,
-    &#039;fr_CA&#039; =&gt; &#039;fr-ca&#039;,
-    // Spanisch (Europa)
-    &#039;es_ES&#039; =&gt; &#039;es-es&#039;,
-    // Spanisch (LatAm — alle nach es-419)
-    &#039;es_AR&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_CL&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_CO&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_CR&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_DO&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_EC&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_GT&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_HN&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_MX&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_PA&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_PE&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_PR&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_UY&#039; =&gt; &#039;es-419&#039;,
-    &#039;es_VE&#039; =&gt; &#039;es-419&#039;,
-    // Portugiesisch
-    &#039;pt_PT&#039; =&gt; &#039;pt-pt&#039;,
-    &#039;pt_AO&#039; =&gt; &#039;pt-pt&#039;,
-    &#039;pt_BR&#039; =&gt; &#039;pt-br&#039;,
-    // Italienisch / Niederländisch / Polnisch
-    &#039;it_IT&#039; =&gt; &#039;it&#039;,
-    &#039;nl_NL&#039; =&gt; &#039;nl&#039;,
-    &#039;nl_BE&#039; =&gt; &#039;nl&#039;,
-    &#039;pl_PL&#039; =&gt; &#039;pl&#039;,
-    // Tschechisch / Slowakisch
-    &#039;cs_CZ&#039; =&gt; &#039;cs&#039;,
-    &#039;sk_SK&#039; =&gt; &#039;sk&#039;,
-    // Nordisch
-    &#039;da_DK&#039; =&gt; &#039;da&#039;,
-    &#039;sv_SE&#039; =&gt; &#039;sv&#039;,
-    &#039;fi&#039; =&gt; &#039;fi&#039;,
-    &#039;nb_NO&#039; =&gt; &#039;nb&#039;,
-    &#039;nn_NO&#039; =&gt; &#039;nb&#039;,
-    // Sonstige EU
-    &#039;hu_HU&#039; =&gt; &#039;hu&#039;,
-    &#039;ro_RO&#039; =&gt; &#039;ro&#039;,
-    &#039;el&#039; =&gt; &#039;el&#039;,
-]                            </span>
+        &nbsp;: mixed&nbsp;= [ // Deutsch &#039;de_DE&#039; =&gt; &#039;de&#039;, &#039;de_DE_formal&#039; =&gt;...                            </span>
 </dt>
 <dd>Maps WordPress locales to the matching ALTCHA i18n locale bundle.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_CTX">CREATIONELL_CAPTCHA_PURPOSE_UA_CTX</a>
     <span>
-        &nbsp;= &#039;underattack-ctx&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;underattack-ctx&#039;                            </span>
 </dt>
 <dd>Purpose label of the under-attack code-challenge suppression token (`ctx`).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_PURPOSE_UA_PASS">CREATIONELL_CAPTCHA_PURPOSE_UA_PASS</a>
     <span>
-        &nbsp;= &#039;underattack-pass&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;underattack-pass&#039;                            </span>
 </dt>
 <dd>Purpose label of the under-attack pass-cookie key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_FORM">CREATIONELL_CAPTCHA_SANITIZE_FORM</a>
     <span>
-        &nbsp;= &#039;form&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;form&#039;                            </span>
 </dt>
 <dd>Sanitiser context: the settings form (`options.php`).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC">CREATIONELL_CAPTCHA_SANITIZE_PROGRAMMATIC</a>
     <span>
-        &nbsp;= &#039;programmatic&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;programmatic&#039;                            </span>
 </dt>
 <dd>Sanitiser context: programmatischer Schreibvorgang (Import, Werksreset,
 „Standardwerte laden&quot;, WP-CLI).</dd>
@@ -279,14 +223,14 @@ ua-blocklist and paths command namespaces.</dd>            <dt class="phpdocumen
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET">CREATIONELL_CAPTCHA_SANITIZE_RESET</a>
     <span>
-        &nbsp;= &#039;reset&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;reset&#039;                            </span>
 </dt>
 <dd>Sanitiser context: Werksreset (`creationell_captcha_reset_settings()`).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_UA_CTX_TTL">CREATIONELL_CAPTCHA_UA_CTX_TTL</a>
     <span>
-        &nbsp;= 120                            </span>
+        &nbsp;: mixed&nbsp;= 120                            </span>
 </dt>
 <dd>Lifetime (seconds) of a `ctx` suppression token. The interstitial widget
 fetches the challenge on load, i.e. within seconds of the 503 being
@@ -1469,19 +1413,9 @@ is gated by the `log_challenge` per-type toggle from Modul 11c.</dd>
     <span>
                                 &nbsp;: string    </span>
 </dt>
-<dd>Canonical-JSON serialisation of ALTCHA challenge parameters, byte-
-identical to `altcha-lib-php`&#039;s `ChallengeParameters::toCanonicalJson()`
-(= ksort top-level + recursive ksort on assoc sub-arrays, JSON-encoded
-with UNESCAPED_SLASHES | UNESCAPED_UNICODE, null keys dropped).</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -function -">
-    <a class="" href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive">creationell_captcha_canonical_sort_recursive()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Recursive helper used by `canonical_params_json` — mirrors the lib&#039;s
-`sortRecursive`. List arrays (sequential integer keys) keep their order;
-associative arrays get `ksort`-ed in place.</dd>
+<dd>Canonical-JSON serialisation of ALTCHA challenge parameters for the re-sign
+step in the /challenge handler (after parameters.data gained `ccode` or the
+under-attack marker).</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_list_setting_keys">creationell_captcha_list_setting_keys()</a>
@@ -2359,21 +2293,20 @@ inaktiven Formular-Plugins nicht wegräumen.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="constant_CREATIONELL_CAPTCHA_SANITIZE_RESET_tags">
         Tags
-        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_SANITIZE_RESET_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     </article>
@@ -4160,7 +4093,7 @@ so a caller never gains anything it did not already have.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/code-challenge.php"><a href="files/includes-code-challenge.html"><abbr title="includes/code-challenge.php">code-challenge.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">389</span>
 
     </aside>
 
@@ -5509,21 +5442,20 @@ Hinweis, den er gerade weggeklickt hat, wäre dort erneut zu sehen.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_hardening_dismiss_redirect_target_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_hardening_dismiss_redirect_target#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_hardening_dismiss_redirect_target_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -5633,21 +5565,20 @@ lookup.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_resolve_widget_locale_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_resolve_widget_locale#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_resolve_widget_locale_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">0.27.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6006,21 +5937,20 @@ library keeps signing challenges with the unchanged base key.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_derive_hmac_key_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_derive_hmac_key#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_derive_hmac_key_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6057,21 +5987,20 @@ under-attack tokens — never rendered, never stored.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_client_ua_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_client_ua#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_client_ua_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6124,21 +6053,20 @@ cookie bound to the new network. No lock-out, no loop.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_underattack_pass_binding_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_binding_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6185,21 +6113,20 @@ cookie bound to the new network. No lock-out, no loop.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_underattack_pass_issue_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_issue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6251,21 +6178,20 @@ covers the visitor binding as well, which is not part of the cookie value.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_underattack_pass_check_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_check#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_pass_check_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6348,21 +6274,20 @@ rotate well beyond a /24).</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_underattack_ctx_issue_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_issue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6412,21 +6337,20 @@ the token's lifetime, every later presentation of the same token fails.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_underattack_ctx_check_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_underattack_ctx_check_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -6577,21 +6501,20 @@ well. <code class="prettyprint">::</code> and <code class="prettyprint">::ffff:0
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_normalize_ip_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_normalize_ip#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_normalize_ip_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -9106,21 +9029,20 @@ patterns are written against the spelling <code class="prettyprint">wp_parse_url
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_request_path_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_request_path#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_request_path_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -9186,21 +9108,20 @@ falsch und ist hiermit ersetzt.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_request_target_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_request_target#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_request_target_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -9248,21 +9169,20 @@ request instead of reading either of those.</p>
 
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_current_rest_route_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_current_rest_route#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_current_rest_route_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -9311,21 +9231,20 @@ request instead of reading either of those.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_normalize_rest_route_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_normalize_rest_route#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_normalize_rest_route_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -9435,22 +9354,27 @@ form — see Engine::verify().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">230</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Canonical-JSON serialisation of ALTCHA challenge parameters, byte-
-identical to `altcha-lib-php`&#039;s `ChallengeParameters::toCanonicalJson()`
-(= ksort top-level + recursive ksort on assoc sub-arrays, JSON-encoded
-with UNESCAPED_SLASHES | UNESCAPED_UNICODE, null keys dropped).</p>
+        <p class="phpdocumentor-summary">Canonical-JSON serialisation of ALTCHA challenge parameters for the re-sign
+step in the /challenge handler (after parameters.data gained `ccode` or the
+under-attack marker).</p>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">creationell_captcha_canonical_params_json</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
-        <section class="phpdocumentor-description"><p>Needed for the re-sign step in Modul 15's /challenge handler after we
-mutate parameters.data.ccode.</p>
+        <section class="phpdocumentor-description"><p>Delegates to the vendor library's own <code class="prettyprint">ChallengeParameters::toCanonicalJson()</code>
+— the very function <code class="prettyprint">Altcha::verifySolution()</code> later checks the signature
+against. Until Modul 29 this was a hand-written copy of the library's old
+algorithm (ksort + recursive ksort + json_encode). altcha-org/altcha v2.3.0
+replaced that with a JS-compatible canonicalisation (UTF-16 key order, JS
+number format, list-shaped <code class="prettyprint">data</code> as an object); for the inputs this plugin
+produces the copy still matched, but the next library change could silently
+have split &quot;what we sign&quot; from &quot;what gets verified&quot;.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -9467,50 +9391,29 @@ mutate parameters.data.ccode.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_canonical_params_json_tags">
+        Tags
+        <a href="namespaces/default.html#function_creationell_captcha_canonical_params_json_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\JsonException">JsonException</abbr></span>
+                                                                                        <section class="phpdocumentor-description"><p>When <code class="prettyprint">data</code> contains invalid UTF-8 — never the case
+for the server-generated values this plugin puts there.</p>
+</section>
+
+                                    </dd>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
-</article>
-                    <article class="phpdocumentor-element -function - ">
-    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_canonical_sort_recursive">
-        creationell_captcha_canonical_sort_recursive()
-        <a href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="includes/rest.php"><a href="files/includes-rest.html"><abbr title="includes/rest.php">rest.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">247</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Recursive helper used by `canonical_params_json` — mirrors the lib&#039;s
-`sortRecursive`. List arrays (sequential integer keys) keep their order;
-associative arrays get `ksort`-ed in place.</p>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">creationell_captcha_canonical_sort_recursive</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$data</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-    
 </article>
                     <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_list_setting_keys">
@@ -10105,21 +10008,20 @@ verlässt sich darauf, weil sie Startbytes zählt und Fortsetzungsbytes
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_truncate_chars_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -10179,21 +10081,20 @@ aus (<code class="prettyprint">creationell_captcha_truncate_setting_text()</code
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_truncate_chars_by_bytes_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_truncate_chars_by_bytes_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -10377,21 +10278,20 @@ fehlgeschlagener Schreibvorgang.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="function_creationell_captcha_store_settings_tags">
         Tags
-        <a href="namespaces/default.html#function_creationell_captcha_store_settings#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="namespaces/default.html#function_creationell_captcha_store_settings_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.1.0</span>
-                                                                                
-                                             
+                                                                                                        
                                     </dd>
-                                            </dl>
+                        </dl>
 
     
 </article>
@@ -11510,7 +11410,7 @@ nirgends mehr gelesen (siehe Docblock der Migration).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
     </aside>
 
@@ -11568,7 +11468,7 @@ davon sicher sein.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
     </aside>
 
@@ -11607,7 +11507,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">301</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
     </aside>
 
@@ -11633,7 +11533,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">313</span>
+    <span class="phpdocumentor-element-found-in__line">315</span>
 
     </aside>
 
@@ -11678,7 +11578,7 @@ integrations, which read the payload from their plugin's submission data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">336</span>
+    <span class="phpdocumentor-element-found-in__line">338</span>
 
     </aside>
 
@@ -11711,7 +11611,7 @@ nonce applies here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">351</span>
 
     </aside>
 
@@ -11740,7 +11640,7 @@ the <form> element so the hidden <code class="prettyprint">altcha</code> field i
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">364</span>
+    <span class="phpdocumentor-element-found-in__line">366</span>
 
     </aside>
 
@@ -11780,7 +11680,7 @@ auto-inject buffer).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">376</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
     </aside>
 
@@ -11876,100 +11776,7 @@ in a single statement.</p>
 </article>
             </section>
 
-        <div class="phpdocumentor-modal" id="source-view">
-    <div class="phpdocumentor-modal-bg" data-exit-button></div>
-    <div class="phpdocumentor-modal-container">
-        <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="" class="language-php line-numbers linkable-line-numbers"></pre>
-        </div>
-        <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
-    </div>
-</div>
-
-    <script type="text/javascript">
-        (function () {
-            function loadExternalCodeSnippet(el, url, line) {
-                Array.prototype.slice.call(el.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                    const src = url || pre.getAttribute('data-src').replace(/\\/g, '/');
-                    const language = 'php';
-
-                    const code = document.createElement('code');
-                    code.className = 'language-' + language;
-                    pre.textContent = '';
-                    pre.setAttribute('data-line', line)
-                    code.textContent = 'Loading…';
-                    pre.appendChild(code);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('GET', src, true);
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState !== 4) {
-                            return;
-                        }
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-                            Prism.highlightElement(code);
-                            d=document.getElementsByClassName("line-numbers");
-                            d[0].scrollTop = d[0].children[1].offsetTop;
-                            return;
-                        }
-
-                        if (xhr.status === 404) {
-                            code.textContent = '✖ Error: File could not be found';
-                            return;
-                        }
-
-                        if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                            return;
-                        }
-
-                        code.textContent = '✖ Error: An unknown error occurred';
-                    };
-
-                    xhr.send(null);
-                });
-            }
-
-            const modalButtons = document.querySelectorAll("[data-modal]");
-            const openedAsLocalFile = window.location.protocol === 'file:';
-            if (modalButtons.length > 0 && openedAsLocalFile) {
-                console.warn(
-                    'Viewing the source code is unavailable because you are opening this page from the file:// scheme; ' +
-                    'browsers block XHR requests when a page is opened this way'
-                );
-            }
-
-            modalButtons.forEach(function (trigger) {
-                if (openedAsLocalFile) {
-                    trigger.setAttribute("hidden", "hidden");
-                }
-
-                trigger.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    const modal = document.getElementById(trigger.dataset.modal);
-                    if (!modal) {
-                        console.error(`Modal with id "${trigger.dataset.modal}" could not be found`);
-                        return;
-                    }
-                    modal.classList.add("phpdocumentor-modal__open");
-
-                    loadExternalCodeSnippet(modal, trigger.dataset.src || null, trigger.dataset.line)
-                    const exits = modal.querySelectorAll("[data-exit-button]");
-                    exits.forEach(function (exit) {
-                        exit.addEventListener("click", function (event) {
-                            event.preventDefault();
-                            modal.classList.remove("phpdocumentor-modal__open");
-                        });
-                    });
-                });
-            });
-        })();
-    </script>
-
+        
     </article>
                                 </section>
                 <section class="phpdocumentor-on-this-page__sidebar">
@@ -12021,7 +11828,6 @@ in a single statement.</p>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_block_response">creationell_captcha_block_response()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_build_widget_markup">creationell_captcha_build_widget_markup()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_canonical_params_json">creationell_captcha_canonical_params_json()</a></li>
-                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_canonical_sort_recursive">creationell_captcha_canonical_sort_recursive()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_cf7_active">creationell_captcha_cf7_active()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_cf7_auto_inject">creationell_captcha_cf7_auto_inject()</a></li>
                                                     <li class=""><a href="namespaces/default.html#function_creationell_captcha_cf7_register_tag">creationell_captcha_cf7_register_tag()</a></li>
