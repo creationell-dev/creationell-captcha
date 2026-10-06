@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.1.3  
+**Version:** 1.2.0  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.3  
+**Stable tag:** 1.2.0  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
@@ -622,7 +622,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.1.3'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.2.0'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -666,6 +666,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 | `creationell_captcha_max_derive_cost` | Obergrenze der akzeptierten PBKDF2-Iterationen (`cost`) einer eingehenden Payload (Default 20000) |
 | `creationell_captcha_max_derive_time_cost` | Obergrenze der akzeptierten Argon2id-Zeitkosten (`cost`/opslimit, Default 5) |
 | `creationell_captcha_max_derive_memory_cost` | Obergrenze der akzeptierten Argon2id-Speicherkosten in KiB (Default 262144) |
+| `creationell_captcha_argon2id_memory_budget` | Gesamtes Speicherbudget in MiB, das der Browser eines Besuchers für eine Argon2id-Abfrage nutzen darf; daraus folgt die Obergrenze für die Worker-Zahl des Widgets (Default 512) |
 | `creationell_captcha_max_solution_counter` | Obergrenze des akzeptierten Lösungs-Counters einer Payload (Default 1000) |
 | `creationell_captcha_max_derive_key_length` | Obergrenze der akzeptierten Schlüssellänge (`keyLength`) in Bytes (Default 64) |
 | `creationell_captcha_code_max_attempts` | Fehlversuche je Bild-Code-Token, bevor das Token verbrannt wird (Default 5) |
@@ -778,6 +779,28 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.2.0
+
+Argon2id belegt im Browser eines Besuchers nicht mehr beliebig viel Speicher.
+
+- Das Captcha-Widget rechnet mit mehreren Workern parallel, und jeder davon
+  reserviert den eingestellten Argon2id-Speicher. Bei hohen Werten kam so auf
+  Rechnern mit vielen Kernen ein Mehrfaches an Arbeitsspeicher zusammen (bei
+  256 MiB bis zu 4 GiB). Das Plugin begrenzt die Zahl der Worker jetzt so, dass
+  zusammen höchstens 512 MiB belegt werden.
+- Die Begrenzung wirkt nur nach unten: Das Widget nutzt weiterhin höchstens so
+  viele Worker, wie das Gerät Kerne hat, und auf Geräten mit wenig Speicher
+  höchstens vier. Kein Gerät belegt mehr Speicher als mit 1.1.3.
+- Beim Standardwert (32 MiB) ändert sich nichts. Bei höheren Werten startet das
+  Widget weniger Worker; die Sicherheitsabfrage dauert dann deutlich länger
+  (gemessen bei Schwierigkeit „Mittel": 32 MiB ≈ 3 s, 256 MiB ≈ 45 s). Der
+  Hilfetext der Einstellung nennt die Werte; empfohlen sind 32–64 MiB.
+- `wp creacaptcha status` zeigt die wirksame Worker-Zahl und den Gesamtspeicher.
+- Für Entwickler: neuer Filter `creationell_captcha_argon2id_memory_budget`
+  (Speicherbudget in MiB, Default 512). Mindestens ein Worker läuft immer; ein
+  Budget unter dem Speicher je Worker wird um diesen einen Worker überschritten.
+- Keine neue Einstellung, keine Datenbank-Migration; PBKDF2 ist nicht betroffen.
 
 ### 1.1.3
 

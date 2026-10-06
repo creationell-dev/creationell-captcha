@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+            <title>CreaCaptcha</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
+    <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/base.css">
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/template.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism-okaidia.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
+                <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
+        <script src="js/search.js"></script>
+        <script defer src="js/searchIndex.js"></script>
+    </head>
+<body id="top">
+    <header class="phpdocumentor-header phpdocumentor-section">
+    <h1 class="phpdocumentor-title"><a href="" class="phpdocumentor-title__link">CreaCaptcha</a></h1>
+    <input class="phpdocumentor-header__menu-button" type="checkbox" id="menu-button" name="menu-button" />
+    <label class="phpdocumentor-header__menu-icon" for="menu-button">
+        <i class="fas fa-bars"></i>
+    </label>
+    <section data-search-form class="phpdocumentor-search">
+    <label>
+        <span class="visually-hidden">Search for</span>
+        <svg class="phpdocumentor-search__icon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="2"/>
+            <line x1="12.4892" y1="12.2727" x2="19.1559" y2="18.9393" stroke="currentColor" stroke-width="3"/>
+        </svg>
+        <input type="search" class="phpdocumentor-field phpdocumentor-search__field" placeholder="Loading .." disabled />
+    </label>
+</section>
+
+    <nav class="phpdocumentor-topnav">
+    <ul class="phpdocumentor-topnav__menu">
+        </ul>
+</nav>
+</header>
+
+    <main class="phpdocumentor">
+        <div class="phpdocumentor-section">
+            <input class="phpdocumentor-sidebar__menu-button" type="checkbox" id="sidebar-button" name="sidebar-button" />
+<label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
+    Menu
+</label>
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
+            <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="namespaces/creationell.html" class="">Creationell</a>
+</h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="namespaces/creationell-captcha.html" class="">Captcha</a>
+                
+            </li>
+            </ul>
+
+                        </section>
+                <section class="phpdocumentor-sidebar__category -packages">
+            <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Application.html" class="">Application</a>
+</h4>
+
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Creationell.html" class="">Creationell</a>
+</h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Creationell-Captcha.html" class="">Captcha</a>
+                
+            </li>
+            </ul>
+
+                        </section>
+            
+    <section class="phpdocumentor-sidebar__category -reports">
+        <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
+                <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
+    </section>
+
+    <section class="phpdocumentor-sidebar__category -indices">
+        <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
+    </section>
+</aside>
+
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                <section>
+                                        <ul class="phpdocumentor-breadcrumbs">
+    </ul>
+
+    <article class="phpdocumentor-element -file">
+        <h2 class="phpdocumentor-content__title">argon2id-budget.php</h2>
+
+            <p class="phpdocumentor-summary">Argon2id memory budget for the browser (Modul 31).</p>
+
+        
+            <section class="phpdocumentor-description"><p>The vendored <altcha-widget> solves an Argon2id challenge with one Web
+Worker per logical CPU (at most 16, at most 4 when navigator.deviceMemory
+reports ≤ 4 GB), and every worker reserves the challenge's full
+<code class="prettyprint">memoryCost</code>. At 256 MiB per worker a 16-thread desktop asks for 4 GiB.
+These helpers derive an upper bound for the worker count from a total
+budget so that workers × memory never exceeds it.</p>
+<p>The bound is applied in the browser as min( budget workers, widget
+heuristic ) via <code class="prettyprint">$altcha.defaults</code> — NOT as a <code class="prettyprint">workers</code> attribute. The
+attribute is a fixed count that replaces the widget's heuristic entirely
+(no cap by CPU count or device memory), so on a 2-core / 4 GB phone it
+would RAISE memory use (e.g. 48 MiB: 2 × 48 → 10 × 48). Via the defaults
+store the widget never uses more workers than its own heuristic picks.</p>
+<p>Kept out of helpers.php on purpose: the engine needs
+creationell_captcha_argon2id_memory_mib(), and the Level-2 tests load the
+engine without helpers.php (they stub its functions).</p>
+</section>
+
+        
+
+
+        
+<h3 id="toc">
+    Table of Contents
+    <a href="files/includes-argon2id-budget.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h3>
+
+
+
+
+
+
+
+
+
+
+
+<h4 id="toc-functions">
+    Functions
+    <a href="files/includes-argon2id-budget.html#toc-functions" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_memory_mib">creationell_captcha_argon2id_memory_mib()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Argon2id memory per derivation in MiB, clamped to the settings range.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_memory_budget">creationell_captcha_argon2id_memory_budget()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Total browser memory budget for Argon2id in MiB (never negative).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_active">creationell_captcha_argon2id_active()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether challenges are actually issued with Argon2id — mirrors the
+engine&#039;s fallback to PBKDF2 when ext-sodium is missing.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_workers">creationell_captcha_argon2id_workers()</a>
+    <span>
+                                &nbsp;: int|null    </span>
+</dt>
+<dd>Upper bound for the widget&#039;s Argon2id solver workers from the budget.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_workers_summary">creationell_captcha_argon2id_workers_summary()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>One-line summary for `wp creacaptcha status`.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_worker_script">creationell_captcha_argon2id_worker_script()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Inline JS that registers the Argon2id worker with the widget and, when the
+budget requires it, caps the solver workers via `$altcha.defaults`.</dd>
+
+    </dl>
+
+
+        
+
+            <section class="phpdocumentor-functions">
+        <h3 class="phpdocumentor-elements__header" id="functions">
+            Functions
+            <a href="files/includes-argon2id-budget.html#functions" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_memory_mib">
+        creationell_captcha_argon2id_memory_mib()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_mib" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">40</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Argon2id memory per derivation in MiB, clamped to the settings range.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_memory_mib</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+        <section class="phpdocumentor-description"><p>The single source for this value: Engine::create_challenge() signs it into
+the challenge (<code class="prettyprint">memoryCost</code>), and the worker budget below divides by it. A
+stored value outside 8–256 (old installs, direct option writes) is clamped
+the same way in both places.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_memory_budget">
+        creationell_captcha_argon2id_memory_budget()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_budget" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Total browser memory budget for Argon2id in MiB (never negative).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_memory_budget</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_active">
+        creationell_captcha_argon2id_active()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_active" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">75</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether challenges are actually issued with Argon2id — mirrors the
+engine&#039;s fallback to PBKDF2 when ext-sodium is missing.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_active</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_workers">
+        creationell_captcha_argon2id_workers()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_workers" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">87</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Upper bound for the widget&#039;s Argon2id solver workers from the budget.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_workers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int|null</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>1–15, or null when no bound is needed (not Argon2id, or
+the budget allows all 16 workers).</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_workers_summary">
+        creationell_captcha_argon2id_workers_summary()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_workers_summary" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">100</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">One-line summary for `wp creacaptcha status`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_workers_summary</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_worker_script">
+        creationell_captcha_argon2id_worker_script()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_worker_script" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">130</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Inline JS that registers the Argon2id worker with the widget and, when the
+budget requires it, caps the solver workers via `$altcha.defaults`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_worker_script</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Must run after the widget bundle (which creates <code class="prettyprint">globalThis.$altcha</code>) and
+before a widget starts solving. The widget reads <code class="prettyprint">workers</code> from its
+defaults store only at solve time and merges the store over its own
+heuristic, so the value written here — min( budget bound, heuristic ),
+the heuristic mirrored 1:1 from the vendored bundle — is what it uses.
+Shared by the form widget (wp_add_inline_script 'after') and the
+under-attack interstitial (<head>, before the <altcha-widget> element).</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>JS, or '' when Argon2id is not in effect.</p>
+</section>
+
+            </section>
+
+</article>
+            </section>
+
+        
+    </article>
+                                </section>
+                <section class="phpdocumentor-on-this-page__sidebar">
+                            
+    <section class="phpdocumentor-on-this-page__content">
+        <strong class="phpdocumentor-on-this-page__title">On this page</strong>
+
+        <ul class="phpdocumentor-list -clean">
+            <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                                                                                                                                                                        <li><a href="files/includes-argon2id-budget.html#toc-functions">Functions</a></li>
+                                    </ul>
+            </li>
+
+            
+                            <li class="phpdocumentor-on-this-page-section__title">Functions</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_active">creationell_captcha_argon2id_active()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_budget">creationell_captcha_argon2id_memory_budget()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_mib">creationell_captcha_argon2id_memory_mib()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_worker_script">creationell_captcha_argon2id_worker_script()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_workers">creationell_captcha_argon2id_workers()</a></li>
+                                                    <li class=""><a href="namespaces/default.html#function_creationell_captcha_argon2id_workers_summary">creationell_captcha_argon2id_workers_summary()</a></li>
+                                            </ul>
+                </li>
+                    </ul>
+    </section>
+
+                </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+    <section class="phpdocumentor-search-results__dialog">
+        <header class="phpdocumentor-search-results__header">
+            <h2 class="phpdocumentor-search-results__title">Search results</h2>
+            <button class="phpdocumentor-search-results__close"><i class="fas fa-times"></i></button>
+        </header>
+        <section class="phpdocumentor-search-results__body">
+            <ul class="phpdocumentor-search-results__entries"></ul>
+        </section>
+    </section>
+</section>
+        </div>
+        <a href="files/includes-argon2id-budget.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
+
+    </main>
+
+    <script>
+        cssVars({});
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+</body>
+</html>

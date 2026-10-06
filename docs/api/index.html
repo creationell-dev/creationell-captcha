@@ -268,7 +268,7 @@ old 5-minute-bucket pair accepted (BK-4).</dd>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_CREATIONELL_CAPTCHA_VERSION">CREATIONELL_CAPTCHA_VERSION</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;1.1.3&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;1.2.0&#039;                            </span>
 </dt>
 
     </dl>
@@ -461,6 +461,50 @@ link per row, the embedded event data and the detail modal.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Records a security event of the given type.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_memory_mib">creationell_captcha_argon2id_memory_mib()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Argon2id memory per derivation in MiB, clamped to the settings range.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_memory_budget">creationell_captcha_argon2id_memory_budget()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Total browser memory budget for Argon2id in MiB (never negative).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_active">creationell_captcha_argon2id_active()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether challenges are actually issued with Argon2id — mirrors the
+engine&#039;s fallback to PBKDF2 when ext-sodium is missing.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_workers">creationell_captcha_argon2id_workers()</a>
+    <span>
+                                &nbsp;: int|null    </span>
+</dt>
+<dd>Upper bound for the widget&#039;s Argon2id solver workers from the budget.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_workers_summary">creationell_captcha_argon2id_workers_summary()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>One-line summary for `wp creacaptcha status`.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_creationell_captcha_argon2id_worker_script">creationell_captcha_argon2id_worker_script()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Inline JS that registers the Argon2id worker with the widget and, when the
+budget requires it, caps the solver workers via `$altcha.defaults`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_creationell_captcha_enqueue_admin_assets">creationell_captcha_enqueue_admin_assets()</a>
@@ -2608,7 +2652,7 @@ old 5-minute-bucket pair accepted (BK-4).</p>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">CREATIONELL_CAPTCHA_VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;1.1.3&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;1.2.0&#039;</span>
 </code>
 
 
@@ -3580,6 +3624,210 @@ JavaScript fills them client-side from the embedded JSON map.</p>
     
 
     
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_memory_mib">
+        creationell_captcha_argon2id_memory_mib()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_mib" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">40</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Argon2id memory per derivation in MiB, clamped to the settings range.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_memory_mib</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+        <section class="phpdocumentor-description"><p>The single source for this value: Engine::create_challenge() signs it into
+the challenge (<code class="prettyprint">memoryCost</code>), and the worker budget below divides by it. A
+stored value outside 8–256 (old installs, direct option writes) is clamped
+the same way in both places.</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_memory_budget">
+        creationell_captcha_argon2id_memory_budget()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_memory_budget" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Total browser memory budget for Argon2id in MiB (never negative).</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_memory_budget</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_active">
+        creationell_captcha_argon2id_active()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_active" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">75</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether challenges are actually issued with Argon2id — mirrors the
+engine&#039;s fallback to PBKDF2 when ext-sodium is missing.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_active</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_workers">
+        creationell_captcha_argon2id_workers()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_workers" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">87</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Upper bound for the widget&#039;s Argon2id solver workers from the budget.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_workers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int|null</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>1–15, or null when no bound is needed (not Argon2id, or
+the budget allows all 16 workers).</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_workers_summary">
+        creationell_captcha_argon2id_workers_summary()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_workers_summary" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">100</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">One-line summary for `wp creacaptcha status`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_workers_summary</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_argon2id_worker_script">
+        creationell_captcha_argon2id_worker_script()
+        <a href="namespaces/default.html#function_creationell_captcha_argon2id_worker_script" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/argon2id-budget.php"><a href="files/includes-argon2id-budget.html"><abbr title="includes/argon2id-budget.php">argon2id-budget.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">130</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Inline JS that registers the Argon2id worker with the widget and, when the
+budget requires it, caps the solver workers via `$altcha.defaults`.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">creationell_captcha_argon2id_worker_script</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>Must run after the widget bundle (which creates <code class="prettyprint">globalThis.$altcha</code>) and
+before a widget starts solving. The widget reads <code class="prettyprint">workers</code> from its
+defaults store only at solve time and merges the store over its own
+heuristic, so the value written here — min( budget bound, heuristic ),
+the heuristic mirrored 1:1 from the vendored bundle — is what it uses.
+Shared by the form widget (wp_add_inline_script 'after') and the
+under-attack interstitial (<head>, before the <altcha-widget> element).</p>
+</section>
+
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>JS, or '' when Argon2id is not in effect.</p>
+</section>
+
+            </section>
+
 </article>
                     <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_creationell_captcha_enqueue_admin_assets">
@@ -11684,7 +11932,7 @@ nirgends mehr gelesen (siehe Docblock der Migration).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
     </aside>
 
@@ -11742,7 +11990,7 @@ davon sicher sein.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
     </aside>
 
@@ -11781,7 +12029,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">303</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
     </aside>
 
@@ -11807,7 +12055,7 @@ emitted as empty-string values per HTML5 convention.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">315</span>
+    <span class="phpdocumentor-element-found-in__line">316</span>
 
     </aside>
 
@@ -11852,7 +12100,7 @@ integrations, which read the payload from their plugin's submission data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">338</span>
+    <span class="phpdocumentor-element-found-in__line">339</span>
 
     </aside>
 
@@ -11885,7 +12133,7 @@ nonce applies here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">351</span>
+    <span class="phpdocumentor-element-found-in__line">352</span>
 
     </aside>
 
@@ -11914,7 +12162,7 @@ the <form> element so the hidden <code class="prettyprint">altcha</code> field i
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">366</span>
+    <span class="phpdocumentor-element-found-in__line">367</span>
 
     </aside>
 
@@ -11954,7 +12202,7 @@ auto-inject buffer).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/widget.php"><a href="files/includes-widget.html"><abbr title="includes/widget.php">widget.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">378</span>
+    <span class="phpdocumentor-element-found-in__line">379</span>
 
     </aside>
 

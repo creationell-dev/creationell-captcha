@@ -171,6 +171,36 @@ Search.appendIndex(
             "summary": "Records\u0020a\u0020security\u0020event\u0020of\u0020the\u0020given\u0020type.",
             "url": "namespaces/default.html#function_creationell_captcha_record_event"
         },                {
+            "fqsen": "\\creationell_captcha_argon2id_memory_mib\u0028\u0029",
+            "name": "creationell_captcha_argon2id_memory_mib",
+            "summary": "Argon2id\u0020memory\u0020per\u0020derivation\u0020in\u0020MiB,\u0020clamped\u0020to\u0020the\u0020settings\u0020range.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_memory_mib"
+        },                {
+            "fqsen": "\\creationell_captcha_argon2id_memory_budget\u0028\u0029",
+            "name": "creationell_captcha_argon2id_memory_budget",
+            "summary": "Total\u0020browser\u0020memory\u0020budget\u0020for\u0020Argon2id\u0020in\u0020MiB\u0020\u0028never\u0020negative\u0029.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_memory_budget"
+        },                {
+            "fqsen": "\\creationell_captcha_argon2id_active\u0028\u0029",
+            "name": "creationell_captcha_argon2id_active",
+            "summary": "Whether\u0020challenges\u0020are\u0020actually\u0020issued\u0020with\u0020Argon2id\u0020\u2014\u0020mirrors\u0020the\nengine\u0027s\u0020fallback\u0020to\u0020PBKDF2\u0020when\u0020ext\u002Dsodium\u0020is\u0020missing.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_active"
+        },                {
+            "fqsen": "\\creationell_captcha_argon2id_workers\u0028\u0029",
+            "name": "creationell_captcha_argon2id_workers",
+            "summary": "Upper\u0020bound\u0020for\u0020the\u0020widget\u0027s\u0020Argon2id\u0020solver\u0020workers\u0020from\u0020the\u0020budget.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_workers"
+        },                {
+            "fqsen": "\\creationell_captcha_argon2id_workers_summary\u0028\u0029",
+            "name": "creationell_captcha_argon2id_workers_summary",
+            "summary": "One\u002Dline\u0020summary\u0020for\u0020\u0060wp\u0020creacaptcha\u0020status\u0060.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_workers_summary"
+        },                {
+            "fqsen": "\\creationell_captcha_argon2id_worker_script\u0028\u0029",
+            "name": "creationell_captcha_argon2id_worker_script",
+            "summary": "Inline\u0020JS\u0020that\u0020registers\u0020the\u0020Argon2id\u0020worker\u0020with\u0020the\u0020widget\u0020and,\u0020when\u0020the\nbudget\u0020requires\u0020it,\u0020caps\u0020the\u0020solver\u0020workers\u0020via\u0020\u0060\u0024altcha.defaults\u0060.",
+            "url": "namespaces/default.html#function_creationell_captcha_argon2id_worker_script"
+        },                {
             "fqsen": "\\creationell_captcha_enqueue_admin_assets\u0028\u0029",
             "name": "creationell_captcha_enqueue_admin_assets",
             "summary": "Enqueues\u0020admin\u0020styles\u0020and\u0020scripts\u0020on\u0020the\u0020CreaCaptcha\u0020admin\u0020pages.",
@@ -815,11 +845,6 @@ Search.appendIndex(
             "name": "serve_interstitial",
             "summary": "Outputs\u0020the\u0020interstitial\u0020page\u0020with\u0020HTTP\u0020503\u0020and\u0020terminates.",
             "url": "classes/Creationell-Captcha-UnderAttack.html#method_serve_interstitial"
-        },                {
-            "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003Aargon2id_worker_snippet\u0028\u0029",
-            "name": "argon2id_worker_snippet",
-            "summary": "Returns\u0020the\u0020inline\u0020Argon2id\u0020worker\u002Dregistration\u0020script,\u0020or\u0020\u0027\u0027\u0020when\u0020the\nArgon2id\u0020algorithm\u0020is\u0020not\u0020in\u0020use.",
-            "url": "classes/Creationell-Captcha-UnderAttack.html#method_argon2id_worker_snippet"
         },                {
             "fqsen": "\\Creationell\\Captcha\\UnderAttack\u003A\u003ACOOKIE",
             "name": "COOKIE",
