@@ -3,7 +3,7 @@
 **Plugin Name:** CreaCaptcha  
 **Plugin URI:** https://github.com/creationell-dev/creationell-captcha  
 **Description:** Datenschutzfreundlicher Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Modus, E-Mail-Obfuskation und Bild-Code-Challenge — vollständig selbst-gehostet ohne externe Dienste.  
-**Version:** 1.2.1  
+**Version:** 1.2.2  
 **Author:** creationell® – die Werbeagentur <marketing@creationell.de>  
 **Author URI:** https://www.creationell.de/  
 **Contributors:** creationell-dev, JPKCom  
@@ -11,11 +11,12 @@
 **Requires at least:** 6.9  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.2.1  
+**Stable tag:** 1.2.2  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** creationell-captcha  
-**Domain Path:** /languages
+**Domain Path:** /languages  
+**Update URI:** https://github.com/creationell-dev/creationell-captcha
 
 Schützt WordPress-Formulare und ganze Sites mit einem selbst-gehosteten Proof-of-Work-Captcha, Firewall, Rate-Limiter, Under-Attack-Interstitial, E-Mail-Obfuskation und optionaler Bild-Code-Challenge — ohne externe Dienste.
 
@@ -622,7 +623,7 @@ Die wichtigsten Konstanten, Hooks und Filter im Überblick:
 
 | Konstante | Default | Zweck |
 |-----------|---------|-------|
-| `CREATIONELL_CAPTCHA_VERSION` | `'1.2.1'` | Plugin-Version |
+| `CREATIONELL_CAPTCHA_VERSION` | `'1.2.2'` | Plugin-Version |
 | `CREATIONELL_CAPTCHA_FILE` | `__FILE__` | Plugin-Hauptdatei |
 | `CREATIONELL_CAPTCHA_PLUGIN_PATH` | `plugin_dir_path(...)` | Plugin-Ordner |
 | `CREATIONELL_CAPTCHA_PLUGIN_URL` | `plugin_dir_url(...)` | Plugin-URL |
@@ -779,6 +780,23 @@ Drei Wege: (1) Der eingebaute Self-Hosted-Updater zeigt neue Versionen automatis
 ---
 
 ## Changelog
+
+### 1.2.2
+
+Wartungsrelease rund um die Updates, keine neuen Einstellungen, keine Migration.
+
+- Neuer Plugin-Header `Update URI: https://github.com/creationell-dev/creationell-captcha`.
+  Bisher fragte WordPress für dieses Plugin zusätzlich bei wordpress.org nach Updates;
+  ein dort unter demselben Slug veröffentlichtes Plugin mit höherer Versionsnummer wäre
+  als Update von CreaCaptcha angeboten worden. Jetzt kommen Updates nur noch aus dem
+  eigenen Repository.
+- Der Update-Prüfer speichert das abgerufene Manifest jetzt für die ganze Installation
+  statt für jede Site einzeln. In einem Multisite-Netzwerk wird es damit einmal geladen
+  statt einmal je Site; auf einer Einzelinstallation ändert sich nichts Sichtbares. Ein
+  Cache-Eintrag der Vorversion wird nicht mehr gelesen und läuft nach spätestens
+  24 Stunden ab.
+- Die Deinstallation entfernt auch diesen Cache-Eintrag.
+- Der Update-Prüfer setzt jetzt wie das Plugin selbst WordPress 6.9 voraus (bisher 6.8).
 
 ### 1.2.1
 

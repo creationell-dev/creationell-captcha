@@ -55,9 +55,11 @@ function creationell_captcha_uninstall_site(): void {
     wp_clear_scheduled_hook( 'creationell_captcha_cleanup_replay_markers' );
     wp_clear_scheduled_hook( 'creationell_captcha_prune_events' );
 
-    // Remove all plugin transients (code-challenge tokens, rate-limit buckets,
-    // plugin-updater cache+lock — anything with the creationell_captcha_
-    // prefix).
+    // Remove all per-site plugin transients (code-challenge tokens, rate-limit
+    // buckets — anything with the creationell_captcha_ prefix). This also
+    // catches an updater cache written by a version before 1.2.2, which still
+    // cached per site; the current updater's entries are site transients and
+    // are removed once, below.
     $like         = $wpdb->esc_like( '_transient_creationell_captcha_' ) . '%';
     $timeout_like = $wpdb->esc_like( '_transient_timeout_creationell_captcha_' ) . '%';
     $wpdb->query(
@@ -149,3 +151,18 @@ if ( is_multisite() ) {
 }
 
 creationell_captcha_uninstall_user_meta();
+
+/*
+ * The self-hosted updater keeps three SITE transients: the cached manifest,
+ * the marker of a failed fetch and the fetch lock. Site transients belong to
+ * the whole installation (on multisite `wp_sitemeta`, otherwise
+ * `_site_transient_*` rows that the per-site LIKE sweep above does not match),
+ * so they are deleted exactly once and not in the site walk. The key mirrors
+ * `includes/class-plugin-updater.php`: prefix plus md5 of the plugin folder
+ * name — read from WP_UNINSTALL_PLUGIN so a renamed folder loses its entries
+ * as well.
+ */
+$creationell_captcha_update_key = 'creationell_captcha_git_update_' . md5( dirname( (string) WP_UNINSTALL_PLUGIN ) );
+delete_site_transient( $creationell_captcha_update_key );
+delete_site_transient( $creationell_captcha_update_key . '_fail' );
+delete_site_transient( $creationell_captcha_update_key . '_lock' );

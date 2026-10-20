@@ -43,6 +43,12 @@
  *   parameter is string-typed (W3-13; the list used to name only the first
  *   two). Audited call by call on 2026-07-30; re-audit after every upstream
  *   merge.
+ * - Manifest cache, failure marker and fetch lock are SITE transients, as in
+ *   the shared upstream since its 1.4.0 (ported 2026-10-20): on a multisite
+ *   network the manifest is fetched once per network instead of once per
+ *   site, and the plugin update itself is a network-wide event anyway.
+ *   Minimum WordPress raised to 6.9 (the plugin header has required it since
+ *   v1.0.0), manifest fallbacks for `requires`/`tested` follow the header.
  *
  * Both renames are necessary to avoid `Cannot redeclare class` fatals
  * when more than one of Jean Pierre's plugins (each carrying its own
@@ -60,7 +66,7 @@
  * - URL validation and sanitization of all remote data
  * - Race condition prevention for manifest fetching
  * - Comprehensive error logging in WP_DEBUG mode
- * - Transient caching with 24-hour TTL, negative caching of failed fetches
+ * - Site-transient caching with 24-hour TTL, negative caching of failed fetches
  *
  * Security Features:
  * - All URLs are validated using wp_http_validate_url() before use; the
@@ -74,7 +80,7 @@
  *
  * Namespace: Creationell\Captcha\GitUpdate (renamed from JPKComPostFilterGitUpdate)
  * PHP Version: 8.3+
- * WordPress Version: 6.8+
+ * WordPress Version: 6.9+
  *
  * @author Jean Pierre Kolb <jpk@jpkc.com>
  * @since 1.0.0 Initial release with GitHub integration
@@ -104,8 +110,9 @@ final class CreationellCaptchaGitPluginUpdater {
     /**
      * Largest manifest body that is accepted, in bytes.
      *
-     * The decoded manifest is cached in `wp_options` for 24 hours, so its size
-     * is the site's problem, not the host's. The live manifest measured 180 KB
+     * The decoded manifest is cached as a site transient (`wp_options`, on
+     * multisite `wp_sitemeta`) for 24 hours, so its size is the site's
+     * problem, not the host's. The live manifest measured 180 KB
      * on 2026-07-30 (README-derived `readme_html` is the bulk of it); 1 MiB is
      * roughly five times that and only has to bound the transient, not track
      * it closely. Raise it here if the README ever grows past that.
@@ -147,7 +154,7 @@ final class CreationellCaptchaGitPluginUpdater {
         global $wp_version;
 
         // Environment check
-        if ( version_compare( version1: PHP_VERSION, version2: '8.3', operator: '<' ) || version_compare( version1: $wp_version, version2: '6.8', operator: '<' ) ) {
+        if ( version_compare( version1: PHP_VERSION, version2: '8.3', operator: '<' ) || version_compare( version1: $wp_version, version2: '6.9', operator: '<' ) ) {
             return;
         }
 
@@ -191,7 +198,7 @@ final class CreationellCaptchaGitPluginUpdater {
      * @return ?object Decoded manifest or null on failure.
      */
     private function get_remote_manifest(): ?object {
-        $remote = get_transient( $this->cache_key );
+        $remote = get_site_transient( $this->cache_key );
 
         // W3-14: Der Transient ist NICHT vertrauenswürdiger als die Antwort,
         // aus der er stammt. Er hält 24 Stunden und überlebt damit das Update
@@ -204,7 +211,7 @@ final class CreationellCaptchaGitPluginUpdater {
         if ( false !== $remote ) {
             $remote = $this->validate_manifest( $remote );
             if ( null === $remote ) {
-                delete_transient( $this->cache_key );
+                delete_site_transient( $this->cache_key );
                 $remote = false;
             }
         }
@@ -214,19 +221,19 @@ final class CreationellCaptchaGitPluginUpdater {
             // again immediately — and the 15-second timeout below is paid by
             // the cron worker AND by every wp-admin page load that renders the
             // update badge (LK-5). Remember the failure for a few minutes.
-            if ( $this->cache_enabled && get_transient( $this->failure_key() ) ) {
+            if ( $this->cache_enabled && get_site_transient( $this->failure_key() ) ) {
                 return null;
             }
 
             // Race condition prevention: Check if another request is already fetching
             $lock_key = $this->cache_key . '_lock';
-            if ( get_transient( $lock_key ) ) {
+            if ( get_site_transient( $lock_key ) ) {
                 // Another request is fetching, return null to avoid duplicate API calls
                 return null;
             }
 
             // Acquire lock for 30 seconds
-            set_transient( $lock_key, true, 30 );
+            set_site_transient( $lock_key, true, 30 );
 
             $response = wp_safe_remote_get( $this->manifest_url, [
                 'timeout' => 15,
@@ -234,7 +241,7 @@ final class CreationellCaptchaGitPluginUpdater {
             ] );
 
             // Release lock
-            delete_transient( $lock_key );
+            delete_site_transient( $lock_key );
 
             // Error handling with logging
             if ( is_wp_error( $response ) ) {
@@ -263,7 +270,7 @@ final class CreationellCaptchaGitPluginUpdater {
             }
 
             // Bound the input before decoding it: whatever comes back is cached
-            // in wp_options for 24 hours, and `readme_html` alone can carry
+            // as a site transient for 24 hours, and `readme_html` alone can carry
             // megabytes if the source is compromised (LK-6).
             $body = (string) wp_remote_retrieve_body( $response );
             if ( strlen( $body ) > self::MAX_MANIFEST_BYTES ) {
@@ -297,7 +304,7 @@ final class CreationellCaptchaGitPluginUpdater {
                 return null;
             }
 
-            set_transient( $this->cache_key, $remote, DAY_IN_SECONDS );
+            set_site_transient( $this->cache_key, $remote, DAY_IN_SECONDS );
         }
 
         return is_object( value: $remote ) ? $remote : null;
@@ -320,7 +327,7 @@ final class CreationellCaptchaGitPluginUpdater {
      */
     private function remember_fetch_failure(): void {
         if ( $this->cache_enabled ) {
-            set_transient( $this->failure_key(), 1, self::FETCH_FAILURE_TTL );
+            set_site_transient( $this->failure_key(), 1, self::FETCH_FAILURE_TTL );
         }
     }
 
@@ -516,8 +523,8 @@ final class CreationellCaptchaGitPluginUpdater {
         $info->download_link    = $this->is_https_url( is_string( value: $remote->download_url ?? null ) ? $remote->download_url : '' )
             ? esc_url_raw( $remote->download_url )
             : '';
-        $info->requires         = sanitize_text_field( $remote->requires ?? '6.8' );
-        $info->tested           = sanitize_text_field( $remote->tested ?? '6.9' );
+        $info->requires         = sanitize_text_field( $remote->requires ?? '6.9' );
+        $info->tested           = sanitize_text_field( $remote->tested ?? '7.1' );
         $info->requires_php     = sanitize_text_field( $remote->requires_php ?? '8.3' );
         $info->license          = sanitize_text_field( $remote->license ?? 'GPL-2.0+' );
         $info->license_uri      = esc_url_raw( $this->manifest_string( $remote->license_uri ?? null, 'http://www.gnu.org/licenses/gpl-2.0.txt' ) );
@@ -712,10 +719,10 @@ final class CreationellCaptchaGitPluginUpdater {
              && isset( $options['action'], $options['type'] )
              && $options['action'] === 'update'
              && $options['type'] === 'plugin' ) {
-            delete_transient( $this->cache_key );
+            delete_site_transient( $this->cache_key );
             // The negative cache goes with it — after an update the next check
             // should be free to hit the network again (LK-5).
-            delete_transient( $this->failure_key() );
+            delete_site_transient( $this->failure_key() );
         }
     }
 
@@ -833,6 +840,7 @@ final class CreationellCaptchaGitPluginUpdater {
             return new \WP_Error(
                 'download_failed',
                 sprintf(
+                    /* translators: %s: Error message from the failed download */
                     __( 'Download failed: %s', 'creationell-captcha' ),
                     $temp_file->get_error_message()
                 )
