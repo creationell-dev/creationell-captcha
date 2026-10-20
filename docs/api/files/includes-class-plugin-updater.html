@@ -153,6 +153,12 @@ rejects the whole manifest when <code class="prettyprint">version</code>, <code 
 parameter is string-typed (W3-13; the list used to name only the first
 two). Audited call by call on 2026-07-30; re-audit after every upstream
 merge.</li>
+<li>Manifest cache, failure marker and fetch lock are SITE transients, as in
+the shared upstream since its 1.4.0 (ported 2026-10-20): on a multisite
+network the manifest is fetched once per network instead of once per
+site, and the plugin update itself is a network-wide event anyway.
+Minimum WordPress raised to 6.9 (the plugin header has required it since
+v1.0.0), manifest fallbacks for <code class="prettyprint">requires</code>/<code class="prettyprint">tested</code> follow the header.</li>
 </ul>
 <p>Both renames are necessary to avoid <code class="prettyprint">Cannot redeclare class</code> fatals
 when more than one of Jean Pierre's plugins (each carrying its own
@@ -168,7 +174,7 @@ comprehensive security features including:</p>
 <li>URL validation and sanitization of all remote data</li>
 <li>Race condition prevention for manifest fetching</li>
 <li>Comprehensive error logging in WP_DEBUG mode</li>
-<li>Transient caching with 24-hour TTL, negative caching of failed fetches</li>
+<li>Site-transient caching with 24-hour TTL, negative caching of failed fetches</li>
 </ul>
 <p>Security Features:</p>
 <ul>
@@ -183,7 +189,7 @@ discarded</li>
 </ul>
 <p>Namespace: Creationell\Captcha\GitUpdate (renamed from JPKComPostFilterGitUpdate)
 PHP Version: 8.3+
-WordPress Version: 6.8+</p>
+WordPress Version: 6.9+</p>
 </section>
 
         
